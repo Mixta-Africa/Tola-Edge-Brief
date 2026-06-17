@@ -1057,7 +1057,7 @@
     await sleep(200);
 
     try {
-      const res = await fetch(`/data/config.json?t=${Date.now()}`, { cache: 'no-store' });
+      const res = await fetch(`./data/config.json?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error(`config.json ${res.status}`);
       CFG = await res.json();
       if (!CFG.token) throw new Error('config.json incomplete');
