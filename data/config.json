@@ -1,0 +1,10 @@
+{
+  "google": {
+    "spreadsheetId": "YOUR_ACTUAL_GOOGLE_SHEETS_ID_HERE",
+    "sheetName": "Sheet1"
+  },
+  "pipeline": {
+    "marketFocus": "Nigeria",
+    "maxArticlesPerRun": 10
+  }
+}
