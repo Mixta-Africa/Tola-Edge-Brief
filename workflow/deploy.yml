@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Checkout gh-pages (or create it)
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-out
+          token: ${{ secrets.GH_DEPLOY_TOKEN }}
+        continue-on-error: true
+
+      - name: Init gh-pages branch if new
+        run: |
+          if [ ! -d "gh-pages-out" ]; then
+            mkdir gh-pages-out
+            cd gh-pages-out
+            git init
+            git remote add origin https://x-access-token:${{ secrets.GH_DEPLOY_TOKEN }}@github.com/${{ github.repository }}.git
+            git checkout --orphan gh-pages
+          fi
+
+      - name: Copy app files to gh-pages
+        run: |
+          cp index.html gh-pages-out/index.html
+          mkdir -p gh-pages-out/data
+          cp data/mixta-context.json gh-pages-out/data/mixta-context.json
+
+          # Initialise brief_output.json if not present
+          if [ ! -f "gh-pages-out/data/brief_output.json" ]; then
+            echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' > gh-pages-out/data/brief_output.json
+          fi
+
+          # Initialise vault_index.json if not present
+          if [ ! -f "gh-pages-out/data/vault_index.json" ]; then
+            echo '[]' > gh-pages-out/data/vault_index.json
+          fi
+
+          mkdir -p gh-pages-out/vault
+
+      - name: Commit and push
+        run: |
+          cd gh-pages-out
+          git config user.name "Deploy Bot"
+          git config user.email "actions@github.com"
+          git add .
+          git diff --staged --quiet || git commit -m "deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push origin gh-pages
