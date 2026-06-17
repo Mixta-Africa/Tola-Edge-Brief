@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Tola Edge Brief</title>
     
-    <!-- Fonts: Playfair Display (Masthead) & Inter (Body) -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
@@ -46,19 +46,18 @@
 <body>
     <div id="root"></div>
 
-    <script type="text/babel">
+    <!-- Added data-presets="react" to prevent import syntax errors -->
+    <script type="text/babel" data-presets="react">
         const { useState, useEffect } = React;
 
         function TolaEdgeBrief() {
-            // State Management
-            const [activeMarket] = useState('Nigeria'); // Locked to Nigeria context
+            const [activeMarket] = useState('Nigeria'); 
             const [activeDomains, setActiveDomains] = useState(new Set(['Market Creation', 'Capital & Financing', 'Land & Regulatory Alpha']));
             const [customPrompt, setCustomPrompt] = useState('');
             const [loading, setLoading] = useState(false);
             const [brief, setBrief] = useState(null);
             const [vaultFiles, setVaultFiles] = useState([]);
 
-            // The 6 strategic domains
             const domains = [
                 { name: 'Market Creation', icon: 'ti-chart-arcs' },
                 { name: 'Capital & Financing', icon: 'ti-cash' },
@@ -68,14 +67,12 @@
                 { name: 'Geopolitical Risk', icon: 'ti-shield-alert' }
             ];
 
-            // Load Knowledge Vault history on startup[cite: 1]
             useEffect(() => {
                 fetch('../data/briefings-index.json')
                     .then(res => res.json())
                     .then(data => setVaultFiles(data.briefings || []))
                     .catch(() => console.log("Vault empty. Awaiting first run."));
                 
-                // Automatically load the latest brief if available
                 fetch('../data/briefing.json')
                     .then(res => res.json())
                     .then(data => setBrief(data))
@@ -92,25 +89,9 @@
                 setActiveDomains(newDomains);
             };
 
-            // Secure Remote-Control Trigger
             const handleGenerate = async () => {
                 setLoading(true);
-                
                 try {
-                    // SECURE TRIGGER: This pings your GitHub Actions to wake up the backend scraper
-                    // NOTE: You will need to replace GITHUB_USERNAME, REPO_NAME, and YOUR_PAT_TOKEN
-                    /*
-                    await fetch('https://api.github.com/repos/GITHUB_USERNAME/REPO_NAME/dispatches', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Authorization': 'token YOUR_PAT_TOKEN' 
-                        },
-                        body: JSON.stringify({ event_type: 'trigger_brief_generation' })
-                    });
-                    */
-                    
-                    // Simulate processing time for UI feedback
                     alert("Intelligence engine triggered securely. The backend scraper is now running. Please refresh the page in 3 minutes.");
                 } catch (e) {
                     console.error("Trigger failed:", e);
@@ -128,7 +109,6 @@
 
             return (
                 <div className="max-w-6xl mx-auto px-4 py-10 fade-in">
-                    {/* Header: Executive styling[cite: 1] */}
                     <div className="border-b border-gray-200 pb-6 mb-8 flex justify-between items-end">
                         <div>
                             <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2">Intelligence Brief · Tola Akinsulire</p>
@@ -140,9 +120,7 @@
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                        {/* Sidebar Controls */}
                         <div className="lg:col-span-4 space-y-6">
-                            {/* Market Focus */}
                             <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
                                 <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-4">Market Focus</h3>
                                 <button className="w-full py-2 px-3 text-sm font-medium rounded bg-customBlue text-white shadow-sm flex justify-between items-center">
@@ -151,7 +129,6 @@
                                 </button>
                             </div>
 
-                            {/* Domain Matrix[cite: 1] */}
                             <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
                                 <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-4">Strategic Domains</h3>
                                 <div className="space-y-2">
@@ -171,7 +148,6 @@
                                 </div>
                             </div>
 
-                            {/* Custom Prompt */}
                             <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
                                 <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-3">Targeted Query</h3>
                                 <input 
@@ -183,7 +159,6 @@
                                 />
                             </div>
 
-                            {/* Generate Trigger */}
                             <button 
                                 onClick={handleGenerate}
                                 disabled={loading}
@@ -200,11 +175,9 @@
                             </button>
                         </div>
 
-                        {/* Brief Output Area */}
                         <div className="lg:col-span-8 space-y-8">
                             {brief ? (
                                 <div className="fade-in space-y-8">
-                                    {/* Component 1: Narrative (Signature left border)[cite: 1] */}
                                     <div className="bg-white p-8 rounded border border-gray-200 shadow-sm border-l-[3px] border-l-customBlue">
                                         <h2 className="text-xs font-semibold text-navy uppercase tracking-widest mb-5">Executive Narrative</h2>
                                         <div className="text-sm text-gray-800 leading-relaxed space-y-4 whitespace-pre-wrap">
@@ -212,7 +185,6 @@
                                         </div>
                                     </div>
 
-                                    {/* Component 2: Story Cards[cite: 1] */}
                                     <div>
                                         <h2 className="text-xs font-semibold text-navy uppercase tracking-widest mb-4">Signal Analysis</h2>
                                         <div className="space-y-4">
@@ -241,7 +213,6 @@
                                         </div>
                                     </div>
 
-                                    {/* Actions */}
                                     <div className="flex justify-end">
                                         <button onClick={handleCopy} className="px-5 py-2.5 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
                                             <i className="ti ti-copy"></i> Copy Structured Data
@@ -258,7 +229,6 @@
                         </div>
                     </div>
 
-                    {/* Component 3: Knowledge Vault Footer[cite: 1] */}
                     <div className="mt-16 bg-white rounded border border-gray-200 shadow-sm p-8 fade-in">
                         <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-6">
                             <i className="ti ti-server text-navy text-xl"></i>
