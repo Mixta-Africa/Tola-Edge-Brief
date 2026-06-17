@@ -1,0 +1,56 @@
+/**
+ * Remote Config Loader.
+ *
+ * Lets the dashboard edit the watch-list and sources without code changes.
+ * The dashboard writes config to Firebase Realtime Database; this reads it back
+ * at pipeline start. If Firebase isn't configured or is unreachable, the pipeline
+ * silently falls back to the committed repo files (mixta-context.json, sources.json).
+ *
+ * Requires env var FIREBASE_DB_URL (e.g. https://your-project-default-rtdb.firebaseio.com).
+ * RTDB read is a plain HTTPS GET — no SDK, no typed-format parsing.
+ */
+
+const axios = require('axios');
+
+const DB_URL = process.env.FIREBASE_DB_URL;
+
+async function readNode(pathName) {
+  if (!DB_URL) return null;
+  try {
+    const url = `${DB_URL.replace(/\/$/, '')}/${pathName}.json`;
+    const res = await axios.get(url, { timeout: 8000 });
+    return res.data || null;
+  } catch (e) {
+    console.warn(`[Config] Could not read remote ${pathName}: ${e.message}`);
+    return null;
+  }
+}
+
+/**
+ * Returns an array of watch-list items [{topic, why}] or null if unset.
+ */
+async function getWatchListOverride() {
+  const data = await readNode('config/watchlist');
+  if (!data) return null;
+  // Accept either {items:[...]} or a raw array
+  const items = Array.isArray(data) ? data : data.items;
+  if (!Array.isArray(items) || items.length === 0) return null;
+  console.log(`[Config] Loaded ${items.length} watch-list items from dashboard config.`);
+  return items;
+}
+
+/**
+ * Returns { rssFeeds, googleNewsQueries } overrides or null if unset.
+ */
+async function getSourcesOverride() {
+  const data = await readNode('config/sources');
+  if (!data) return null;
+  const out = {};
+  if (Array.isArray(data.rssFeeds)) out.rssFeeds = data.rssFeeds;
+  if (Array.isArray(data.googleNewsQueries)) out.googleNewsQueries = data.googleNewsQueries;
+  if (!out.rssFeeds && !out.googleNewsQueries) return null;
+  console.log('[Config] Loaded source overrides from dashboard config.');
+  return out;
+}
+
+module.exports = { getWatchListOverride, getSourcesOverride };

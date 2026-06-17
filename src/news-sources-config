@@ -1,0 +1,162 @@
+/**
+ * NEWS SOURCES CONFIGURATION
+ * 
+ * Manages:
+ * - Direct news URLs (user-added)
+ * - Aggregator quotas (how many articles per source)
+ * - Search configurations
+ * - Source prioritization
+ * 
+ * EASY TO USE:
+ * 1. Add your direct news URLs below
+ * 2. Push to GitHub
+ * 3. Pipeline fetches from your sources
+ * 4. Gets priority boost (user-curated = high quality)
+ */
+
+module.exports = {
+  // ========================================================================
+  // DIRECT URLS - ADD YOUR NEWS SOURCES HERE
+  // ========================================================================
+  
+  directUrls: {
+    enabled: true,
+    
+    // Add Nigerian real estate news URLs here
+    // Format: 'https://domain.com/section' or 'https://domain.com/section/'
+    urls: [
+      // EXAMPLE SOURCES - Replace with real links:
+      // 'https://www.guardian.ng/business/real-estate/',
+      // 'https://www.vanguardngr.com/category/business/real-estate/',
+      // 'https://www.businessday.ng/tag/real-estate/',
+      // 'https://www.nairametrics.com/tag/real-estate/',
+      // 'https://www.thecable.ng/topic/real-estate',
+      // 'https://www.punch.ng/category/business/real-estate/',
+      // 'https://dailytrust.com/category/business/real-estate/',
+      // 'https://www.thisday.com.ng/business/real-estate/',
+      // 'https://leadership.ng/tag/real-estate/',
+    ],
+    
+    description: 'Manually added direct URLs - highest priority'
+  },
+
+  // ========================================================================
+  // AGGREGATOR QUOTAS
+  // ========================================================================
+  
+  quotas: {
+    newsapi: {
+      maxArticles: 40,
+      description: 'NewsAPI - Vetted sources',
+    },
+    
+    googleNews: {
+      maxArticles: 100,
+      description: 'Google News RSS - Real-time updates',
+    },
+    
+    gnews: {
+      maxArticles: 25,
+      description: 'GNews API - Additional coverage',
+    },
+    
+    customRss: {
+      maxArticles: 50,
+      description: 'Custom RSS feeds',
+    },
+    
+    directUrls: {
+      maxArticles: 100,
+      maxUrlsPerRun: 50,
+      priorityBoost: 2,
+      description: 'Direct URLs - User-curated sources',
+    },
+  },
+
+  // ========================================================================
+  // SOURCE PRIORITIZATION
+  // ========================================================================
+  
+  prioritization: {
+    // Sources ranked by quality (1 = highest)
+    sources: {
+      'Direct URL': 1,           // User-selected = highest
+      'NewsAPI': 2,              // Vetted news orgs
+      'Custom RSS': 3,           // Known publishers
+      'Google News RSS': 4,      // Broad coverage
+      'GNews': 5,                // Additional API
+    },
+  },
+
+  // ========================================================================
+  // ENRICHMENT CONFIGURATION
+  // ========================================================================
+  
+  enrichment: {
+    // Fallback strategy when extraction fails
+    thresholdChars: 200,         // Articles < 200 chars get enriched
+    maxExtractChars: 3000,       // Max chars to extract per article
+    
+    strategy: [
+      'full_text',               // Try to extract full article
+      'headline_description',    // Fallback to headline + description
+      'headline_only',           // Last resort: headline
+    ],
+    
+    // Wait between fetches (ms) to avoid hammering servers
+    batchSize: 3,
+    batchDelayMs: 2000,
+  },
+
+  // ========================================================================
+  // HOW TO ADD DIRECT URLS
+  // ========================================================================
+  
+  instructions: `
+  
+  STEP 1: Find a real estate news section
+    Example: https://www.guardian.ng/business/real-estate/
+  
+  STEP 2: Add to the urls array above
+    urls: [
+      'https://www.guardian.ng/business/real-estate/',  // ← Add here
+      'https://www.vanguardngr.com/category/business/real-estate/',
+    ]
+  
+  STEP 3: Commit and push
+    git add src/NEWS_SOURCES_CONFIG.js
+    git commit -m "add: direct news sources"
+    git push
+  
+  STEP 4: Pipeline fetches from your sources next run
+    • Extracts articles from each page
+    • Adds to briefing
+    • Gets priority boost
+  
+  STEP 5: Check results
+    Go to Google Sheet → should have new entries
+    Go to email → briefing should include your sources
+  
+  GREAT SOURCES TO ADD:
+    ✓ Guardian Nigeria - https://www.guardian.ng/business/real-estate/
+    ✓ Vanguard - https://www.vanguardngr.com/category/business/real-estate/
+    ✓ BusinessDay - https://www.businessday.ng/tag/real-estate/
+    ✓ Nairametrics - https://www.nairametrics.com/tag/real-estate/
+    ✓ The Cable - https://www.thecable.ng/topic/real-estate
+    ✓ Punch - https://www.punch.ng/category/business/real-estate/
+    ✓ Daily Trust - https://dailytrust.com/category/business/real-estate/
+    ✓ ThisDay - https://www.thisday.com.ng/business/real-estate/
+    ✓ Leadership - https://leadership.ng/tag/real-estate/
+  `,
+
+  // ========================================================================
+  // MONITORING & LOGGING
+  // ========================================================================
+  
+  logging: {
+    logLevel: 'info',  // 'debug', 'info', 'warn', 'error'
+    logDirectUrlFetches: true,
+    logEnrichmentDetails: true,
+    logQualityBreakdown: true,  // Shows full-text vs headline+desc counts
+  },
+};

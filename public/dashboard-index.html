@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mixta Market Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #15191f; --ink-soft: #3d444e; --muted: #717a86; --faint: #9aa3ad;
+    --line: #e7e9ee; --line-soft: #f0f2f5; --bg: #ffffff; --bg-soft: #f7f8fa; --bg-sink: #f2f4f7;
+    --accent: #b8243f; --accent-soft: #fbe9ed;
+    --green: #1b7a4b; --green-soft: #e7f4ec; --amber: #9a6b00; --amber-soft: #fbf2dc;
+    --red: #c0392b; --red-soft: #fbe9e7; --blue: #3f6ea5; --blue-soft: #eaf1f8;
+    --radius: 10px; --shadow: 0 1px 2px rgba(20,25,31,.04), 0 6px 20px rgba(20,25,31,.05);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--bg-soft); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+
+  .topbar { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,.88); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--line); }
+  .topbar-inner { max-width: 1040px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 18px; }
+  .brand { display: flex; flex-direction: column; line-height: 1.1; }
+  .brand .name { font-weight: 700; font-size: 15px; letter-spacing: -.01em; }
+  .brand .sub { font-size: 11px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+  .status-pill { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px; background: var(--bg-sink); color: var(--ink-soft); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+  .status-pill.healthy { background: var(--green-soft); color: var(--green); } .status-pill.healthy .status-dot { background: var(--green); }
+  .status-pill.degraded { background: var(--amber-soft); color: var(--amber); } .status-pill.degraded .status-dot { background: var(--amber); }
+  .status-pill.failed { background: var(--red-soft); color: var(--red); } .status-pill.failed .status-dot { background: var(--red); }
+
+  .nav { border-bottom: 1px solid var(--line); background: var(--bg); }
+  .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0 24px; display: flex; gap: 4px; }
+  .nav button { appearance: none; border: 0; background: none; cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 500; color: var(--muted); padding: 14px 14px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .15s; }
+  .nav button:hover { color: var(--ink); }
+  .nav button.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 24px 80px; }
+  .view { display: none; animation: fade .35s ease both; }
+  .view.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .view { animation: none; } }
+
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .dateline { font-size: 13px; color: var(--muted); margin-bottom: 26px; }
+
+  .exec { font-family: 'Newsreader', Georgia, serif; font-size: 25px; line-height: 1.4; font-weight: 460; color: var(--ink); letter-spacing: -.005em; margin: 0 0 8px; max-width: 46ch; }
+  .exec-rule { width: 44px; height: 3px; background: var(--accent); border-radius: 2px; margin: 22px 0 30px; }
+
+  .theme { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 16px; box-shadow: var(--shadow); border-left: 3px solid var(--line); }
+  .theme.rec-act { border-left-color: var(--accent); }
+  .theme.rec-monitor { border-left-color: var(--amber); }
+  .theme.rec-watch { border-left-color: var(--blue); }
+  .theme-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .theme-label { font-size: 17px; font-weight: 650; letter-spacing: -.01em; }
+  .badge { font-size: 10.5px; font-weight: 600; padding: 3px 9px; border-radius: 999px; letter-spacing: .04em; text-transform: uppercase; }
+  .badge.new { background: var(--green-soft); color: var(--green); }
+  .badge.building { background: var(--amber-soft); color: var(--amber); }
+  .badge.established { background: var(--bg-sink); color: var(--ink-soft); }
+  .badge.single { background: var(--red-soft); color: var(--red); }
+  .theme-row { margin: 9px 0; font-size: 14px; }
+  .theme-row .k { font-weight: 600; color: var(--ink); }
+  .why { background: var(--blue-soft); border-radius: 8px; padding: 11px 13px; color: #234; font-size: 13.5px; }
+  .rec .k { color: var(--accent); }
+  .theme-foot { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line-soft); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .conf { font-weight: 600; } .conf.high { color: var(--green); } .conf.medium { color: var(--amber); } .conf.low { color: var(--red); }
+  .src-links a { color: var(--blue); text-decoration: none; border-bottom: 1px solid transparent; }
+  .src-links a:hover { border-bottom-color: var(--blue); }
+  .watch-band { margin-top: 26px; padding: 14px 18px; background: var(--bg-sink); border-radius: 8px; font-size: 13px; color: var(--ink-soft); }
+  .watch-band .k { font-weight: 600; }
+
+  .tracker-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; padding: 15px 4px; border-bottom: 1px solid var(--line-soft); }
+  .tracker-row .label { font-weight: 550; font-size: 14.5px; }
+  .tracker-row .meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .presence { display: flex; gap: 3px; align-items: center; }
+  .pip { width: 9px; height: 16px; border-radius: 2px; background: var(--line); }
+  .pip.on { background: var(--accent); }
+  .pip.on.fade { background: #e3a9b5; }
+  .count-num { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: var(--ink-soft); min-width: 56px; text-align: right; }
+
+  .search { width: 100%; font-family: inherit; font-size: 14px; color: var(--ink); padding: 12px 15px; border: 1px solid var(--line); border-radius: 9px; background: var(--bg); margin-bottom: 20px; }
+  .search:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .arch-item { background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 16px 18px; margin-bottom: 10px; cursor: pointer; transition: border-color .15s; }
+  .arch-item:hover { border-color: var(--faint); }
+  .arch-date { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); font-weight: 500; }
+  .arch-summary { font-family: 'Newsreader', serif; font-size: 15.5px; line-height: 1.45; margin: 6px 0 8px; }
+  .arch-themes { font-size: 12px; color: var(--muted); }
+  .art-row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 14px 4px; border-bottom: 1px solid var(--line-soft); }
+  .art-title { font-size: 14px; font-weight: 500; }
+  .art-title a { text-decoration: none; }
+  .art-title a:hover { color: var(--accent); }
+  .art-meta { font-size: 12px; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip { background: var(--bg-sink); border-radius: 5px; padding: 1px 7px; font-weight: 500; }
+  .chip.bullish { background: var(--green-soft); color: var(--green); }
+  .chip.bearish { background: var(--red-soft); color: var(--red); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-bottom: 18px; }
+  .seg button { border: 0; background: var(--bg); font-family: inherit; font-size: 12.5px; font-weight: 500; color: var(--muted); padding: 8px 16px; cursor: pointer; }
+  .seg button.active { background: var(--accent); color: #fff; }
+
+  .h-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 26px; }
+  .h-card { background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 16px; }
+  .h-card .n { font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 500; letter-spacing: -.02em; }
+  .h-card .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .src-line { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 13.5px; }
+  .src-line .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .src-line .dot.ok { background: var(--green); } .src-line .dot.down { background: var(--red); }
+  .src-line .cnt { margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); }
+  .hist-strip { display: flex; gap: 3px; margin-top: 8px; flex-wrap: wrap; }
+  .hist-pip { width: 10px; height: 22px; border-radius: 2px; background: var(--line); }
+  .hist-pip.healthy { background: var(--green); } .hist-pip.degraded { background: var(--amber); } .hist-pip.failed { background: var(--red); }
+
+  .cfg-note { background: var(--blue-soft); border-radius: 9px; padding: 14px 16px; font-size: 13px; color: #234; margin-bottom: 22px; }
+  .cfg-note code { background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .cfg-block { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 18px; }
+  .cfg-block h3 { margin: 0 0 4px; font-size: 15px; }
+  .cfg-block p.hint { margin: 0 0 14px; font-size: 12.5px; color: var(--muted); }
+  .cfg-item { display: flex; gap: 8px; margin-bottom: 8px; }
+  .cfg-item input { flex: 1; font-family: inherit; font-size: 13px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 7px; }
+  .cfg-item input:focus { outline: none; border-color: var(--accent); }
+  .cfg-item button.del { border: 1px solid var(--line); background: var(--bg); color: var(--muted); border-radius: 7px; padding: 0 12px; cursor: pointer; }
+  .cfg-item button.del:hover { color: var(--red); border-color: var(--red); }
+  .btn { font-family: inherit; font-weight: 600; font-size: 13px; border-radius: 8px; padding: 9px 16px; cursor: pointer; border: 1px solid transparent; }
+  .btn.add { background: var(--bg-sink); color: var(--ink-soft); }
+  .btn.save { background: var(--accent); color: #fff; }
+  .btn.save:disabled { opacity: .5; cursor: not-allowed; }
+  .cfg-status { font-size: 12.5px; margin-left: 12px; color: var(--muted); }
+
+  .empty { text-align: center; padding: 60px 20px; color: var(--faint); font-size: 14px; }
+  .loading { text-align: center; padding: 50px; color: var(--faint); font-size: 13px; }
+  footer { max-width: 1040px; margin: 0 auto; padding: 0 24px 50px; color: var(--faint); font-size: 11.5px; text-align: center; }
+
+  @media (max-width: 640px) {
+    .exec { font-size: 21px; }
+    .nav-inner { overflow-x: auto; }
+    .topbar-inner { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="name">Mixta Market Intelligence</span>
+        <span class="sub">Nigerian Real Estate &middot; Daily Briefing</span>
+      </div>
+      <span id="statusPill" class="status-pill"><span class="status-dot"></span><span id="statusText">Loading</span></span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <button data-view="briefing" class="active">Briefing</button>
+      <button data-view="themes">Theme Tracker</button>
+      <button data-view="archive">Archive</button>
+      <button data-view="health">System Health</button>
+      <button data-view="config">Settings</button>
+    </div>
+  </nav>
+
+  <main>
+    <section id="briefing" class="view active">
+      <div class="eyebrow">Executive Briefing</div>
+      <div id="briefingDate" class="dateline"></div>
+      <div id="briefingBody"><div class="loading">Loading today's briefing&hellip;</div></div>
+    </section>
+
+    <section id="themes" class="view">
+      <div class="eyebrow">Theme Tracker</div>
+      <div class="dateline">How stories build over time. Each bar is a day the theme appeared in a briefing.</div>
+      <div id="themesBody"><div class="loading">Loading theme history&hellip;</div></div>
+    </section>
+
+    <section id="archive" class="view">
+      <div class="eyebrow">Archive</div>
+      <div class="dateline">Past briefings and the full article record.</div>
+      <div class="seg">
+        <button id="segBriefings" class="active" onclick="setArchTab('briefings')">Past briefings</button>
+        <button id="segArticles" onclick="setArchTab('articles')">Articles</button>
+      </div>
+      <input id="archSearch" class="search" placeholder="Search by keyword, source, or theme&hellip;" oninput="renderArchive()" />
+      <div id="archiveBody"><div class="loading">Loading archive&hellip;</div></div>
+    </section>
+
+    <section id="health" class="view">
+      <div class="eyebrow">System Health</div>
+      <div id="healthDate" class="dateline"></div>
+      <div id="healthBody"><div class="loading">Loading system health&hellip;</div></div>
+    </section>
+
+    <section id="config" class="view">
+      <div class="eyebrow">Settings</div>
+      <div class="dateline">Adjust what the intelligence engine watches and where it looks. Changes apply on the next run.</div>
+      <div id="configBody"><div class="loading">Loading settings&hellip;</div></div>
+    </section>
+  </main>
+
+  <footer>Mixta Market Intelligence &middot; Autonomous daily pipeline &middot; Generated by GitHub Actions</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* CONFIG — fill these in to enable the Settings editor. Leave as-is and the dashboard still works read-only. */
+const firebaseConfig = {
+  apiKey: "FILL_IN",
+  authDomain: "FILL_IN",
+  databaseURL: "FILL_IN",
+  projectId: "FILL_IN"
+};
+// Auto-detect the base path so this works on GitHub Pages (timilehin-taiwo.github.io/News-Fetcher/)
+// as well as locally. We strip the filename and any trailing slash, then append /data.
+// e.g.  https://timilehin-taiwo.github.io/News-Fetcher/  → .../News-Fetcher/data
+//        http://localhost:8080/public/dashboard-index.html → .../public/../data  → /data
+const DATA_BASE = (function() {
+  const loc = window.location.href;
+  // If served from the repo root (GitHub Pages with index redirect or direct path)
+  const base = loc.endsWith('/') ? loc.slice(0, -1) : loc.substring(0, loc.lastIndexOf('/'));
+  return base + '/data';
+})();
+
+let fb = null, db = null, firebaseReady = false;
+let articlesCache = [], briefingsIndex = [], archTab = 'briefings';
+let cfgWatch = [], cfgRss = [], cfgGoogle = [];
+
+function initFirebase() {
+  try {
+    if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "FILL_IN") {
+      fb = firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+      firebaseReady = true;
+    }
+  } catch (e) { console.warn("Firebase init skipped:", e.message); }
+}
+
+async function loadJSON(path) {
+  try {
+    const r = await fetch(`${DATA_BASE}/${path}?t=${Date.now()}`);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+
+document.querySelectorAll('.nav button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.view).classList.add('active');
+  };
+});
+
+function renderStatus(health) {
+  const pill = document.getElementById('statusPill');
+  const text = document.getElementById('statusText');
+  const s = health?.status || 'unknown';
+  pill.className = 'status-pill ' + s;
+  const map = { healthy: 'All systems healthy', degraded: 'Running degraded', failed: 'Last run failed', unknown: 'Status unknown' };
+  text.textContent = map[s] || s;
+}
+
+function esc(s) { return (s == null ? '' : String(s)).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function recClass(rec) {
+  const r = (rec || '').toLowerCase();
+  if (r.startsWith('act')) return 'rec-act';
+  if (r.startsWith('monitor')) return 'rec-monitor';
+  if (r.startsWith('watch')) return 'rec-watch';
+  return '';
+}
+
+function renderBriefing(b) {
+  const el = document.getElementById('briefingBody');
+  const dateEl = document.getElementById('briefingDate');
+  if (!b || !b.themes || !b.themes.length) {
+    el.innerHTML = '<div class="empty">No briefing available yet. It will appear after the next pipeline run.</div>';
+    return;
+  }
+  if (b.generatedAt) {
+    dateEl.textContent = new Date(b.generatedAt).toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  }
+  let html = `<p class="exec">${esc(b.executive_summary)}</p><div class="exec-rule"></div>`;
+  for (const t of b.themes) {
+    const nov = (t.novelty || 'established').toLowerCase();
+    const conf = (t.confidence || 'medium').toLowerCase();
+    const single = t.singleSource ? '<span class="badge single">Single source</span>' : '';
+    const seen = (t.timesSeen && t.timesSeen > 1) ? ` &middot; day ${t.timesSeen}` : '';
+    const srcs = (t.sourceArticles || []).map(s => `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.source)}</a>`).join(', ');
+    html += `
+      <div class="theme ${recClass(t.recommendation)}">
+        <div class="theme-head">
+          <span class="theme-label">${esc(t.label)}</span>
+          <span class="badge ${nov}">${esc(nov)}${seen}</span>
+          ${single}
+        </div>
+        <div class="theme-row"><span class="k">What happened.</span> ${esc(t.what_happened)}</div>
+        <div class="theme-row why"><span class="k">Why it matters to Mixta.</span> ${esc(t.why_it_matters_to_mixta)}</div>
+        <div class="theme-row rec"><span class="k">Recommendation.</span> ${esc(t.recommendation)}</div>
+        <div class="theme-foot">
+          <span>Confidence <span class="conf ${conf}">${esc((t.confidence||'medium').toUpperCase())}</span></span>
+          ${srcs ? `<span class="src-links">Sources: ${srcs}</span>` : ''}
+        </div>
+      </div>`;
+  }
+  if (b.watch_list_hits && b.watch_list_hits.length) {
+    html += `<div class="watch-band"><span class="k">Watch-list activity today:</span> ${b.watch_list_hits.map(esc).join(' &middot; ')}</div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderThemes(memory) {
+  const el = document.getElementById('themesBody');
+  const themes = (memory?.themes || []).slice().sort((a,b) => b.count - a.count || (a.lastSeen < b.lastSeen ? 1 : -1));
+  if (!themes.length) {
+    el.innerHTML = '<div class="empty">No theme history yet. Themes accumulate as briefings are generated day over day.</div>';
+    return;
+  }
+  const maxPips = 14;
+  let html = '';
+  for (const t of themes) {
+    const c = Math.min(t.count, maxPips);
+    let pips = '';
+    for (let i = 0; i < maxPips; i++) {
+      const on = i < c;
+      const fade = on && i < c - 3 ? ' fade' : '';
+      pips += `<span class="pip${on ? ' on' : ''}${fade}"></span>`;
+    }
+    const span = (t.firstSeen && t.lastSeen) ? `${t.firstSeen} &rarr; ${t.lastSeen}` : (t.lastSeen || '');
+    html += `
+      <div class="tracker-row">
+        <div><div class="label">${esc(t.label)}</div><div class="meta">${span}</div></div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="presence">${pips}</div>
+          <span class="count-num">${t.count} day${t.count===1?'':'s'}</span>
+        </div>
+      </div>`;
+  }
+  el.innerHTML = html;
+}
+
+function setArchTab(tab) {
+  archTab = tab;
+  document.getElementById('segBriefings').classList.toggle('active', tab === 'briefings');
+  document.getElementById('segArticles').classList.toggle('active', tab === 'articles');
+  document.getElementById('archSearch').placeholder = tab === 'briefings'
+    ? 'Search past briefings by summary or theme\u2026'
+    : 'Search articles by title or source\u2026';
+  renderArchive();
+}
+
+function renderArchive() {
+  const el = document.getElementById('archiveBody');
+  const q = document.getElementById('archSearch').value.toLowerCase().trim();
+  if (archTab === 'briefings') {
+    let items = briefingsIndex;
+    if (q) items = items.filter(b =>
+      (b.executive_summary || '').toLowerCase().includes(q) ||
+      (b.themeLabels || []).join(' ').toLowerCase().includes(q) ||
+      (b.date || '').includes(q));
+    if (!items.length) { el.innerHTML = '<div class="empty">No briefings match your search.</div>'; return; }
+    el.innerHTML = items.map(b => `
+      <div class="arch-item" onclick="openBriefing('${b.date}')">
+        <div class="arch-date">${b.date}</div>
+        <div class="arch-summary">${esc((b.executive_summary || '').slice(0, 220))}${(b.executive_summary||'').length > 220 ? '\u2026' : ''}</div>
+        <div class="arch-themes">${(b.themeLabels || []).map(esc).join(' &middot; ')}</div>
+      </div>`).join('');
+  } else {
+    let items = articlesCache;
+    if (q) items = items.filter(a =>
+      (a.title || '').toLowerCase().includes(q) ||
+      (a.source || '').toLowerCase().includes(q) ||
+      (a.trending_topics || '').toLowerCase().includes(q));
+    if (!items.length) { el.innerHTML = '<div class="empty">No articles match your search.</div>'; return; }
+    el.innerHTML = items.slice(0, 200).map(a => {
+      const sent = (a.sentiment || 'neutral').toLowerCase();
+      return `
+      <div class="art-row">
+        <div class="art-title"><a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.title)}</a></div>
+        <div class="art-meta">
+          <span class="chip">${esc(a.source || 'Unknown')}</span>
+          <span class="chip ${sent}">${esc(sent)}</span>
+          ${a.addedAt ? `<span>${new Date(a.addedAt).toLocaleDateString()}</span>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+async function openBriefing(date) {
+  const b = await loadJSON(`archive/briefing-${date}.json`);
+  if (!b) { alert('Could not load that briefing.'); return; }
+  document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+  document.querySelector('.nav button[data-view="briefing"]').classList.add('active');
+  document.getElementById('briefing').classList.add('active');
+  renderBriefing(b);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderHealth(health, history) {
+  const el = document.getElementById('healthBody');
+  const dateEl = document.getElementById('healthDate');
+  if (!health) { el.innerHTML = '<div class="empty">No health data yet.</div>'; return; }
+  if (health.timestamp) dateEl.textContent = 'Last run ' + new Date(health.timestamp).toLocaleString();
+  const c = health.counts || {};
+  let html = `
+    <div class="h-grid">
+      <div class="h-card"><div class="n">${c.filtered ?? '\u2014'}</div><div class="l">Articles after filtering</div></div>
+      <div class="h-card"><div class="n">${c.analyzed ?? '\u2014'}</div><div class="l">Analyzed</div></div>
+      <div class="h-card"><div class="n">${health.synthesis?.themes ?? '\u2014'}</div><div class="l">Briefing themes</div></div>
+      <div class="h-card"><div class="n">${c.aiFallbacks ?? '\u2014'}</div><div class="l">AI fallbacks</div></div>
+    </div>`;
+  if (health.warnings && health.warnings.length) {
+    html += `<div class="cfg-note" style="background:var(--amber-soft);color:var(--amber);"><strong>Attention:</strong> ${health.warnings.map(esc).join(' &middot; ')}</div>`;
+  }
+  const s = health.sources || {};
+  const lines = [];
+  const addLine = (name, ok, count, err) => lines.push(
+    `<div class="src-line"><span class="dot ${ok ? 'ok' : 'down'}"></span><span>${esc(name)}</span>${err ? `<span style="color:var(--red);font-size:12px;">${esc(err)}</span>` : ''}<span class="cnt">${count ?? 0}</span></div>`);
+  if (s.gnews) addLine('GNews API', s.gnews.ok, s.gnews.count, s.gnews.error);
+  if (s.newsapi) addLine('NewsAPI', s.newsapi.ok, s.newsapi.count, s.newsapi.error);
+  if (s.googlenews) addLine('Google News', s.googlenews.ok, s.googlenews.count, s.googlenews.error);
+  if (s.rss && s.rss.feeds) { for (const [n, f] of Object.entries(s.rss.feeds)) addLine('RSS \u2014 ' + n, f.ok, f.count, f.error); }
+  html += `<h3 style="font-size:14px;margin:26px 0 6px;">Source status</h3>${lines.join('')}`;
+  if (history?.runs?.length) {
+    const runs = history.runs.slice(-30);
+    html += `<h3 style="font-size:14px;margin:28px 0 6px;">Recent run history</h3>
+      <div class="hist-strip">${runs.map(r => `<span class="hist-pip ${r.status}" title="${r.timestamp} \u2014 ${r.status}"></span>`).join('')}</div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:8px;">Last ${runs.length} runs &middot; green healthy, amber degraded, red failed</div>`;
+  }
+  el.innerHTML = html;
+}
+
+function renderConfig() {
+  const el = document.getElementById('configBody');
+  if (!firebaseReady) {
+    el.innerHTML = `<div class="cfg-note">Editing is not connected yet. To enable in-dashboard editing of the watch-list and sources, add your Firebase Realtime Database details to <code>firebaseConfig</code> at the top of this file's script, and set <code>FIREBASE_DB_URL</code> as a GitHub secret so the pipeline reads your changes. Until then, edit <code>src/mixta-context.json</code> and <code>src/sources.json</code> directly.</div><div id="cfgReadonly"></div>`;
+    showReadonlyConfig();
+    return;
+  }
+  el.innerHTML = `
+    <div class="cfg-block"><h3>Watch-list</h3><p class="hint">Topics the engine watches and connects to Mixta. Each needs a short note on why it matters.</p><div id="watchItems"></div><button class="btn add" onclick="addWatch()">+ Add topic</button></div>
+    <div class="cfg-block"><h3>Google News queries</h3><p class="hint">Search phrases turned into news feeds. Broad coverage, no rate limit.</p><div id="googleItems"></div><button class="btn add" onclick="addGoogle()">+ Add query</button></div>
+    <div class="cfg-block"><h3>RSS feeds</h3><p class="hint">Direct publisher feeds. Name plus feed URL.</p><div id="rssItems"></div><button class="btn add" onclick="addRss()">+ Add feed</button></div>
+    <div style="display:flex;align-items:center;"><button id="saveBtn" class="btn save" onclick="saveConfig()">Save changes</button><span id="cfgStatus" class="cfg-status"></span></div>`;
+  drawWatch(); drawGoogle(); drawRss();
+}
+
+function drawWatch() {
+  document.getElementById('watchItems').innerHTML = cfgWatch.map((w, i) => `
+    <div class="cfg-item">
+      <input value="${esc(w.topic || '')}" placeholder="Topic" oninput="cfgWatch[${i}].topic=this.value">
+      <input value="${esc(w.why || '')}" placeholder="Why it matters" oninput="cfgWatch[${i}].why=this.value">
+      <button class="del" onclick="cfgWatch.splice(${i},1);drawWatch()">Remove</button>
+    </div>`).join('');
+}
+function drawGoogle() {
+  document.getElementById('googleItems').innerHTML = cfgGoogle.map((q, i) => `
+    <div class="cfg-item">
+      <input value="${esc(q)}" placeholder="Search phrase" oninput="cfgGoogle[${i}]=this.value">
+      <button class="del" onclick="cfgGoogle.splice(${i},1);drawGoogle()">Remove</button>
+    </div>`).join('');
+}
+function drawRss() {
+  document.getElementById('rssItems').innerHTML = cfgRss.map((f, i) => `
+    <div class="cfg-item">
+      <input value="${esc(f.source || '')}" placeholder="Name" style="max-width:160px" oninput="cfgRss[${i}].source=this.value">
+      <input value="${esc(f.url || '')}" placeholder="https://feed-url" oninput="cfgRss[${i}].url=this.value">
+      <button class="del" onclick="cfgRss.splice(${i},1);drawRss()">Remove</button>
+    </div>`).join('');
+}
+function addWatch() { cfgWatch.push({ topic: '', why: '' }); drawWatch(); }
+function addGoogle() { cfgGoogle.push(''); drawGoogle(); }
+function addRss() { cfgRss.push({ source: '', url: '' }); drawRss(); }
+
+async function saveConfig() {
+  const btn = document.getElementById('saveBtn');
+  const status = document.getElementById('cfgStatus');
+  btn.disabled = true; status.textContent = 'Saving\u2026'; status.style.color = 'var(--muted)';
+  try {
+    await db.ref('config/watchlist').set({ items: cfgWatch.filter(w => w.topic) });
+    await db.ref('config/sources').set({ rssFeeds: cfgRss.filter(f => f.url && f.source), googleNewsQueries: cfgGoogle.filter(Boolean) });
+    status.textContent = 'Saved. Takes effect on the next run.'; status.style.color = 'var(--green)';
+  } catch (e) {
+    status.textContent = 'Save failed: ' + e.message; status.style.color = 'var(--red)';
+  } finally { btn.disabled = false; }
+}
+
+async function showReadonlyConfig() {
+  // src/ files are not committed to data/ — fetch from GitHub raw directly.
+  // These are read-only display; editing requires Firebase.
+  const RAW = 'https://raw.githubusercontent.com/Timilehin-Taiwo/News-Fetcher/main/src';
+  async function rawJSON(file) {
+    try { const r = await fetch(`${RAW}/${file}`); return r.ok ? r.json() : null; } catch { return null; }
+  }
+  const ctx = await rawJSON('mixta-context.json');
+  const src = await rawJSON('sources.json');
+  const el = document.getElementById('cfgReadonly');
+  let html = '';
+  if (ctx?.watch_list) html += `<div class="cfg-block"><h3>Watch-list (current)</h3>${ctx.watch_list.map(w => `<div class="theme-row"><span class="k">${esc(w.topic)}.</span> ${esc(w.why)}</div>`).join('')}</div>`;
+  if (src) {
+    html += `<div class="cfg-block"><h3>Google News queries</h3><div>${(src.googleNewsQueries||[]).map(q => `<span class="chip" style="margin:2px;display:inline-block">${esc(q)}</span>`).join(' ')}</div></div>`;
+    html += `<div class="cfg-block"><h3>RSS feeds</h3>${(src.rssFeeds||[]).map(f => `<div class="theme-row"><span class="k">${esc(f.source)}</span> &middot; ${esc(f.url)}</div>`).join('')}</div>`;
+  }
+  if (el) el.innerHTML = html;
+}
+
+async function loadConfigState() {
+  if (firebaseReady) {
+    try {
+      const w = (await db.ref('config/watchlist').get()).val();
+      const s = (await db.ref('config/sources').get()).val();
+      if (w && w.items) cfgWatch = w.items;
+      if (s && s.rssFeeds) cfgRss = s.rssFeeds;
+      if (s && s.googleNewsQueries) cfgGoogle = s.googleNewsQueries;
+    } catch (e) { /* fall through */ }
+  }
+  if (!cfgWatch.length || !cfgRss.length) {
+    const RAW = 'https://raw.githubusercontent.com/Timilehin-Taiwo/News-Fetcher/main/src';
+    async function rawJSON(file) {
+      try { const r = await fetch(`${RAW}/${file}`); return r.ok ? r.json() : null; } catch { return null; }
+    }
+    const ctx = await rawJSON('mixta-context.json');
+    const src = await rawJSON('sources.json');
+    if (!cfgWatch.length && ctx?.watch_list) cfgWatch = ctx.watch_list.map(w => ({ topic: w.topic, why: w.why }));
+    if (!cfgRss.length && src?.rssFeeds) cfgRss = src.rssFeeds.map(f => ({ source: f.source, url: f.url }));
+    if (!cfgGoogle.length && src?.googleNewsQueries) cfgGoogle = src.googleNewsQueries.slice();
+  }
+}
+
+(async function boot() {
+  initFirebase();
+  const [briefing, memory, articles, health, history, bIndex] = await Promise.all([
+    loadJSON('briefing.json'), loadJSON('themes.json'), loadJSON('articles.json'),
+    loadJSON('health.json'), loadJSON('health-history.json'), loadJSON('briefings-index.json'),
+  ]);
+  articlesCache = Array.isArray(articles) ? articles : [];
+  briefingsIndex = bIndex?.briefings || [];
+  renderStatus(health);
+  renderBriefing(briefing);
+  renderThemes(memory);
+  renderHealth(health, history);
+  renderArchive();
+  await loadConfigState();
+  renderConfig();
+})();
+</script>
+</body>
+</html>

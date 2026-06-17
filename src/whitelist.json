@@ -1,0 +1,26 @@
+{
+  "coreSources": [
+    "ThisDay",
+    "Guardian",
+    "Premium Times",
+    "BusinessDay",
+    "Vanguard",
+    "Property Pro Africa",
+    "The Nation",
+    "Punch",
+    "The Punch",
+    "Leadership",
+    "Daily Trust",
+    "Channels Television",
+    "Sahara Reporters",
+    "Naija247news",
+    "Legit Nigeria",
+    "Nigeria Real Estate Hub",
+    "NewsAPI",
+    "Google News",
+    "google news"
+  ],
+  "dynamicSources": [],
+  "version": "1.1",
+  "lastUpdated": "2026-06-16"
+}

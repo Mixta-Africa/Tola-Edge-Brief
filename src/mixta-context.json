@@ -1,0 +1,250 @@
+{
+  "_instructions": "This file is the brain of the intelligence layer. The synthesis engine injects it into every reasoning prompt so news gets connected to Mixta's actual position. Remaining FILL_INs are figures that only exist in internal finance/ops data (revenue targets, receivables totals) and were not present in any source document or on the public website — populate these by hand from the commercial dashboard when convenient. Safe to edit by hand; it is plain JSON.",
+
+  "company": {
+    "name": "Mixta Africa",
+    "description": "Pan-African real estate, infrastructure and hospitality developer, building affordable-to-premium residential communities primarily along the Lagos / Ibeju-Lekki corridor, with a 20+ year track record, project experience in 8 African countries, operations in 5 countries (Nigeria, Senegal, Tunisia, Morocco, Côte d'Ivoire), 20,000+ housing units completed, 47 projects fully delivered, and 5,000+ units sold.",
+    "headquarters": "8 Kasumu Ekemode Street, off Saka Tinubu, Victoria Island, Lagos, Nigeria",
+    "leadership": {
+      "chairman": "Dapo Oshinusi",
+      "ceo": "Deji Alli",
+      "ed_cfo": "Benson Ajayi",
+      "chief_commercial_officer": "Tola Akinsulire",
+      "ed_legal_corporate_services": "Ugochukwu Ndubuisi",
+      "head_risk_audit": "Pekun Ozolua",
+      "country_manager_nigeria": "Sade Hughes",
+      "country_manager_tunisia": "Ridha Ellouze",
+      "country_manager_senegal_cote_divoire": "Seynabou Fall",
+      "directeur_general_maroc": "Hussein Afraoui"
+    },
+    "business_segments": [
+      "Real Estate Development - residential and commercial properties, both built units and serviced plots",
+      "Infrastructure Development - roads, water supply, drainage, power access within landbank; ARM-sponsored infrastructure investments such as the Lekki toll project",
+      "Hospitality Development & Management - Moorhouse Hotel, Four Points by Sheraton, and flagship Lakowe Lakes Golf & Country Estate (currently operated and managed in-house)"
+    ],
+    "strategic_priorities_2026": [
+      "Hit FILL_IN_REVENUE_TARGET (internal 2026 revenue target not present in any source document - check commercial dashboard / FINCON)",
+      "Recover concentrated receivables (FILL_IN_RECEIVABLES_NAIRA - internal figure not present in any source document; concentration project also FILL_IN)",
+      "Shift new-sales mix toward higher-margin / faster-converting segments (premium Lakowe Lakes products and LNT commercial plots showing stronger documented returns than affordable tier)",
+      "Pursue institutional / bulk transactions and corporate mortgage programmes, including the MREIF/MOFI diaspora and domestic mortgage partnership with Access Bank",
+      "Maintain DFI credibility (EBRD, IFC) for ongoing capital raises",
+      "Grow the diaspora buyer channel via the 'Own It 4 Sure' (O4S) S.U.R.E. framework and dedicated diaspora sales line (sales_diaspora@mixtafrica.com)",
+      "Scale Lagos New Town (LNT) - currently 30% of 1,561 hectares developed, hosting 35K+ people, targeting 200,000 residents at completion",
+      "Find a healthcare operator partner for the proposed Lakowe Wellness and Medical Center"
+    ]
+  },
+
+  "active_projects": [
+    {
+      "name": "Lakowe Crossings",
+      "location": "Lakowe, Ibeju-Lekki corridor, Lagos (within Lagos New Town)",
+      "segment": "Mixed-use / commercial-residential - first live-work-play serviced plot development",
+      "price_band_naira_per_sqm": "FILL_IN (not disclosed in source documents; LNT commercial plots generally from N292,648.46/sqm)",
+      "typical_unit_price_naira": "FILL_IN",
+      "status": "Active - 14-hectare fully serviced ecosystem, 98 plots",
+      "notes": "Positioned for institutional and high-value commercial entry; offers flexibility to build residential or commercial within the same sustainable community."
+    },
+    {
+      "name": "Lakowe Annexe",
+      "location": "Lakowe, Ibeju-Lekki corridor, Lagos - between Beechwood Park and the LNT commercial plots, sharing a border and lake with Lakowe Lakes Golf and Country Estate",
+      "segment": "Mid-market residential plots (premium estate per website positioning)",
+      "price_band_naira_per_sqm": "From N270,000/sqm (N25,092.94/sq ft)",
+      "typical_unit_price_naira": "FILL_IN (plot-based product, priced per sqm rather than per unit)",
+      "status": "Active construction / sales; provisional layout approval pending. Launched 2024, returns to date 70%+ on plots.",
+      "composition": "228 distinctive serviced plots, varying from 360 sqm upwards",
+      "open_issues": [
+        "Provisional layout approval stalled by escalating government fees",
+        "BAFF contractor payment delays",
+        "Second-lane drainage construction progress",
+        "Road QA/QC failures",
+        "Manhole installation behind target",
+        "Growing sales receivables gap"
+      ]
+    },
+    {
+      "name": "Lagos New Town (LNT)",
+      "location": "Ibeju-Lekki corridor, Lagos - at the convergence of the Green Line Metro, Lekki-Epe International Airport, Lekki Deep Seaport and Dangote Refinery, along the Lagos-Calabar Coastal Highway",
+      "segment": "Master-planned mixed-income city - affordable, mid-market, premium residential plus commercial and industrial plots",
+      "price_band_naira_per_sqm": "Varies by sub-project: Elms Gardens from N99,246.95/sqm (affordable); LNT commercial plots from N292,648.46/sqm (mid); Lakowe Lakes Golf Estate plots from N407,642.98/sqm garden view up to N783,392.96/sqm waterfront (premium)",
+      "status": "Active - 1,561 hectares total Mixta landbank, 30% developed, currently hosts 35K+ people (Summerville estate, Adiva Plainfields, Beechwood Park, private bulk land developers and private settlements), targeting 200,000 residents at completion. Twice the size of Victoria Island. Per the public website, LNT spans 15 million sqm.",
+      "notes": "Mixta's flagship infrastructure-arbitrage play - positioned to capture valuation upside as the Green Line Metro (68km, 177 stations including Lakowe), the Lekki-Epe International Airport (projected 5,000,000 passengers/year), the Lekki Deep Seaport, and the Dangote Refinery (135,000+ jobs at maturity) come fully onstream. Coastal Road commissioned May 2025, cutting commute time to LNT to ~20 minutes. Sub-projects within LNT include Lakowe Crossings, Nova Park (21.58-hectare industrial hub, 53 plots), Lakowe Wellness and Medical Center (seeking healthcare operator partner), Elms Gardens, Marula Park, Beechwood Park, Adiva Plainfields, Townsville Estate, and Lakowe Lakes Golf & Country Estate."
+    }
+  ],
+
+  "completed_flagship_projects": [
+    {
+      "name": "Lakowe Lakes Golf & Country Estate",
+      "description": "Mixta's flagship hospitality and premium residential project; 18-hole championship golf course; 327 households currently occupying completed homes; marketed as 'West Africa's Best Kept Secret'.",
+      "rental_pool": "Managed by Newmark Hotels; owners can enlist 1-3 bedroom furnished villas/apartments for short-stay hospitality rentals; clients retain full discretion to enroll or withdraw at any time."
+    },
+    {"name": "Beechwood Park", "households_or_units": "250 households occupying completed homes; 648+ affordable units overall; 404 units sold project-wide on Beechwood Park II, 377 completed, 11 available"},
+    {"name": "Adiva Estates (Plainfields)", "households_or_units": "420 households occupying completed homes; 1,200+ units overall"},
+    {"name": "Beechwood Estate", "households_or_units": "400 households occupying completed homes; 1,100+ units overall"},
+    {"name": "Ibudo Wura", "households_or_units": "600+ units; 640-unit project size, 112 built (Phase 1), 80 ongoing (new commission)"},
+    {"name": "Marula Park (Affordable)", "households_or_units": "53+ units delivered; 984-unit total project size, 197 in Release I, 117 under ongoing construction"},
+    {"name": "Fara Park I & II", "households_or_units": "450+ units; Fara Park II returns to date 400%+ since 2020 launch"},
+    {"name": "RDP / Résidence de la Paix (Lagos)", "households_or_units": "105+ affordable units; 96 built, all completed, 7 unsold"},
+    {"name": "Elms Garden", "households_or_units": "115+ units; returns to date 150%+ since 2023 launch"},
+    {"name": "Lakowe Lakes Plots", "households_or_units": "Returns to date 700%+ since 2020 launch"}
+  ],
+
+  "product_tiers": {
+    "affordable": ["Marula Park (homes, from N39M)", "Ibudo Wura (homes, from N50M)", "Beechwood Park II (homes, from N66M)", "Résidence de la Paix / RDP (homes, from N49.6M)", "Elms Gardens (plots, from N99,246.95/sqm)", "Adiva Plainfield Estate (plots, from N135,000/sqm)"],
+    "mid_market": ["Expressview Estate, Lugbe Abuja (homes, from N105.97M)", "Fara Park II (homes)", "Beechwood Park (homes)", "Lakowe Annexe (plots, from N270,000/sqm)", "LNT Commercial Plots (from N292,648.46/sqm)"],
+    "premium": ["Park Villas, Lakowe (homes, from N310.56M)", "Lakowe Heights (homes, from N217M)", "Ulé retirement enclave (homes, from N477.79M)", "Riyom and Wase (homes, from N391.54M)", "Lakowe Lakes Golf Estate serviced plots (garden view from N407,642.98/sqm; fairway view from N485,503.86/sqm)", "Lakowe Plots / lakeview and waterfront (from N645,976.21/sqm; waterfront from N783,392.96/sqm)", "The Cove, The Village, Villa Bella, Obudu Villas"],
+    "outside_lagos": ["Expressview Estate, Lugbe Abuja", "Expressview Estate, Port Harcourt (494 units across 3 phases, Phase 1 = 39 units; construction kickoff targeted late Feb/early March 2026)"]
+  },
+
+  "financing_products": {
+    "mortgage": "Offered via Mixta partnership with MOFI MREIF and Access Bank; equity from 10% for Nigeria-based clients (diaspora pack cites 20% deposit); interest rate from 9.5-9.75%; tenure up to 20 years (10 years to legal retirement age); loan size up to N100M.",
+    "standard_payment_plan": "Structured plan up to 12-18 months; initial down payment 20-30%; available for homes and plots.",
+    "duo_rent_to_own": {
+      "description": "Mixta's branded rent-to-own product (duo.mixtafrica.com), delivered on 1 and 2 bedroom units of Marula Park.",
+      "duo_classic": "Rents toward ownership within 3 years; minimum 5% (max 25%) equity deposit; fixed annual rent for 3 years; option to purchase exercised after 3 years.",
+      "duo_variants": "Rent toward ownership within 1 year with a mortgage exit plan; 5% initial equity plus the 20% mortgage equity balance spread over 12 months (Duo Active), 15 months (Duo Extra), or 18 months (Duo Bounty)."
+    },
+    "diaspora_specific": "USD pricing tied to naira property pricing available on every unit; FX-locking rules defined at reservation and key milestone dates; option to pay fully in USD; documented payment receipts at every step; dedicated diaspora sales mailbox (sales_diaspora@mixtafrica.com)."
+  },
+
+  "transaction_documentation_sequence": [
+    "1. Offer Letter - commercial terms (product type, price, payment schedule, service charges, allocation timing, documentation costs)",
+    "2. Contract of Sale - issued at 50% payment completion",
+    "3. Deed of Assignment / Deed of Sublease - issued at full payment; legal proof of ownership plus survey",
+    "4. Homeowners Agreement - estate rules, regulations, building guidelines, occupier obligations"
+  ],
+
+  "rental_pool_economics": {
+    "manager": "Newmark Hotels",
+    "structure": "Owners are matched into a pool of similar unit types; pool revenue is totaled monthly and shared equally among pool members after a 10% Newmark management fee.",
+    "case_study": "A 2-bedroom semi-detached Park Villa purchased for N310.56M ($207K) is matched to a pool of 10; the pool generates ~N11,000,000/month; Newmark takes 10% (N1,000,000); the remaining N10,000,000 is split evenly at N1,000,000 ($660) per owner per month.",
+    "nightly_rates": "1BR off-peak N330,000 ($220) / peak N396,000 ($264); 2BR off-peak N400,000 ($267) / peak N480,000 ($320).",
+    "competitive_benchmark_vs_airbnb": "Lakowe Rental Pool nightly rates run well above both Lagos mainland and island Airbnb averages: 1BR $273 vs $50 (mainland)/$57 (island); 2BR $332 vs $123/$123; 3BR $360 vs $150/$150; 4BR $416 vs $172 (mainland)/$230 (island) - i.e. parity or a discount at the 4BR tier versus island Airbnb. Occupancy also runs higher: Lakowe averages 60% (vs Lekki's 44%) and peaks at 95% (vs Lekki's 65%)."
+  },
+
+  "competitors": [
+    {"name": "Lekki - Victoria Island - Ikoyi corridor developments (generic benchmark, 'Lekki - Ikoyi - VI Average')", "note": "Used as Mixta's own ROI/Airbnb benchmark set in board materials. 2BR comparable from N658.3M ($438.87K) vs Lakowe Park Villas from N310.56M ($207K); comparable annual property appreciation 12% vs Lakowe's claimed 15%; Lekki short-let occupancy 44% average / 65% peak vs Lakowe's 60%/95%."},
+
+    {"name": "Montego Garden 4", "developer": "Henry Montego", "location": "Ogombo Rd, Abraham Adesanya, Lagos", "segment": "affordable/mid", "spec": "Fully Finished, 58/58 spec score (highest in corridor)", "reference_prices_naira": "1-bed 36M; 2-bed apt 72.5M (89sqm); 3-bed apt 91.6M; 3-bed maisonette 96.2M; 3-bed terrace 100.2M (81sqm); 4-bed detached 177M", "naira_per_sqm_examples": "2-bed approx 815k/sqm FF; 1-bed approx 541k/sqm FF", "source": "Mixta Q2 2026 affordable-segment CMA (Lekki-Epe corridor set)"},
+    {"name": "Shelter Valley (Urban Shelter, Phase 1 & 2)", "developer": "Urban Shelter in conjunction with Lagos State", "location": "Abraham Adesanya Estate, Lagos", "segment": "affordable", "spec": "Fully Finished; Phase 2 est. completion Q2 2027", "reference_prices_naira": "1-bed 60M; 2-bed apt 85M; 2-bed terrace 100M/155M/180M (Phase 2 listed); Phase 1 sold out", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Citadel Views 2.0", "developer": "Nedcomoaks", "location": "Ogombo Road, Lagos (waterfront, ~5km/20min to coastal road)", "segment": "affordable/mid", "spec": "Fully Finished with solar, 57/58 spec score", "reference_prices_naira": "1-bed 90M (with solar); 2-bed 114M (with solar)", "mortgage_partners_named": "MREIF 9.75%; Homevest 12%; Imperial Homes 29% (max N120M)", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Celebration Parkland Estate", "developer": "Dayclar Global Ventures Ltd in conjunction with Lagos State", "location": "Eleko Junction, Lagos", "segment": "affordable", "spec": "Fully Finished, 56/58 spec score; 3-bed bungalow used as direct benchmark against Mixta BWP bungalow", "reference_prices_naira": "3-bed bungalow 85M; 3-bed bungalow (corner) 90M", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Haven Estate (Coop West Haven)", "developer": "Henry Montego", "location": "Monastery Rd, Sangotedo / Ogombo Rd, Abraham Adesanya", "segment": "affordable/mid", "spec": "Fully Finished, 57/58 spec score; first units delivery target Q4 2026; prices exclusive of legal fees", "reference_prices_naira": "2-bed Type A 90M; 2-bed Type B 95M; 3-bed + BQ 120M", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Treasure Estate", "segment": "affordable", "spec": "58/58 spec score (tied highest with Montego Garden 4)", "source": "Mixta Q2 2026 affordable-segment CMA - 58-criterion specification matrix"},
+    {"name": "Echelon Apartments", "segment": "affordable", "spec": "48/58 spec score", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Terra Developers", "segment": "affordable", "spec": "48/58 spec score; sold as shell/semi-finished (interior plastered only, uninhabitable) requiring buyer-funded finishing of N5M-N10M", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Golden Park Estate (Sangotedo)", "segment": "affordable", "spec": "48/58 spec score; marketed Fully Finished but bare kitchens/no wardrobes in practice, requiring buyer top-up", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Amen Estate (Phase II)", "segment": "upper/premium - not a direct affordable-tier competitor", "reference_prices_naira": "Phase II approx 204.5M", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Universal Homes - Alaro City", "segment": "upper/premium - not a direct affordable-tier competitor", "reference_prices_naira": "approx 181M-192M range cited", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Meridian Park Estate", "segment": "affordable (lowest spec score surveyed)", "spec": "22/58 spec score - lowest of all surveyed developers; shell/semi-finished, uninhabitable as sold", "source": "Mixta Q2 2026 affordable-segment CMA"},
+    {"name": "Coastal Road developments (generic corridor reference)", "note": "Used as a corridor/geographic reference point in the CMA's competitor map rather than a single named project.", "source": "Mixta Q2 2026 affordable-segment CMA"},
+
+    {"name": "Bloom Haven", "segment": "affordable (wider Ibeju-Lekki/Sangotedo market scan, separate dataset from the 13-name Lekki-Epe corridor CMA above)", "reference_prices_naira": "2-bed apt 70M; 3-bed apt 95M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Veritasi Homes CA 4", "segment": "affordable", "reference_prices_naira": "2-bed apt 62.5M; 3-bed apt 82.5M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Olivia Court", "segment": "affordable", "reference_prices_naira": "2-bed apt 65M; 3-bed apt 100M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "De Avocado Smart Apartments", "segment": "affordable", "reference_prices_naira": "1-bed apt 38.5M; 2-bed apt 48.5M; 3-bed apt 55.8M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Lekki Pride I", "segment": "affordable", "reference_prices_naira": "1-bed apt 38M; 2-bed apt 40M; 3-bed apt 48M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "County Apartments", "segment": "affordable", "reference_prices_naira": "1-bed apt 65M; 2-bed apt 80M; 3-bed apt 95M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Blue Hedge Realtors", "segment": "affordable", "reference_prices_naira": "1-bed apt 40M; 2-bed apt 65M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Blue Hedge Realtors B", "segment": "affordable", "reference_prices_naira": "2-bed apt 32M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Cynergy Gardens", "segment": "affordable", "reference_prices_naira": "1-bed apt 23M; 2-bed apt 40M; 3-bed apt 48M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Romax Homes", "segment": "affordable", "reference_prices_naira": "2-bed apt 37.8M; 3-bed apt 0 (not listed)", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Gracias Goldstone", "segment": "affordable", "reference_prices_naira": "2-bed apt 65M; 3-bed apt 80M", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"},
+    {"name": "Ace - Mo Apartments", "segment": "affordable", "note": "Listed in the wider workbook scan; price figures for this entry were not consistently populated across sheets.", "source": "Mixta internal Affordable Housing Competitive Analysis workbook, 2026"}
+  ],
+  "_competitor_note": "This list merges two distinct, non-overlapping competitor datasets: (1) the 13-name Lekki-Epe corridor set used in Mixta's Q2 2026 affordable-segment CMA, which includes TCO normalization, a 58-criterion specification matrix, and price-per-sqm analysis; and (2) a wider Ibeju-Lekki/Sangotedo market scan from a separate internal workbook with a different competitor universe (Bloom Haven, Veritasi, etc.). IMPORTANT FOR SYNTHESIS: the names, prices, and per-sqm figures here are raw reference data points only, not conclusions. The CMA source document itself contains an argumentative internal narrative (e.g. labeling certain Mixta products as being in a 'danger zone', recommending specific Q2 pricing holds/increases) - that framing belongs to Mixta's internal pricing strategy debate and should not be treated as neutral market fact when reasoning about external news. When connecting news to competitor data, use the figures here for context/triangulation only, and keep reasoning about market implications independent of the CMA's own recommended conclusions, to avoid baking a single internal stakeholder's argument into supposedly neutral news synthesis.",
+
+  "internal_pricing_strategy_view": {
+    "_caveat": "Everything in this block is ONE internal Mixta stakeholder's argument and recommendation as of the Q2 2026 affordable-segment CMA (May 2026) - not verified market fact, and not necessarily management's final decision. Kept deliberately separate from the neutral 'competitors' array above. Do not let this framing bias synthesis of unrelated news; treat it as a snapshot of an internal debate that may be superseded at any time.",
+    "headline_argument": "CMA author argues Mixta's affordable pricing is not broadly overpriced on a Total Cost of Ownership (all-inclusive) basis, but several products are underspecified/undersized relative to price, weakening buyer appeal; recommends a non-uniform approach to proposed Q2 2026 price increases of 10-16.6% rather than applying them portfolio-wide.",
+    "per_product_recommendations_as_argued": [
+      {"product": "Ibudo Wura 1-bed & 2-bed", "issue_argued": "Competitive on TCO basis but exposed on naira/sqm and spec relative to fully-finished peers", "recommendation_argued": "Hold at Q1 pricing or reduce the proposed increase percentage", "priority_argued": "High"},
+      {"product": "Marula 1-bed", "issue_argued": "38sqm footprint pushes price to ~N1,368k/sqm, among the highest in the surveyed 1-bed segment", "recommendation_argued": "Reprice/reposition as a starter unit, or redirect buyers toward Marula 2-bed", "priority_argued": "Urgent"},
+      {"product": "Marula 2-bed", "issue_argued": "High naira/sqm (~N1,260k) on hybrid spec relative to fully-finished peers", "recommendation_argued": "Do not raise Q2 price; hold at Q1 pricing", "priority_argued": "Urgent"},
+      {"product": "Marula 3-bed", "issue_argued": "Argued as the strongest relatively-positioned product, competitive vs Montego Garden 4 Terrace on naira/sqm", "recommendation_argued": "Proceed with proposed price increase", "priority_argued": "Good / proceed"},
+      {"product": "BWP (Beechwood Park) 3-bed bungalow", "issue_argued": "Proposed Q2 price (N92.75M-N97.35M) argued to be 9-15% above Celebration Parkland's comparable fully-finished 3-bed bungalow (N85M-N90M)", "recommendation_argued": "Hold Q2 price at Q1 level or revisit costing methodology before any increase", "priority_argued": "Urgent"}
+    ],
+    "fully_finished_upgrade_debate": "CMA frames a portfolio-wide Fully Finished (FF) spec upgrade as the single highest-impact lever (unlocks FirstBank + AG Mortgage lender eligibility, currently excluded under hybrid spec) but flags it would cost N2.6M/unit (1-bed) to N5.1M/unit (2-3 bed) and pressure already-thin affordable-segment margins; CMA explicitly recommends AGAINST a broad FF upgrade as the default response, preferring selective/moderated pricing instead.",
+    "mortgage_lender_eligibility_as_argued": "Current hybrid spec said to qualify for 2 of 4 surveyed lenders (Stanbic IBTC - shell-plus threshold; Access Bank - 75% construction disbursement trigger). FirstBank and AG Mortgage are said to require Fully Finished spec and currently exclude Mixta's hybrid product.",
+    "status": "Pending management/AMC decision as of May 2026 CMA; treat as provisional and check for newer pricing decisions in subsequent context updates."
+  },
+
+  "watch_list": [
+    {
+      "topic": "Government layout-approval fees",
+      "why": "Escalating fees are stalling Lakowe Annexe provisional approval and delaying launch timing."
+    },
+    {
+      "topic": "BAFF contractor / contractor payments",
+      "why": "Payment delays risk schedule slippage on Annexe."
+    },
+    {
+      "topic": "Infrastructure on the Ibeju-Lekki corridor (Green Line Metro, Lekki-Epe Coastal Highway, Lekki-Epe International Airport, Lekki Deep Seaport, Dangote Refinery)",
+      "why": "Corridor infrastructure directly drives land values and demand around Lakowe, LNT, and all sub-projects. Coastal Road commissioning (May 2025) already cut Lakowe-to-VI-adjacent commute times to ~20 minutes; Green Line Metro (68km, 177 stations incl. Lakowe), the airport (5M passengers/year projected) and the Dangote Refinery/Lekki Seaport combo (135,000+ jobs at maturity) are the next catalysts to track for completion/delay news."
+    },
+    {
+      "topic": "Mortgage availability / NMRC / MREIF / corporate mortgage schemes",
+      "why": "Near-zero historical mortgage uptake is a structural drag on sales conversion; the MOFI MREIF programme (N1 trillion programme size, 99-year life, initial N150bn series, rates from 9.75%, loans up to N100M) is the key easing mechanism to watch for expansion, rate changes, or eligibility changes - including any extension of diaspora eligibility, which the diaspora deck flags as already applying to diaspora clients even though the domestic acquisition deck states the MOFI programme 'applies to clients living in Nigeria.' This discrepancy between the two decks is itself worth monitoring/resolving internally. Separately, per the Q2 2026 affordable-segment CMA, Mixta's current hybrid-spec affordable units reportedly qualify for only 2 of 4 surveyed lenders (Stanbic IBTC, Access Bank); FirstBank and AG Mortgage are said to require Fully Finished spec. Watch for any lender policy change on minimum finish thresholds, since that would directly change Mixta's addressable mortgage-backed buyer pool without Mixta changing anything itself."
+    },
+    {
+      "topic": "Naira / FX / inflation / cement & construction input costs",
+      "why": "Directly hits build costs (BAFF, drainage, roadworks) and real pricing power; also the central driver behind Mixta's diaspora-facing FX-lock and USD-pricing positioning, since this is explicitly named as one of diaspora buyers' '7 fears.'"
+    },
+    {
+      "topic": "Affordable housing policy (FG 'Renewed Hope' plan, One Million Homes Housing Project, state housing programmes)",
+      "why": "Public supply in the affordable band competes directly with Lakowe Annexe, Marula Park, Ibudo Wura and RDP positioning. MREIF itself is part of this same federal programme, so policy news here cuts both ways - competitive supply risk and financing-channel opportunity simultaneously."
+    },
+    {
+      "topic": "Insecurity / kidnapping affecting site access and buyer sentiment",
+      "why": "Escort withdrawal and insecurity have already been cited as stalling real estate delivery."
+    },
+    {
+      "topic": "Diaspora remittance flows and growth rate (US-Nigeria corridor specifically)",
+      "why": "Mixta's diaspora pitch is explicitly built on >$90bn in diaspora remittances (2020-2024) growing 9% YoY (2024); the entire 'Own It 4 Sure' positioning depends on converting a larger share of this flow into documented real estate assets rather than informal-market consumption. Slowdowns or accelerations in remittance growth are a direct demand signal for the diaspora sales channel."
+    },
+    {
+      "topic": "Newmark Hotels / hospitality management partner performance",
+      "why": "The entire rental-pool value proposition (and therefore Lakowe Lakes Golf Estate premium pricing power) depends on Newmark's continued management quality and the pool's actual monthly disbursement performance, which the rental pool deck itself flags as 'strictly tied to actual sales performance and total headcount within the participating pool' - i.e. not guaranteed."
+    },
+    {
+      "topic": "Healthcare operator partnership for Lakowe Wellness and Medical Center",
+      "why": "Mixta is actively seeking a partner for this facility; news of a signed operator (or a competitor securing one nearby) would be a meaningful corridor development."
+    }
+  ],
+
+  "data_hooks": {
+    "_note": "Optional but powerful. If you later expose live numbers (from the commercial dashboard), drop the latest values here so the engine can quote them. Update manually for now if useful.",
+    "outstanding_receivables_naira": "FILL_IN (e.g. ₦9.5Bn) - not present in any of the four uploaded PDFs or the public website; pull from FINCON/commercial dashboard",
+    "receivables_concentration": "FILL_IN (which project holds most of it) - not present in source documents",
+    "mortgage_uptake": "near-zero historically; MREIF/MOFI partnership (rates from 9.75%, up to N100M, up to 20-year tenor) is the primary structural counter-measure currently in market",
+    "revenue_target_2026_naira": "FILL_IN - not present in source documents",
+    "units_sold_total_company": "5,000+ (company-wide, per Real Estate Acquisition deck)",
+    "units_sold_lnt_specifically": "5,000+ (LNT-specific figure cited separately in the same deck, page 13 - worth reconciling whether this is the same 5,000+ or additive)",
+    "housing_units_completed_total": "20,000+",
+    "projects_fully_delivered": "47 across 8 African countries",
+    "lnt_total_hectares": "1,561 hectares (Mixta landbank figure) / 15,000,000 sqm per public website corporate page - these two figures are consistent (1,561 ha ≈ 15.61M sqm)",
+    "lnt_pct_developed": "30%",
+    "lnt_current_population": "35,000+",
+    "lnt_target_population": "200,000",
+    "lakowe_lakes_completed_households": "327",
+    "beechwood_park_completed_households": "250",
+    "adiva_estates_completed_households": "420",
+    "beechwood_estate_completed_households": "400"
+  },
+
+  "_sources_used_for_this_update": [
+    "Lakowe Heights Mini Pack PDF (product factsheet, pricing, payment plan)",
+    "Lakowe Lakes Rental Pool PDF, February 2026 (Newmark management, case study, Airbnb comparison)",
+    "Mixta Africa - Addressing the Concerns of Diaspora Nigerians PDF, February 2026 (S.U.R.E. framework, LNT corridor thesis, board/management team, track record timeline 2007-2023)",
+    "Mixta Africa - Diaspora Mortgage Solutions PDF, February 2026 (MREIF/MOFI structure, prequalification steps)",
+    "Mixta Africa - Real Estate Acquisition PDF, February 2026 (full product catalogue across Lagos and outside-Lagos, land ownership/plots, Duo and financing detail, transaction documentation sequence)",
+    "https://mixtafrica.com/ (corporate homepage, country footprint, Mixta Hub products)",
+    "https://mixtafrica.com/lagos-new-town/ (LNT scale figures, ongoing/completed project list, sales contact channels)",
+    "Mixta Affordable Segment CMA Q2 2026 PDF, May 2026 (13-name Lekki-Epe corridor competitor set, TCO normalization methodology, 58-criterion specification matrix, naira/sqm positioning analysis, proposed Q2 pricing table, mortgage lender alignment) - merged June 2026",
+    "Affordable Housing Competitive Analysis 2026 workbook (wider Ibeju-Lekki/Sangotedo competitor scan - Bloom Haven, Veritasi Homes, County Apartments, etc.) - merged June 2026",
+    "All Project Masterlist (internal pricing/classification history 2014-2026) - referenced for cross-check, not yet fully mined",
+    "Price Sheet 2020-2026 Final workbook (internal price-sheet ground truth, property classification by class/segment) - referenced for cross-check, not yet fully mined"
+  ],
+  "_changelog": [
+    {"date": "2026-06-17", "change": "Merged Q2 2026 affordable-segment CMA (13-name Lekki-Epe corridor competitor set + pricing/spec analysis) and a separate wider competitive-analysis workbook into competitors[] as neutral reference data; added internal_pricing_strategy_view as a clearly-separated, explicitly-caveated block for the CMA's argumentative conclusions so they don't bias general news synthesis. Two source competitor sets do not overlap and were both preserved with source tagging rather than deduplicated/merged into single entries."}
+  ]
+}
