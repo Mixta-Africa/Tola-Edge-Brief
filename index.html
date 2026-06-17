@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── Reset & Base ─────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -52,19 +51,13 @@
       min-height: 100vh;
     }
 
-    /* ── Layout ───────────────────────────────────────────────────────── */
-    .app-shell {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
+    .app-shell { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
 
-    /* ── Header ───────────────────────────────────────────────────────── */
+    /* ── Header ── */
     .header {
       padding: 48px 0 36px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 40px;
-      position: relative;
     }
 
     .header-eyebrow {
@@ -101,40 +94,10 @@
     .header-date {
       font-size: 13px;
       color: var(--text-muted);
-      font-weight: 400;
       font-family: 'JetBrains Mono', monospace;
     }
 
-    .header-actions {
-      position: absolute;
-      top: 48px;
-      right: 0;
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-icon {
-      width: 36px;
-      height: 36px;
-      border: 1px solid var(--border);
-      background: var(--white);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      transition: all 0.15s ease;
-      font-size: 15px;
-    }
-
-    .btn-icon:hover {
-      border-color: var(--blue);
-      color: var(--blue);
-      background: var(--blue-light);
-    }
-
-    /* ── Section labels ───────────────────────────────────────────────── */
+    /* ── Section labels ── */
     .section-label {
       font-size: 10px;
       font-weight: 600;
@@ -144,7 +107,7 @@
       margin-bottom: 12px;
     }
 
-    /* ── Market Filter ────────────────────────────────────────────────── */
+    /* ── Controls ── */
     .controls-block {
       background: var(--white);
       border: 1px solid var(--border);
@@ -154,11 +117,7 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .market-pills {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 28px;
-    }
+    .market-pills { display: flex; gap: 8px; margin-bottom: 28px; }
 
     .pill {
       padding: 7px 18px;
@@ -174,20 +133,10 @@
     }
 
     .pill:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+    .pill.active { background: var(--blue); border-color: var(--blue); color: var(--white); }
 
-    .pill.active {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: var(--white);
-    }
-
-    /* ── Domain Toggles ───────────────────────────────────────────────── */
-    .domain-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 24px;
-    }
+    /* ── Domain grid ── */
+    .domain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
 
     .domain-card {
       border: 1.5px solid var(--border);
@@ -201,95 +150,47 @@
     }
 
     .domain-card:hover { border-color: var(--blue-mid); background: var(--blue-light); }
-
-    .domain-card.active {
-      border-color: var(--blue);
-      background: var(--blue-tint);
-    }
-
-    .domain-card.active .domain-code {
-      color: var(--blue);
-    }
-
-    .domain-card.active .domain-name {
-      color: var(--navy);
-    }
+    .domain-card.active { border-color: var(--blue); background: var(--blue-tint); }
+    .domain-card.active .domain-code { color: var(--blue); }
+    .domain-card.active .domain-name { color: var(--navy); }
 
     .domain-code {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-hint);
-      margin-bottom: 3px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-hint); margin-bottom: 3px;
       transition: color 0.18s;
     }
 
-    .domain-name {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      line-height: 1.3;
-      transition: color 0.18s;
-    }
+    .domain-name { font-size: 12px; font-weight: 500; color: var(--text-muted); line-height: 1.3; transition: color 0.18s; }
 
-    .domain-priority {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
+    .domain-priority { position: absolute; top: 8px; right: 10px; width: 6px; height: 6px; border-radius: 50%; }
     .priority-highest { background: var(--teal); }
     .priority-high    { background: var(--blue); }
     .priority-medium  { background: var(--amber); }
     .priority-low     { background: var(--border); }
 
-    /* ── Custom Prompt ────────────────────────────────────────────────── */
-    .custom-input-wrap {
-      position: relative;
-      margin-bottom: 20px;
-    }
+    /* ── Custom input ── */
+    .custom-input-wrap { position: relative; margin-bottom: 20px; }
 
     .custom-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-md);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: var(--text-body);
-      background: var(--white);
-      outline: none;
-      transition: border-color 0.18s;
-      line-height: 1.5;
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid var(--border); border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif; font-size: 14px;
+      color: var(--text-body); background: var(--white);
+      outline: none; transition: border-color 0.18s; line-height: 1.5;
     }
 
     .custom-input::placeholder { color: var(--text-hint); }
     .custom-input:focus { border-color: var(--blue); }
 
-    /* ── Generate Button ──────────────────────────────────────────────── */
+    /* ── Generate button ── */
     .btn-generate {
-      width: 100%;
-      padding: 15px 24px;
-      background: var(--navy);
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
+      width: 100%; padding: 15px 24px;
+      background: var(--navy); color: var(--white);
+      border: none; border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+      letter-spacing: 0.02em; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all 0.2s ease; position: relative; overflow: hidden;
     }
 
     .btn-generate:hover:not(:disabled) {
@@ -299,36 +200,20 @@
     }
 
     .btn-generate:active:not(:disabled) { transform: translateY(0); }
+    .btn-generate:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+    .btn-generate .btn-arrow { transition: transform 0.2s; }
+    .btn-generate:hover:not(:disabled) .btn-arrow { transform: translateX(3px); }
 
-    .btn-generate:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-generate .btn-arrow {
-      transition: transform 0.2s;
-    }
-
-    .btn-generate:hover:not(:disabled) .btn-arrow {
-      transform: translateX(3px);
-    }
-
-    /* Loading pulse ring */
     @keyframes pulse-ring {
       0%   { box-shadow: 0 0 0 0 rgba(24,95,165,0.4); }
       70%  { box-shadow: 0 0 0 10px rgba(24,95,165,0); }
       100% { box-shadow: 0 0 0 0 rgba(24,95,165,0); }
     }
 
-    .btn-generate.loading {
-      animation: pulse-ring 1.4s ease-out infinite;
-      background: var(--blue-mid);
-    }
+    .btn-generate.loading { animation: pulse-ring 1.4s ease-out infinite; background: var(--blue-mid); }
 
     .spinner {
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       border: 2px solid rgba(255,255,255,0.3);
       border-top-color: var(--white);
       border-radius: 50%;
@@ -337,456 +222,215 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Status Bar ───────────────────────────────────────────────────── */
+    /* ── Status bar ── */
     .status-bar {
-      display: none;
-      align-items: center;
-      gap: 10px;
+      display: none; align-items: center; gap: 10px;
       padding: 12px 16px;
-      background: var(--blue-light);
-      border: 1px solid #C8DDF5;
-      border-radius: var(--radius-md);
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--blue);
+      background: var(--blue-light); border: 1px solid #C8DDF5;
+      border-radius: var(--radius-md); margin-top: 12px;
+      font-size: 13px; color: var(--blue);
     }
 
     .status-bar.visible { display: flex; }
     .status-bar.error { background: var(--coral-tint); border-color: #F2BEB0; color: var(--coral); }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .status-dot.pulsing { animation: dot-pulse 1.2s ease-in-out infinite; }
 
-    .status-dot.pulsing {
-      animation: dot-pulse 1.2s ease-in-out infinite;
-    }
+    @keyframes dot-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-    @keyframes dot-pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
-    }
-
-    /* ── Brief Output ─────────────────────────────────────────────────── */
+    /* ── Output ── */
     .output-section {
-      margin-top: 32px;
-      opacity: 0;
-      transform: translateY(12px);
+      margin-top: 32px; opacity: 0; transform: translateY(12px);
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    .output-section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .output-section.visible { opacity: 1; transform: translateY(0); }
 
-    /* Executive Narrative — signature left-accent card */
+    /* Executive narrative — signature left-accent card */
     .narrative-card {
       background: var(--white);
       border: 1px solid var(--border);
       border-left: 3px solid var(--blue);
       border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
-      padding: 28px 32px;
-      margin-bottom: 28px;
+      padding: 28px 32px; margin-bottom: 28px;
       box-shadow: var(--shadow-sm);
     }
 
-    .narrative-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
+    .narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .narrative-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); }
+    .narrative-meta { font-size: 11px; color: var(--text-hint); font-family: 'JetBrains Mono', monospace; margin-left: auto; }
 
-    .narrative-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--blue);
-    }
-
-    .narrative-meta {
-      font-size: 11px;
-      color: var(--text-hint);
-      font-family: 'JetBrains Mono', monospace;
-      margin-left: auto;
-    }
-
-    .narrative-body p {
-      font-size: 15px;
-      line-height: 1.75;
-      color: var(--text-body);
-      margin-bottom: 16px;
-    }
-
+    .narrative-body p { font-size: 15px; line-height: 1.75; color: var(--text-body); margin-bottom: 16px; }
     .narrative-body p:last-child { margin-bottom: 0; }
 
-    /* Story Cards */
-    .stories-header {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .stories-count {
-      font-size: 12px;
-      color: var(--text-hint);
-    }
+    /* Story cards */
+    .stories-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+    .stories-count { font-size: 12px; color: var(--text-hint); }
 
     .story-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 24px 28px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow-sm);
-      opacity: 0;
-      transform: translateY(8px);
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 14px;
+      box-shadow: var(--shadow-sm); opacity: 0; transform: translateY(8px);
       transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.2s ease;
     }
 
     .story-card.visible { opacity: 1; transform: translateY(0); }
     .story-card:hover { box-shadow: var(--shadow-md); }
 
-    .story-tags {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
+    .story-tags { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 
     .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 10px;
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 500;
-      white-space: nowrap;
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 11px; font-weight: 500; white-space: nowrap;
     }
 
     .tag-impact-high   { background: #FEF3EE; color: #9B3A1A; border: 1px solid #F5C4AE; }
     .tag-impact-medium { background: var(--amber-tint); color: #7A4A00; border: 1px solid #F2D99A; }
     .tag-impact-low    { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+    .tag-domain        { background: var(--blue-tint); color: var(--blue); border: 1px solid #C4D9F5; }
+    .tag-market-ng     { background: var(--teal-tint); color: #0F6E56; border: 1px solid #9FE1CB; }
+    .tag-market-sn     { background: #F5F0FE; color: #534AB7; border: 1px solid #CECBF6; }
 
-    .tag-domain {
-      background: var(--blue-tint);
-      color: var(--blue);
-      border: 1px solid #C4D9F5;
-    }
+    .story-title { font-size: 16px; font-weight: 600; color: var(--navy); margin-bottom: 10px; line-height: 1.35; letter-spacing: -0.01em; }
+    .story-body  { font-size: 14px; color: var(--text-body); line-height: 1.7; margin-bottom: 16px; }
 
-    .tag-market-ng { background: var(--teal-tint); color: #0F6E56; border: 1px solid #9FE1CB; }
-    .tag-market-sn { background: #F5F0FE; color: #534AB7; border: 1px solid #CECBF6; }
+    .relevance-block { border-top: 1px solid var(--border-soft); padding-top: 14px; }
+    .relevance-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+    .relevance-text  { font-size: 13.5px; color: var(--text-body); line-height: 1.65; }
 
-    .story-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--navy);
-      margin-bottom: 10px;
-      line-height: 1.35;
-      letter-spacing: -0.01em;
-    }
-
-    .story-body {
-      font-size: 14px;
-      color: var(--text-body);
-      line-height: 1.7;
-      margin-bottom: 16px;
-    }
-
-    .relevance-block {
-      border-top: 1px solid var(--border-soft);
-      padding-top: 14px;
-    }
-
-    .relevance-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 6px;
-    }
-
-    .relevance-text {
-      font-size: 13.5px;
-      color: var(--text-body);
-      line-height: 1.65;
-    }
-
-    /* ── Action Row ───────────────────────────────────────────────────── */
-    .action-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 24px;
-    }
+    /* ── Action row ── */
+    .action-row { display: flex; gap: 10px; margin-top: 24px; }
 
     .btn-action {
-      padding: 10px 20px;
-      border-radius: var(--radius-md);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.18s ease;
-      border: 1.5px solid var(--border);
-      background: var(--white);
-      color: var(--text-body);
+      padding: 10px 20px; border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; gap: 7px;
+      transition: all 0.18s ease; border: 1.5px solid var(--border);
+      background: var(--white); color: var(--text-body);
     }
 
     .btn-action:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+    .btn-action.saved { border-color: var(--teal); color: var(--teal); background: var(--teal-tint); }
 
-    .btn-action.saved {
-      border-color: var(--teal);
-      color: var(--teal);
-      background: var(--teal-tint);
-    }
+    /* ── Divider ── */
+    .section-divider { height: 1px; background: var(--border); margin: 40px 0; }
 
-    /* ── Divider ──────────────────────────────────────────────────────── */
-    .section-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 40px 0;
-    }
-
-    /* ── Knowledge Vault ──────────────────────────────────────────────── */
-    .vault-section {
-      padding-bottom: 20px;
-    }
-
-    .vault-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-
-    .vault-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    /* ── Vault ── */
+    .vault-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .vault-list   { display: flex; flex-direction: column; gap: 8px; }
 
     .vault-entry {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      opacity: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-md); cursor: pointer;
+      transition: all 0.15s ease; opacity: 0;
       animation: fade-up 0.3s ease forwards;
     }
 
-    @keyframes fade-up {
-      from { opacity: 0; transform: translateY(4px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
     .vault-entry:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+    .vault-filename { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--navy); }
+    .vault-date     { font-size: 12px; color: var(--text-hint); }
+    .vault-empty    { font-size: 13px; color: var(--text-hint); font-style: italic; padding: 16px 0; }
 
-    .vault-filename {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--navy);
-      font-weight: 400;
-    }
-
-    .vault-date {
-      font-size: 12px;
-      color: var(--text-hint);
-    }
-
-    .vault-empty {
-      font-size: 13px;
-      color: var(--text-hint);
-      font-style: italic;
-      padding: 16px 0;
-    }
-
-    /* ── Settings Modal ───────────────────────────────────────────────── */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(12,45,90,0.25);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal {
-      background: var(--white);
-      border-radius: var(--radius-xl);
-      padding: 36px;
-      width: 100%;
-      max-width: 520px;
-      box-shadow: 0 20px 60px rgba(12,45,90,0.18);
-    }
-
-    .modal-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-
-    .modal-subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-      line-height: 1.5;
-    }
-
-    .field-group { margin-bottom: 16px; }
-
-    .field-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      letter-spacing: 0.03em;
-    }
-
-    .field-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--text-body);
+    /* ── Loading overlay (app init) ── */
+    .app-loading {
+      position: fixed; inset: 0;
       background: var(--surface);
-      outline: none;
-      transition: border-color 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 50; transition: opacity 0.4s ease;
     }
 
-    .field-input:focus { border-color: var(--blue); background: var(--white); }
+    .app-loading.hidden { opacity: 0; pointer-events: none; }
 
-    .modal-footer {
-      display: flex;
-      gap: 10px;
-      margin-top: 28px;
-      justify-content: flex-end;
+    .app-loading-inner { text-align: center; }
+
+    .app-loading-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; color: var(--navy);
+      margin-bottom: 16px; letter-spacing: -0.01em;
     }
 
-    .btn-save-settings {
-      padding: 10px 24px;
-      background: var(--navy);
-      color: var(--white);
-      border: none;
-      border-radius: var(--radius-sm);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.18s;
+    .app-loading-bar {
+      width: 180px; height: 2px;
+      background: var(--border); border-radius: 1px;
+      margin: 0 auto; overflow: hidden;
     }
 
-    .btn-save-settings:hover { background: var(--blue); }
-
-    .btn-cancel {
-      padding: 10px 20px;
-      background: transparent;
-      color: var(--text-muted);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.18s;
+    .app-loading-fill {
+      height: 100%; width: 0%;
+      background: var(--blue); border-radius: 1px;
+      transition: width 0.6s ease;
     }
 
-    .btn-cancel:hover { border-color: var(--text-muted); color: var(--text-body); }
+    .app-loading-status {
+      font-size: 12px; color: var(--text-hint);
+      margin-top: 12px; font-family: 'JetBrains Mono', monospace;
+    }
 
-    /* ── Toast ────────────────────────────────────────────────────────── */
+    /* ── Toast ── */
     .toast {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
-      padding: 12px 20px;
-      background: var(--navy);
-      color: var(--white);
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      font-weight: 500;
-      z-index: 200;
-      transform: translateY(20px);
-      opacity: 0;
-      transition: all 0.25s ease;
-      pointer-events: none;
+      position: fixed; bottom: 28px; right: 28px;
+      padding: 12px 20px; background: var(--navy); color: var(--white);
+      border-radius: var(--radius-md); font-size: 13px; font-weight: 500;
+      z-index: 200; transform: translateY(20px); opacity: 0;
+      transition: all 0.25s ease; pointer-events: none;
     }
 
-    .toast.visible { transform: translateY(0); opacity: 1; }
-    .toast.success { background: var(--teal); }
+    .toast.visible  { transform: translateY(0); opacity: 1; }
+    .toast.success  { background: var(--teal); }
 
-    /* ── Responsive ───────────────────────────────────────────────────── */
+    /* ── Responsive ── */
     @media (max-width: 640px) {
       .domain-grid { grid-template-columns: repeat(2, 1fr); }
-      .header-actions { position: static; margin-top: 16px; }
-      .header { padding-bottom: 20px; }
     }
 
     @media (max-width: 400px) {
       .domain-grid { grid-template-columns: 1fr; }
-      .app-shell { padding: 0 16px 60px; }
+      .app-shell   { padding: 0 16px 60px; }
     }
 
-    /* ── Reduced motion ───────────────────────────────────────────────── */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
   </style>
 </head>
 <body>
+
+  <!-- App loading screen — shown while config.json is fetched -->
+  <div class="app-loading" id="app-loading">
+    <div class="app-loading-inner">
+      <div class="app-loading-title">The Tola Edge Brief</div>
+      <div class="app-loading-bar"><div class="app-loading-fill" id="loading-fill"></div></div>
+      <div class="app-loading-status" id="loading-status">Loading configuration…</div>
+    </div>
+  </div>
+
   <div class="app-shell">
 
-    <!-- ── Header ─────────────────────────────────────────────────────── -->
+    <!-- ── Header ── -->
     <header class="header">
       <div class="header-eyebrow">Intelligence Brief · Tola Akinsulire</div>
       <h1 class="header-title">The Tola Edge Brief</h1>
       <div class="header-date" id="header-date"></div>
-      <div class="header-actions">
-        <button class="btn-icon" title="Settings" onclick="openSettings()" aria-label="Settings">⚙</button>
-      </div>
     </header>
 
-    <!-- ── Controls Block ─────────────────────────────────────────────── -->
+    <!-- ── Controls ── -->
     <div class="controls-block">
 
-      <!-- Market Filter -->
       <div class="section-label">Market Scope</div>
-      <div class="market-pills" id="market-pills">
+      <div class="market-pills">
         <button class="pill active" data-market="All"     onclick="setMarket('All')">All Markets</button>
         <button class="pill"        data-market="Nigeria" onclick="setMarket('Nigeria')">Nigeria</button>
         <button class="pill"        data-market="Senegal" onclick="setMarket('Senegal')">Senegal</button>
       </div>
 
-      <!-- Domain Toggles -->
       <div class="section-label">Intelligence Domains</div>
-      <div class="domain-grid" id="domain-grid">
-        <!-- Populated by JS -->
-      </div>
+      <div class="domain-grid" id="domain-grid"></div>
 
-      <!-- Custom Prompt -->
       <div class="custom-input-wrap">
         <input
           class="custom-input"
@@ -797,24 +441,21 @@
         />
       </div>
 
-      <!-- Generate Button -->
       <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
         <span id="btn-text">Generate Intelligence Brief</span>
         <span class="btn-arrow" id="btn-arrow">→</span>
       </button>
 
-      <!-- Status Bar -->
       <div class="status-bar" id="status-bar">
         <span class="status-dot pulsing" id="status-dot"></span>
         <span id="status-text">Initiating intelligence scan…</span>
       </div>
     </div>
 
-    <!-- ── Brief Output ────────────────────────────────────────────────── -->
+    <!-- ── Brief Output ── -->
     <div class="output-section" id="output-section">
 
-      <!-- Executive Narrative -->
-      <div class="narrative-card" id="narrative-card">
+      <div class="narrative-card">
         <div class="narrative-header">
           <span class="narrative-label">Executive Narrative</span>
           <span class="narrative-meta" id="narrative-meta"></span>
@@ -822,28 +463,21 @@
         <div class="narrative-body" id="narrative-body"></div>
       </div>
 
-      <!-- Story Cards -->
       <div class="stories-header">
         <div class="section-label" style="margin-bottom:0">Impact-Rated Stories</div>
         <span class="stories-count" id="stories-count"></span>
       </div>
       <div id="stories-container"></div>
 
-      <!-- Action Row -->
       <div class="action-row">
-        <button class="btn-action" onclick="copyBrief()">
-          <span>⎘</span> Copy Brief
-        </button>
-        <button class="btn-action" id="btn-save" onclick="saveBrief()">
-          <span>↓</span> Save to Vault
-        </button>
+        <button class="btn-action" onclick="copyBrief()"><span>⎘</span> Copy Brief</button>
+        <button class="btn-action" id="btn-save" onclick="saveBrief()"><span>↓</span> Save to Vault</button>
       </div>
     </div>
 
-    <!-- ── Divider ─────────────────────────────────────────────────────── -->
-    <div class="section-divider" id="vault-divider"></div>
+    <div class="section-divider"></div>
 
-    <!-- ── Knowledge Vault ────────────────────────────────────────────── -->
+    <!-- ── Knowledge Vault ── -->
     <div class="vault-section">
       <div class="vault-header">
         <div class="section-label" style="margin-bottom:0">Knowledge Vault</div>
@@ -854,74 +488,70 @@
       </div>
     </div>
 
-  </div><!-- /app-shell -->
-
-  <!-- ── Settings Modal ─────────────────────────────────────────────── -->
-  <div class="modal-backdrop" id="settings-modal">
-    <div class="modal">
-      <div class="modal-title">Configuration</div>
-      <div class="modal-subtitle">
-        Your GitHub PAT and repo details are stored locally in this browser only.
-        API keys for LLM providers are stored securely in GitHub Secrets — never in this browser.
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="s-gh-pat">GitHub Personal Access Token (workflow:write scope)</label>
-        <input class="field-input" id="s-gh-pat" type="password" placeholder="ghp_…" />
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="s-gh-owner">GitHub Owner / Organisation</label>
-        <input class="field-input" id="s-gh-owner" type="text" placeholder="mixta-africa" />
-      </div>
-
-      <div class="field-group">
-        <label class="field-label" for="s-gh-repo">GitHub Repository Name</label>
-        <input class="field-input" id="s-gh-repo" type="text" placeholder="tola-edge-brief" />
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
-        <button class="btn-save-settings" onclick="saveSettings()">Save Configuration</button>
-      </div>
-    </div>
   </div>
 
-  <!-- ── Toast ──────────────────────────────────────────────────────── -->
+  <!-- ── Toast ── -->
   <div class="toast" id="toast"></div>
 
   <script>
   'use strict';
 
-  // ─── STATE ────────────────────────────────────────────────────────────────
+  // ─── CONFIG — loaded from /data/config.json (written by deploy.yml from Secrets) ──
+  // No tokens in code. No localStorage. No modals. Config arrives from the server.
+  let CFG = { owner: '', repo: '', token: '' };
+
+  // ─── STATE ───────────────────────────────────────────────────────────────
 
   const DOMAINS = {
-    D1: { name: 'Capital & Financing',  priority: 'high',    dot: 'priority-high' },
-    D2: { name: 'Land & Regulatory',    priority: 'high',    dot: 'priority-high' },
-    D3: { name: 'Demand Intelligence',  priority: 'medium',  dot: 'priority-medium' },
-    D4: { name: 'Partnership & JV',     priority: 'medium',  dot: 'priority-medium' },
-    D5: { name: 'Geopolitical Risk',    priority: 'low',     dot: 'priority-low' },
-    D6: { name: 'Market Creation',      priority: 'highest', dot: 'priority-highest' },
+    D1: { name: 'Capital & Financing',  dot: 'priority-high'    },
+    D2: { name: 'Land & Regulatory',    dot: 'priority-high'    },
+    D3: { name: 'Demand Intelligence',  dot: 'priority-medium'  },
+    D4: { name: 'Partnership & JV',     dot: 'priority-medium'  },
+    D5: { name: 'Geopolitical Risk',    dot: 'priority-low'     },
+    D6: { name: 'Market Creation',      dot: 'priority-highest' },
   };
 
-  let activeMarket   = 'All';
-  let activeDomains  = new Set(['D1','D2','D3','D4','D5','D6']);
-  let isGenerating   = false;
-  let currentBrief   = null;
-  let pollInterval   = null;
-  let currentReqId   = null;
+  let activeMarket  = 'All';
+  let activeDomains = new Set(['D1','D2','D3','D4','D5','D6']);
+  let isGenerating  = false;
+  let currentBrief  = null;
+  let pollInterval  = null;
+  let currentReqId  = null;
 
-  // ─── INIT ─────────────────────────────────────────────────────────────────
+  // ─── BOOT — fetch config, then initialise app ─────────────────────────────
 
-  function init() {
+  async function boot() {
+    setLoadingStatus('Loading configuration…', 20);
+
+    try {
+      const res = await fetch(`/data/config.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`config.json not found (${res.status})`);
+      const cfg = await res.json();
+      if (!cfg.owner || !cfg.repo || !cfg.token) throw new Error('config.json is incomplete');
+      CFG = cfg;
+    } catch (e) {
+      setLoadingStatus(`Configuration error: ${e.message}`, 100);
+      console.error('[Boot] Config load failed:', e.message);
+      // Still reveal the app — let generateBrief() show the error when triggered
+    }
+
+    setLoadingStatus('Ready', 100);
+    await sleep(400);
+
+    // Hide loading screen
+    const loader = document.getElementById('app-loading');
+    loader.classList.add('hidden');
+    setTimeout(() => loader.remove(), 500);
+
+    // Render UI
     renderDate();
     renderDomains();
     loadVault();
+  }
 
-    // Show settings modal if not configured
-    if (!localStorage.getItem('gh_pat')) {
-      setTimeout(() => openSettings(), 600);
-    }
+  function setLoadingStatus(msg, pct) {
+    document.getElementById('loading-status').textContent = msg;
+    document.getElementById('loading-fill').style.width = pct + '%';
   }
 
   function renderDate() {
@@ -951,14 +581,14 @@
 
   function setMarket(market) {
     activeMarket = market;
-    document.querySelectorAll('.pill').forEach(p => {
-      p.classList.toggle('active', p.dataset.market === market);
-    });
+    document.querySelectorAll('.pill').forEach(p =>
+      p.classList.toggle('active', p.dataset.market === market)
+    );
   }
 
   function toggleDomain(code) {
     if (activeDomains.has(code)) {
-      if (activeDomains.size <= 1) return; // enforce minimum 1
+      if (activeDomains.size <= 1) return;
       activeDomains.delete(code);
     } else {
       activeDomains.add(code);
@@ -969,21 +599,16 @@
   // ─── GENERATE ────────────────────────────────────────────────────────────
 
   async function generateBrief() {
-    const pat   = localStorage.getItem('gh_pat');
-    const owner = localStorage.getItem('gh_owner');
-    const repo  = localStorage.getItem('gh_repo');
-
-    if (!pat || !owner || !repo) {
-      showToast('Configure your GitHub credentials first', 'error');
-      openSettings();
+    if (!CFG.token || !CFG.owner || !CFG.repo) {
+      showToast('App configuration not loaded — check deploy logs', 'error');
       return;
     }
 
     if (isGenerating) return;
-    isGenerating = true;
-    currentBrief = null;
+    isGenerating  = true;
+    currentBrief  = null;
+    currentReqId  = String(Date.now());
 
-    // UI: loading state
     const btnGenerate = document.getElementById('btn-generate');
     const btnText     = document.getElementById('btn-text');
     const btnArrow    = document.getElementById('btn-arrow');
@@ -993,22 +618,18 @@
     btnArrow.style.display = 'none';
     showStatus('Triggering GitHub Actions intelligence run…', false);
 
-    // Build request ID
-    currentReqId = String(Date.now());
-
     try {
-      // Trigger workflow_dispatch
       const customPrompt = document.getElementById('custom-prompt').value.trim();
       const domainsStr   = Array.from(activeDomains).sort().join(',');
 
       const dispatchRes = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/actions/workflows/generate-brief.yml/dispatches`,
+        `https://api.github.com/repos/${CFG.owner}/${CFG.repo}/actions/workflows/generate-brief.yml/dispatches`,
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${pat}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${CFG.token}`,
+            'Accept':        'application/vnd.github.v3+json',
+            'Content-Type':  'application/json',
           },
           body: JSON.stringify({
             ref: 'main',
@@ -1024,13 +645,12 @@
 
       if (!dispatchRes.ok) {
         const err = await dispatchRes.json().catch(() => ({}));
-        throw new Error(`GitHub API error ${dispatchRes.status}: ${err.message || dispatchRes.statusText}`);
+        throw new Error(`GitHub API ${dispatchRes.status}: ${err.message || dispatchRes.statusText}`);
       }
 
-      // Begin polling
-      showStatus('Intelligence engine running — scanning markets, synthesising brief…', true);
+      showStatus('Intelligence engine running — scanning live market sources…', true);
       btnText.textContent = 'Generating…';
-      startPolling(owner, repo);
+      startPolling();
 
     } catch (err) {
       resetGenerateButton();
@@ -1039,45 +659,39 @@
     }
   }
 
-  function startPolling(owner, repo) {
+  function startPolling() {
     let pollCount = 0;
-    const MAX_POLLS = 80; // 80 × 5s = 6m 40s max wait
+    const MAX_POLLS = 100; // 100 × 5s = ~8 min (Puppeteer runs can take a while)
 
     const statusMessages = [
-      'Intelligence engine running — scanning markets…',
-      'Analysing capital & financing signals…',
-      'Cross-referencing with Mixta project portfolio…',
+      'Intelligence engine running — scanning live market sources…',
+      'Fetching from GNews, NewsAPI, RSS feeds…',
+      'Enriching articles with full text via Puppeteer…',
+      'Running 6-LLM analysis chain per article…',
       'Synthesising executive narrative…',
       'Validating story citations and impact ratings…',
-      'Almost ready — finalising brief…',
+      'Finalising brief — almost ready…',
     ];
 
     pollInterval = setInterval(async () => {
       pollCount++;
-
-      // Rotate status messages
-      const msgIdx = Math.min(Math.floor(pollCount / 5), statusMessages.length - 1);
+      const msgIdx = Math.min(Math.floor(pollCount / 6), statusMessages.length - 1);
       showStatus(statusMessages[msgIdx], true);
 
       if (pollCount > MAX_POLLS) {
         clearInterval(pollInterval);
         resetGenerateButton();
-        showStatus('Brief generation timed out. Please try again.', false, true);
+        showStatus('Generation timed out — the pipeline may still be running. Refresh in a minute.', false, true);
         return;
       }
 
       try {
-        // Fetch with cache-bust
         const res = await fetch(
-          `https://${owner}.github.io/${repo}/data/brief_output.json?t=${Date.now()}`,
+          `https://${CFG.owner}.github.io/${CFG.repo}/data/brief_output.json?t=${Date.now()}`,
           { cache: 'no-store' }
         );
-
-        if (!res.ok) return; // gh-pages might not have served the file yet
-
+        if (!res.ok) return;
         const data = await res.json();
-
-        // Check if this response matches our request
         if (data.request_id !== currentReqId) return;
 
         clearInterval(pollInterval);
@@ -1087,14 +701,12 @@
           renderBrief(data);
           resetGenerateButton();
           hideStatus();
-          loadVault(); // refresh vault list
+          loadVault();
         } else {
           resetGenerateButton();
           showStatus(`Brief generation failed: ${data.error || 'Unknown error'}`, false, true);
         }
-      } catch (e) {
-        // Transient fetch error — keep polling
-      }
+      } catch (_) { /* transient — keep polling */ }
     }, 5000);
   }
 
@@ -1117,15 +729,13 @@
     const outputSection = document.getElementById('output-section');
 
     // Narrative
-    const narrativeParagraphs = brief.narrative
-      .split('\n\n')
-      .filter(p => p.trim())
-      .map(p => `<p>${escHtml(p.trim())}</p>`)
-      .join('');
+    const paragraphs = brief.narrative
+      .split('\n\n').filter(p => p.trim())
+      .map(p => `<p>${escHtml(p.trim())}</p>`).join('');
 
-    document.getElementById('narrative-body').innerHTML = narrativeParagraphs;
+    document.getElementById('narrative-body').innerHTML = paragraphs;
     document.getElementById('narrative-meta').textContent =
-      formatTime(data.generated_at) + ' · ' + data.meta?.market || activeMarket;
+      formatTime(data.generated_at) + ' · ' + (data.meta?.market || activeMarket);
 
     // Stories
     const container = document.getElementById('stories-container');
@@ -1138,12 +748,7 @@
       card.className = 'story-card';
       card.style.transitionDelay = `${i * 60}ms`;
 
-      const impactClass = {
-        High:   'tag-impact-high',
-        Medium: 'tag-impact-medium',
-        Low:    'tag-impact-low',
-      }[story.impact] || 'tag-impact-low';
-
+      const impactClass = { High: 'tag-impact-high', Medium: 'tag-impact-medium', Low: 'tag-impact-low' }[story.impact] || 'tag-impact-low';
       const marketClass = story.market === 'Senegal' ? 'tag-market-sn' : 'tag-market-ng';
 
       card.innerHTML = `
@@ -1159,21 +764,13 @@
           <div class="relevance-text">${escHtml(story.relevance)}</div>
         </div>
       `;
-
       container.appendChild(card);
-
-      // Stagger fade-in
-      requestAnimationFrame(() => {
-        setTimeout(() => card.classList.add('visible'), 60 + i * 60);
-      });
+      requestAnimationFrame(() => setTimeout(() => card.classList.add('visible'), 60 + i * 60));
     });
 
-    // Save button state reset
-    const btnSave = document.getElementById('btn-save');
-    btnSave.classList.remove('saved');
-    btnSave.innerHTML = '<span>↓</span> Save to Vault';
+    document.getElementById('btn-save').classList.remove('saved');
+    document.getElementById('btn-save').innerHTML = '<span>↓</span> Save to Vault';
 
-    // Show output
     outputSection.classList.add('visible');
     setTimeout(() => outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   }
@@ -1191,27 +788,21 @@
       text += `\n[${i+1}] ${s.impact.toUpperCase()} | ${s.domain} | ${s.market}\n`;
       text += `${s.title}\n\n${s.body}\n\nMixta Relevance: ${s.relevance}\n`;
     });
-
     navigator.clipboard.writeText(text)
       .then(() => showToast('Brief copied to clipboard', 'success'))
-      .catch(() => showToast('Could not copy — please select and copy manually', 'error'));
+      .catch(() => showToast('Could not copy — select and copy manually', 'error'));
   }
 
   async function saveBrief() {
     if (!currentBrief) return;
-    const btnSave = document.getElementById('btn-save');
-    btnSave.disabled = true;
-    btnSave.innerHTML = '<span>↓</span> Saving…';
-
-    // The Actions workflow already saved it to the vault when it generated the brief.
-    // This button confirms that and shows the user it's already in the vault.
-    // It also triggers a clipboard copy as a secondary save.
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    btn.innerHTML = '<span>↓</span> Saving…';
     copyBrief();
-
     setTimeout(() => {
-      btnSave.classList.add('saved');
-      btnSave.innerHTML = '<span>✓</span> Saved to Vault';
-      btnSave.disabled = false;
+      btn.classList.add('saved');
+      btn.innerHTML = '<span>✓</span> Saved to Vault';
+      btn.disabled = false;
       showToast('Brief saved — vault updated', 'success');
       loadVault();
     }, 800);
@@ -1220,22 +811,20 @@
   // ─── VAULT ───────────────────────────────────────────────────────────────
 
   async function loadVault() {
-    const owner = localStorage.getItem('gh_owner') || '';
-    const repo  = localStorage.getItem('gh_repo')  || '';
     const list  = document.getElementById('vault-list');
     const count = document.getElementById('vault-count');
 
-    if (!owner || !repo) {
-      list.innerHTML = '<div class="vault-empty">Configure GitHub credentials to view vault.</div>';
+    if (!CFG.owner || !CFG.repo) {
+      list.innerHTML = '<div class="vault-empty">Vault unavailable — configuration not loaded.</div>';
       return;
     }
 
     try {
       const res = await fetch(
-        `https://${owner}.github.io/${repo}/data/vault_index.json?t=${Date.now()}`,
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault_index.json?t=${Date.now()}`,
         { cache: 'no-store' }
       );
-      if (!res.ok) throw new Error('Vault index not found');
+      if (!res.ok) throw new Error('not found');
       const entries = await res.json();
 
       if (!entries.length) {
@@ -1251,72 +840,38 @@
         const el = document.createElement('div');
         el.className = 'vault-entry';
         el.style.animationDelay = `${i * 35}ms`;
-
         const displayDate = entry.date
           ? new Date(entry.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
           : entry.date;
-
         el.innerHTML = `
           <span class="vault-filename">${escHtml(entry.filename)}</span>
           <span class="vault-date">${escHtml(displayDate)}</span>
         `;
-        el.title = `View brief from ${displayDate}`;
-        el.onclick = () => loadVaultEntry(owner, repo, entry.filename);
+        el.onclick = () => loadVaultEntry(entry.filename);
         list.appendChild(el);
       });
 
-    } catch (e) {
+    } catch (_) {
       list.innerHTML = '<div class="vault-empty">Vault not yet initialised — generate your first brief to begin.</div>';
       count.textContent = '';
     }
   }
 
-  async function loadVaultEntry(owner, repo, filename) {
+  async function loadVaultEntry(filename) {
     try {
       const res = await fetch(
-        `https://${owner}.github.io/${repo}/vault/${filename}?t=${Date.now()}`,
+        `https://${CFG.owner}.github.io/${CFG.repo}/vault/${filename}?t=${Date.now()}`,
         { cache: 'no-store' }
       );
-      if (!res.ok) throw new Error('Could not load brief');
+      if (!res.ok) throw new Error('not found');
       const data = await res.json();
       currentBrief = data;
       renderBrief(data);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      showToast(`Loaded brief from ${filename.replace('TEB_','').replace('.json','')}`, 'success');
-    } catch (e) {
+      showToast(`Loaded ${filename.replace('TEB_','').replace('.json','')}`, 'success');
+    } catch (_) {
       showToast('Could not load this brief', 'error');
     }
-  }
-
-  // ─── SETTINGS ────────────────────────────────────────────────────────────
-
-  function openSettings() {
-    document.getElementById('s-gh-pat').value   = localStorage.getItem('gh_pat')   || '';
-    document.getElementById('s-gh-owner').value = localStorage.getItem('gh_owner') || '';
-    document.getElementById('s-gh-repo').value  = localStorage.getItem('gh_repo')  || '';
-    document.getElementById('settings-modal').classList.add('open');
-  }
-
-  function closeSettings() {
-    document.getElementById('settings-modal').classList.remove('open');
-  }
-
-  function saveSettings() {
-    const pat   = document.getElementById('s-gh-pat').value.trim();
-    const owner = document.getElementById('s-gh-owner').value.trim();
-    const repo  = document.getElementById('s-gh-repo').value.trim();
-
-    if (!pat || !owner || !repo) {
-      showToast('All three fields are required', 'error');
-      return;
-    }
-
-    localStorage.setItem('gh_pat',   pat);
-    localStorage.setItem('gh_owner', owner);
-    localStorage.setItem('gh_repo',  repo);
-    closeSettings();
-    showToast('Configuration saved', 'success');
-    loadVault();
   }
 
   // ─── STATUS / TOAST ──────────────────────────────────────────────────────
@@ -1341,7 +896,7 @@
     toast.textContent = msg;
     toast.className = 'toast visible' + (type === 'success' ? ' success' : '');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000);
+    toastTimer = setTimeout(() => toast.classList.remove('visible'), 3200);
   }
 
   // ─── UTILS ───────────────────────────────────────────────────────────────
@@ -1349,26 +904,20 @@
   function escHtml(str) {
     if (!str) return '';
     return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   function formatTime(isoStr) {
     if (!isoStr) return '';
-    try {
-      return new Date(isoStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' WAT';
-    } catch { return ''; }
+    try { return new Date(isoStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' WAT'; }
+    catch { return ''; }
   }
 
-  // Close modal on backdrop click
-  document.getElementById('settings-modal').addEventListener('click', function(e) {
-    if (e.target === this) closeSettings();
-  });
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  // ─── BOOT ────────────────────────────────────────────────────────────────
-  init();
+  // ─── START ───────────────────────────────────────────────────────────────
+  boot();
   </script>
 </body>
 </html>
