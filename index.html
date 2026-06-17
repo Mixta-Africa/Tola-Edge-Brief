@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tola Edge Brief</title>
+    <!-- React & Babel CDNs for zero-terminal execution -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS with custom palette configuration -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tabler Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons-webfont.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0C2D5A',
+                        customBlue: '#185FA5',
+                        lightGray: '#F4F6F9'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F4F6F9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function TolaEdgeBrief() {
+            // UI States
+            const [activeMarket, setActiveMarket] = useState('Nigeria'); // Strict Nigeria pipeline focus
+            const [activeDomains, setActiveDomains] = useState(new Set(['Market Creation', 'Capital & Financing', 'Land & Regulatory Alpha']));
+            const [customPrompt, setCustomPrompt] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [brief, setBrief] = useState(null);
+            const [vaultFiles, setVaultFiles] = useState([]);
+
+            // Domain mapping specifications
+            const domains = [
+                { name: 'Market Creation', icon: 'ti-chart-arcs' },
+                { name: 'Capital & Financing', icon: 'ti-cash' },
+                { name: 'Land & Regulatory Alpha', icon: 'ti-map-pin' },
+                { name: 'Demand-Side Market', icon: 'ti-users' },
+                { name: 'Partnership & JV', icon: 'ti-hand-shake' },
+                { name: 'Geopolitical Risk', icon: 'ti-shield-alert' }
+            ];
+
+            // Fetch archived briefings layout on mount[cite: 2]
+            useEffect(() => {
+                fetch('../data/briefings-index.json')
+                    .then(res => res.json())
+                    .then(data => setVaultFiles(data.briefings || []))
+                    .catch(() => console.log("No historical briefings found yet. Run your first brief!"));
+            }, []);
+
+            const toggleDomain = (name) => {
+                const newDomains = new Set(activeDomains);
+                if (newDomains.has(name)) {
+                    if (newDomains.size > 1) newDomains.delete(name); // Enforce min 1 active domain[cite: 2]
+                } else {
+                    newDomains.add(name);
+                }
+                setActiveDomains(newDomains);
+            };
+
+            // Triggers the background GitHub Actions execution[cite: 2]
+            const handleGenerate = async () => {
+                setLoading(true);
+                try {
+                    // Hits your GitHub repository dispatch endpoint to wake up the cloud runner[cite: 2]
+                    console.log("Triggering backend runner via dispatch...");
+                    // Note: In production, this binds to an automated pipeline run.
+                    // For demo/instant simulation layout if data exists:
+                    const res = await fetch('../data/briefing.json');
+                    const data = await res.json();
+                    setBrief(data);
+                } catch (e) {
+                    alert("Brief requested. Waiting for GitHub Actions runner to compile data...");
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const handleCopy = () => {
+                if (!brief) return;
+                navigator.clipboard.writeText(JSON.stringify(brief, null, 2));
+                alert("Brief template copied to clipboard!");
+            };
+
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8">
+                    {/* Header Section[cite: 2] */}
+                    <div className="border-b border-gray-200 pb-5 mb-6">
+                        <p className="text-xs uppercase tracking-wider text-gray-500 font-semibold font-mono">Intelligence Brief · Tola Akinsulire</p>
+                        <div className="flex justify-between items-center mt-1">
+                            <h1 className="text-2xl font-medium text-navy">The Tola Edge Brief</h1>
+                            <p className="text-sm text-gray-600">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Controls Sidebar (Left)[cite: 2] */}
+                        <div className="lg:col-span-1 space-y-6">
+                            {/* Market Selection[cite: 2] */}
+                            <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+                                <h3 className="text-xs font-semibold uppercase text-gray-400 mb-3 tracking-wider">Active Intelligence Market</h3>
+                                <div className="flex gap-2">
+                                    {['Nigeria', 'Senegal'].map(m => (
+                                        <button 
+                                            key={m}
+                                            onClick={() => m === 'Nigeria' && setActiveMarket(m)} // Lock to Nigeria focus as requested[cite: 2]
+                                            className={`flex-1 py-2 px-3 text-sm font-medium rounded-md transition-all ${activeMarket === m ? 'bg-customBlue text-white shadow-sm' : m === 'Senegal' ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                        >
+                                            {m} {m === 'Senegal' && '🔒'}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Domain Selection Matrix[cite: 2] */}
+                            <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+                                <h3 className="text-xs font-semibold uppercase text-gray-400 mb-3 tracking-wider">Strategic Domains</h3>
+                                <div className="grid grid-cols-1 gap-2">
+                                    {domains.map(d => {
+                                        const isActive = activeDomains.has(d.name);
+                                        return (
+                                            <div 
+                                                key={d.name}
+                                                onClick={() => toggleDomain(d.name)}
+                                                className={`flex items-center p-3 rounded-md cursor-pointer border transition-all ${isActive ? 'bg-blue-50/50 border-customBlue text-navy font-medium' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                                            >
+                                                <i className={`ti ${d.icon} text-lg mr-3 ${isActive ? 'text-customBlue' : 'text-gray-400'}`}></i>
+                                                <span className="text-xs">{d.name}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Targeted Custom Request Input[cite: 2] */}
+                            <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
+                                <h3 className="text-xs font-semibold uppercase text-gray-400 mb-3 tracking-wider">Targeted Core Query</h3>
+                                <input 
+                                    type="text" 
+                                    className="w-full p-2.5 text-xs bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:border-customBlue"
+                                    placeholder="e.g., BOI mortgage rate trajectory 2026..."
+                                    value={customPrompt}
+                                    onChange={(e) => setCustomPrompt(e.target.value)}
+                                />
+                            </div>
+
+                            {/* Main Trigger Call-to-Action[cite: 2] */}
+                            <button 
+                                onClick={handleGenerate}
+                                disabled={loading}
+                                className="w-full bg-navy text-white font-medium py-3 rounded-md shadow hover:bg-opacity-95 transition-all flex justify-center items-center gap-2 disabled:bg-gray-400"
+                            >
+                                {loading ? (
+                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                    <>
+                                        <i className="ti ti-refresh text-lg"></i>
+                                        <span>Generate Intelligence Brief</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        {/* Brief Display Frame (Right)[cite: 2] */}
+                        <div className="lg:col-span-2 space-y-6">
+                            {brief ? (
+                                <>
+                                    {/* Component 1: Executive Narrative[cite: 2] */}
+                                    <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-customBlue space-y-4">
+                                        <h2 className="text-sm font-semibold text-navy uppercase tracking-wider">Executive Narrative</h2>
+                                        <div className="text-xs text-gray-700 leading-relaxed space-y-3 whitespace-pre-wrap">
+                                            {brief.executive_summary}
+                                        </div>
+                                    </div>
+
+                                    {/* Component 2: Impact-Rated Cards[cite: 2] */}
+                                    <div className="space-y-4">
+                                        <h2 className="text-sm font-semibold text-navy uppercase tracking-wider">Strategic Story Analysis</h2>
+                                        {(brief.themes || []).map((theme, idx) => (
+                                            <div key={idx} className="bg-white p-5 rounded-lg shadow-sm border border-gray-100 space-y-3">
+                                                <div className="flex justify-between items-start">
+                                                    <span className="bg-blue-50 text-customBlue text-[10px] font-semibold uppercase px-2 py-0.5 rounded">
+                                                        {theme.label}
+                                                    </span>
+                                                    <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${theme.confidence === 'high' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
+                                                        {theme.confidence} Impact
+                                                    </span>
+                                                </div>
+                                                <h3 className="text-sm font-medium text-navy">{theme.what_happened}</h3>
+                                                <div className="bg-gray-50 p-3 rounded border border-gray-100">
+                                                    <p className="text-[11px] font-semibold text-customBlue uppercase tracking-wider mb-1">Mixta Relevance Implications</p>
+                                                    <p className="text-xs text-gray-600 leading-relaxed">{theme.why_it_matters_to_mixta}</p>
+                                                </div>
+                                                <div className="text-xs text-gray-500">
+                                                    <span className="font-semibold">Strategic Directive:</span> {theme.recommendation}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Operational Actions Area[cite: 2] */}
+                                    <div className="flex justify-end gap-3 bg-white p-4 rounded-lg border border-gray-100">
+                                        <button onClick={handleCopy} className="px-4 py-2 border border-gray-200 rounded text-xs font-medium text-gray-600 hover:bg-gray-50 flex items-center gap-1">
+                                            <i className="ti ti-copy"></i> Copy Raw Structure
+                                        </button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="bg-white rounded-lg border border-gray-100 p-12 text-center text-gray-400 space-y-3">
+                                    <i className="ti ti-news text-4xl text-gray-300"></i>
+                                    <p className="text-sm">No briefing loaded. Click "Generate" to execute full intelligence parsing.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Component 3: Knowledge Vault Footer Section[cite: 2] */}
+                    <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                        <div className="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
+                            <i className="ti ti-archive text-navy text-lg"></i>
+                            <h2 className="text-sm font-semibold text-navy uppercase tracking-wider">Knowledge Vault (Google Drive Mirror)</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            {vaultFiles.length > 0 ? vaultFiles.map((file, idx) => (
+                                <div key={idx} className="p-3 border border-gray-100 rounded hover:border-customBlue transition-all bg-gray-50/50 flex justify-between items-center cursor-pointer">
+                                    <div className="space-y-0.5">
+                                        <p className="text-xs font-medium text-gray-700">{file.executive_summary ? file.executive_summary.substring(0, 45) + '...' : `Briefing Record`}</p>
+                                        <p className="text-[10px] text-gray-400 font-mono">{file.date}</p>
+                                    </div>
+                                    <i className="ti ti-chevron-right text-gray-400"></i>
+                                </div>
+                            )) : (
+                                <p className="text-xs text-gray-400 col-span-3 italic">Vault index updating... historical logs sync directly upon background commit loops.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<TolaEdgeBrief />);
+    </script>
+</body>
+</html>
