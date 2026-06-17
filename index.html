@@ -1,256 +1,1374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Tola Edge Brief</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-    
-    <!-- React & Babel for zero-build execution -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS & Tabler Icons -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons-webfont.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: '#0C2D5A',
-                        customBlue: '#185FA5',
-                        bgOffWhite: '#F7F8FA'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Playfair Display', 'serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #F7F8FA; }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Tola Edge Brief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:        #0C2D5A;
+      --blue:        #185FA5;
+      --blue-mid:    #2176CC;
+      --blue-tint:   #EBF3FC;
+      --blue-light:  #F0F6FD;
+      --teal:        #1D9E75;
+      --teal-tint:   #E8F7F2;
+      --coral:       #C94C2A;
+      --coral-tint:  #FBEEE9;
+      --amber:       #B86E00;
+      --amber-tint:  #FEF4E4;
+      --white:       #FFFFFF;
+      --surface:     #F7F8FA;
+      --border:      #E4E7EE;
+      --border-soft: #EEF0F5;
+      --text-primary:   #0C2D5A;
+      --text-body:      #2D3748;
+      --text-muted:     #6B7A99;
+      --text-hint:      #9BA8C0;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   16px;
+      --radius-xl:   20px;
+      --shadow-sm:   0 1px 3px rgba(12,45,90,0.06), 0 1px 2px rgba(12,45,90,0.04);
+      --shadow-md:   0 4px 12px rgba(12,45,90,0.08), 0 2px 4px rgba(12,45,90,0.04);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--text-body);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────────────── */
+    .app-shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Header ───────────────────────────────────────────────────────── */
+    .header {
+      padding: 48px 0 36px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .header-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--blue);
+      border-radius: 1px;
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 34px;
+      font-weight: 500;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .header-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .header-actions {
+      position: absolute;
+      top: 48px;
+      right: 0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+      font-size: 15px;
+    }
+
+    .btn-icon:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: var(--blue-light);
+    }
+
+    /* ── Section labels ───────────────────────────────────────────────── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-hint);
+      margin-bottom: 12px;
+    }
+
+    /* ── Market Filter ────────────────────────────────────────────────── */
+    .controls-block {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 28px 28px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .market-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .pill {
+      padding: 7px 18px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text-muted);
+      transition: all 0.18s ease;
+      user-select: none;
+    }
+
+    .pill:hover { border-color: var(--blue-mid); color: var(--blue-mid); }
+
+    .pill.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+    }
+
+    /* ── Domain Toggles ───────────────────────────────────────────────── */
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .domain-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      cursor: pointer;
+      background: var(--white);
+      transition: all 0.18s ease;
+      user-select: none;
+      position: relative;
+    }
+
+    .domain-card:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+
+    .domain-card.active {
+      border-color: var(--blue);
+      background: var(--blue-tint);
+    }
+
+    .domain-card.active .domain-code {
+      color: var(--blue);
+    }
+
+    .domain-card.active .domain-name {
+      color: var(--navy);
+    }
+
+    .domain-code {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-hint);
+      margin-bottom: 3px;
+      transition: color 0.18s;
+    }
+
+    .domain-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.3;
+      transition: color 0.18s;
+    }
+
+    .domain-priority {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .priority-highest { background: var(--teal); }
+    .priority-high    { background: var(--blue); }
+    .priority-medium  { background: var(--amber); }
+    .priority-low     { background: var(--border); }
+
+    /* ── Custom Prompt ────────────────────────────────────────────────── */
+    .custom-input-wrap {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .custom-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text-body);
+      background: var(--white);
+      outline: none;
+      transition: border-color 0.18s;
+      line-height: 1.5;
+    }
+
+    .custom-input::placeholder { color: var(--text-hint); }
+    .custom-input:focus { border-color: var(--blue); }
+
+    /* ── Generate Button ──────────────────────────────────────────────── */
+    .btn-generate {
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-generate:hover:not(:disabled) {
+      background: var(--blue);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(24,95,165,0.3);
+    }
+
+    .btn-generate:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-generate:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-generate .btn-arrow {
+      transition: transform 0.2s;
+    }
+
+    .btn-generate:hover:not(:disabled) .btn-arrow {
+      transform: translateX(3px);
+    }
+
+    /* Loading pulse ring */
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(24,95,165,0.4); }
+      70%  { box-shadow: 0 0 0 10px rgba(24,95,165,0); }
+      100% { box-shadow: 0 0 0 0 rgba(24,95,165,0); }
+    }
+
+    .btn-generate.loading {
+      animation: pulse-ring 1.4s ease-out infinite;
+      background: var(--blue-mid);
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Status Bar ───────────────────────────────────────────────────── */
+    .status-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--blue-light);
+      border: 1px solid #C8DDF5;
+      border-radius: var(--radius-md);
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--blue);
+    }
+
+    .status-bar.visible { display: flex; }
+    .status-bar.error { background: var(--coral-tint); border-color: #F2BEB0; color: var(--coral); }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .status-dot.pulsing {
+      animation: dot-pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes dot-pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* ── Brief Output ─────────────────────────────────────────────────── */
+    .output-section {
+      margin-top: 32px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .output-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Executive Narrative — signature left-accent card */
+    .narrative-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .narrative-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .narrative-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .narrative-meta {
+      font-size: 11px;
+      color: var(--text-hint);
+      font-family: 'JetBrains Mono', monospace;
+      margin-left: auto;
+    }
+
+    .narrative-body p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text-body);
+      margin-bottom: 16px;
+    }
+
+    .narrative-body p:last-child { margin-bottom: 0; }
+
+    /* Story Cards */
+    .stories-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stories-count {
+      font-size: 12px;
+      color: var(--text-hint);
+    }
+
+    .story-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s ease, transform 0.35s ease, box-shadow 0.2s ease;
+    }
+
+    .story-card.visible { opacity: 1; transform: translateY(0); }
+    .story-card:hover { box-shadow: var(--shadow-md); }
+
+    .story-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .tag-impact-high   { background: #FEF3EE; color: #9B3A1A; border: 1px solid #F5C4AE; }
+    .tag-impact-medium { background: var(--amber-tint); color: #7A4A00; border: 1px solid #F2D99A; }
+    .tag-impact-low    { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+
+    .tag-domain {
+      background: var(--blue-tint);
+      color: var(--blue);
+      border: 1px solid #C4D9F5;
+    }
+
+    .tag-market-ng { background: var(--teal-tint); color: #0F6E56; border: 1px solid #9FE1CB; }
+    .tag-market-sn { background: #F5F0FE; color: #534AB7; border: 1px solid #CECBF6; }
+
+    .story-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    .story-body {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .relevance-block {
+      border-top: 1px solid var(--border-soft);
+      padding-top: 14px;
+    }
+
+    .relevance-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+
+    .relevance-text {
+      font-size: 13.5px;
+      color: var(--text-body);
+      line-height: 1.65;
+    }
+
+    /* ── Action Row ───────────────────────────────────────────────────── */
+    .action-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-action {
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.18s ease;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text-body);
+    }
+
+    .btn-action:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+
+    .btn-action.saved {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--teal-tint);
+    }
+
+    /* ── Divider ──────────────────────────────────────────────────────── */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 40px 0;
+    }
+
+    /* ── Knowledge Vault ──────────────────────────────────────────────── */
+    .vault-section {
+      padding-bottom: 20px;
+    }
+
+    .vault-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .vault-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .vault-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      opacity: 0;
+      animation: fade-up 0.3s ease forwards;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .vault-entry:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+
+    .vault-filename {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--navy);
+      font-weight: 400;
+    }
+
+    .vault-date {
+      font-size: 12px;
+      color: var(--text-hint);
+    }
+
+    .vault-empty {
+      font-size: 13px;
+      color: var(--text-hint);
+      font-style: italic;
+      padding: 16px 0;
+    }
+
+    /* ── Settings Modal ───────────────────────────────────────────────── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(12,45,90,0.25);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 20px 60px rgba(12,45,90,0.18);
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .field-group { margin-bottom: 16px; }
+
+    .field-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-body);
+      background: var(--surface);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .field-input:focus { border-color: var(--blue); background: var(--white); }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+      justify-content: flex-end;
+    }
+
+    .btn-save-settings {
+      padding: 10px 24px;
+      background: var(--navy);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+
+    .btn-save-settings:hover { background: var(--blue); }
+
+    .btn-cancel {
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-cancel:hover { border-color: var(--text-muted); color: var(--text-body); }
+
+    /* ── Toast ────────────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      padding: 12px 20px;
+      background: var(--navy);
+      color: var(--white);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 200;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+
+    .toast.visible { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--teal); }
+
+    /* ── Responsive ───────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .domain-grid { grid-template-columns: repeat(2, 1fr); }
+      .header-actions { position: static; margin-top: 16px; }
+      .header { padding-bottom: 20px; }
+    }
+
+    @media (max-width: 400px) {
+      .domain-grid { grid-template-columns: 1fr; }
+      .app-shell { padding: 0 16px 60px; }
+    }
+
+    /* ── Reduced motion ───────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
+  <div class="app-shell">
 
-    <!-- Added data-presets="react" to prevent import syntax errors -->
-    <script type="text/babel" data-presets="react">
-        const { useState, useEffect } = React;
+    <!-- ── Header ─────────────────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-eyebrow">Intelligence Brief · Tola Akinsulire</div>
+      <h1 class="header-title">The Tola Edge Brief</h1>
+      <div class="header-date" id="header-date"></div>
+      <div class="header-actions">
+        <button class="btn-icon" title="Settings" onclick="openSettings()" aria-label="Settings">⚙</button>
+      </div>
+    </header>
 
-        function TolaEdgeBrief() {
-            const [activeMarket] = useState('Nigeria'); 
-            const [activeDomains, setActiveDomains] = useState(new Set(['Market Creation', 'Capital & Financing', 'Land & Regulatory Alpha']));
-            const [customPrompt, setCustomPrompt] = useState('');
-            const [loading, setLoading] = useState(false);
-            const [brief, setBrief] = useState(null);
-            const [vaultFiles, setVaultFiles] = useState([]);
+    <!-- ── Controls Block ─────────────────────────────────────────────── -->
+    <div class="controls-block">
 
-            const domains = [
-                { name: 'Market Creation', icon: 'ti-chart-arcs' },
-                { name: 'Capital & Financing', icon: 'ti-cash' },
-                { name: 'Land & Regulatory Alpha', icon: 'ti-map-pin' },
-                { name: 'Demand-Side Market', icon: 'ti-users' },
-                { name: 'Partnership & JV', icon: 'ti-hand-shake' },
-                { name: 'Geopolitical Risk', icon: 'ti-shield-alert' }
-            ];
+      <!-- Market Filter -->
+      <div class="section-label">Market Scope</div>
+      <div class="market-pills" id="market-pills">
+        <button class="pill active" data-market="All"     onclick="setMarket('All')">All Markets</button>
+        <button class="pill"        data-market="Nigeria" onclick="setMarket('Nigeria')">Nigeria</button>
+        <button class="pill"        data-market="Senegal" onclick="setMarket('Senegal')">Senegal</button>
+      </div>
 
-            useEffect(() => {
-                fetch('../data/briefings-index.json')
-                    .then(res => res.json())
-                    .then(data => setVaultFiles(data.briefings || []))
-                    .catch(() => console.log("Vault empty. Awaiting first run."));
-                
-                fetch('../data/briefing.json')
-                    .then(res => res.json())
-                    .then(data => setBrief(data))
-                    .catch(() => console.log("No current brief data found."));
-            }, []);
+      <!-- Domain Toggles -->
+      <div class="section-label">Intelligence Domains</div>
+      <div class="domain-grid" id="domain-grid">
+        <!-- Populated by JS -->
+      </div>
 
-            const toggleDomain = (name) => {
-                const newDomains = new Set(activeDomains);
-                if (newDomains.has(name)) {
-                    if (newDomains.size > 1) newDomains.delete(name); 
-                } else {
-                    newDomains.add(name);
-                }
-                setActiveDomains(newDomains);
-            };
+      <!-- Custom Prompt -->
+      <div class="custom-input-wrap">
+        <input
+          class="custom-input"
+          id="custom-prompt"
+          type="text"
+          placeholder="Target a specific signal — e.g. &quot;DFI appetite for affordable housing Nigeria 2026&quot;"
+          maxlength="280"
+        />
+      </div>
 
-            const handleGenerate = async () => {
-                setLoading(true);
-                try {
-                    alert("Intelligence engine triggered securely. The backend scraper is now running. Please refresh the page in 3 minutes.");
-                } catch (e) {
-                    console.error("Trigger failed:", e);
-                    alert("Failed to reach the intelligence engine.");
-                } finally {
-                    setLoading(false);
-                }
-            };
+      <!-- Generate Button -->
+      <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
+        <span id="btn-text">Generate Intelligence Brief</span>
+        <span class="btn-arrow" id="btn-arrow">→</span>
+      </button>
 
-            const handleCopy = () => {
-                if (!brief) return;
-                navigator.clipboard.writeText(JSON.stringify(brief, null, 2));
-                alert("Brief structured data copied to clipboard.");
-            };
+      <!-- Status Bar -->
+      <div class="status-bar" id="status-bar">
+        <span class="status-dot pulsing" id="status-dot"></span>
+        <span id="status-text">Initiating intelligence scan…</span>
+      </div>
+    </div>
 
-            return (
-                <div className="max-w-6xl mx-auto px-4 py-10 fade-in">
-                    <div className="border-b border-gray-200 pb-6 mb-8 flex justify-between items-end">
-                        <div>
-                            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2">Intelligence Brief · Tola Akinsulire</p>
-                            <h1 className="text-4xl font-display text-navy">The Tola Edge Brief</h1>
-                        </div>
-                        <p className="text-sm text-gray-500 font-medium">
-                            {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                        </p>
-                    </div>
+    <!-- ── Brief Output ────────────────────────────────────────────────── -->
+    <div class="output-section" id="output-section">
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                        <div className="lg:col-span-4 space-y-6">
-                            <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
-                                <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-4">Market Focus</h3>
-                                <button className="w-full py-2 px-3 text-sm font-medium rounded bg-customBlue text-white shadow-sm flex justify-between items-center">
-                                    <span>Nigeria</span>
-                                    <i className="ti ti-lock text-white/70"></i>
-                                </button>
-                            </div>
+      <!-- Executive Narrative -->
+      <div class="narrative-card" id="narrative-card">
+        <div class="narrative-header">
+          <span class="narrative-label">Executive Narrative</span>
+          <span class="narrative-meta" id="narrative-meta"></span>
+        </div>
+        <div class="narrative-body" id="narrative-body"></div>
+      </div>
 
-                            <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
-                                <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-4">Strategic Domains</h3>
-                                <div className="space-y-2">
-                                    {domains.map(d => {
-                                        const isActive = activeDomains.has(d.name);
-                                        return (
-                                            <div 
-                                                key={d.name}
-                                                onClick={() => toggleDomain(d.name)}
-                                                className={`flex items-center p-3 rounded cursor-pointer border transition-colors ${isActive ? 'bg-blue-50 border-customBlue text-navy font-medium' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
-                                            >
-                                                <i className={`ti ${d.icon} text-lg mr-3 ${isActive ? 'text-customBlue' : 'text-gray-400'}`}></i>
-                                                <span className="text-sm">{d.name}</span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+      <!-- Story Cards -->
+      <div class="stories-header">
+        <div class="section-label" style="margin-bottom:0">Impact-Rated Stories</div>
+        <span class="stories-count" id="stories-count"></span>
+      </div>
+      <div id="stories-container"></div>
 
-                            <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
-                                <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-3">Targeted Query</h3>
-                                <input 
-                                    type="text" 
-                                    className="w-full p-3 text-sm bg-bgOffWhite border border-gray-200 rounded focus:outline-none focus:border-customBlue transition-colors"
-                                    placeholder="e.g., Access Bank mortgage criteria..."
-                                    value={customPrompt}
-                                    onChange={(e) => setCustomPrompt(e.target.value)}
-                                />
-                            </div>
+      <!-- Action Row -->
+      <div class="action-row">
+        <button class="btn-action" onclick="copyBrief()">
+          <span>⎘</span> Copy Brief
+        </button>
+        <button class="btn-action" id="btn-save" onclick="saveBrief()">
+          <span>↓</span> Save to Vault
+        </button>
+      </div>
+    </div>
 
-                            <button 
-                                onClick={handleGenerate}
-                                disabled={loading}
-                                className="w-full bg-navy text-white font-medium py-3.5 rounded shadow-sm hover:bg-opacity-90 transition-all flex justify-center items-center gap-2 disabled:bg-gray-400"
-                            >
-                                {loading ? (
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                ) : (
-                                    <>
-                                        <i className="ti ti-bolt text-lg"></i>
-                                        <span>Execute Intelligence Scan</span>
-                                    </>
-                                )}
-                            </button>
-                        </div>
+    <!-- ── Divider ─────────────────────────────────────────────────────── -->
+    <div class="section-divider" id="vault-divider"></div>
 
-                        <div className="lg:col-span-8 space-y-8">
-                            {brief ? (
-                                <div className="fade-in space-y-8">
-                                    <div className="bg-white p-8 rounded border border-gray-200 shadow-sm border-l-[3px] border-l-customBlue">
-                                        <h2 className="text-xs font-semibold text-navy uppercase tracking-widest mb-5">Executive Narrative</h2>
-                                        <div className="text-sm text-gray-800 leading-relaxed space-y-4 whitespace-pre-wrap">
-                                            {brief.executive_summary}
-                                        </div>
-                                    </div>
+    <!-- ── Knowledge Vault ────────────────────────────────────────────── -->
+    <div class="vault-section">
+      <div class="vault-header">
+        <div class="section-label" style="margin-bottom:0">Knowledge Vault</div>
+        <span id="vault-count" style="font-size:12px;color:var(--text-hint)"></span>
+      </div>
+      <div class="vault-list" id="vault-list">
+        <div class="vault-empty">Loading vault…</div>
+      </div>
+    </div>
 
-                                    <div>
-                                        <h2 className="text-xs font-semibold text-navy uppercase tracking-widest mb-4">Signal Analysis</h2>
-                                        <div className="space-y-4">
-                                            {(brief.themes || []).map((theme, idx) => (
-                                                <div key={idx} className="bg-white p-6 rounded border border-gray-200 shadow-sm">
-                                                    <div className="flex justify-between items-start mb-3">
-                                                        <span className="bg-bgOffWhite text-gray-600 border border-gray-200 text-xs font-medium px-2.5 py-1 rounded">
-                                                            {theme.label}
-                                                        </span>
-                                                        <span className={`text-[10px] uppercase font-bold px-2.5 py-1 rounded ${theme.confidence === 'high' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
-                                                            {theme.confidence} Impact
-                                                        </span>
-                                                    </div>
-                                                    <h3 className="text-base font-semibold text-navy mb-3">{theme.what_happened}</h3>
-                                                    
-                                                    <div className="bg-bgOffWhite p-4 rounded border border-gray-200 mb-3">
-                                                        <p className="text-[10px] font-bold text-customBlue uppercase tracking-widest mb-1.5">Mixta Relevance</p>
-                                                        <p className="text-sm text-gray-700">{theme.why_it_matters_to_mixta}</p>
-                                                    </div>
-                                                    
-                                                    <div className="text-sm text-gray-600 bg-white border border-gray-100 p-3 rounded">
-                                                        <span className="font-semibold text-navy">Action:</span> {theme.recommendation}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+  </div><!-- /app-shell -->
 
-                                    <div className="flex justify-end">
-                                        <button onClick={handleCopy} className="px-5 py-2.5 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
-                                            <i className="ti ti-copy"></i> Copy Structured Data
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="bg-white rounded border border-gray-200 p-16 text-center text-gray-400 shadow-sm">
-                                    <i className="ti ti-shield-lock text-5xl mb-4 text-gray-300"></i>
-                                    <p className="text-base font-medium text-gray-500 mb-1">System Ready</p>
-                                    <p className="text-sm">Click execute to synthesize today's market intelligence.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+  <!-- ── Settings Modal ─────────────────────────────────────────────── -->
+  <div class="modal-backdrop" id="settings-modal">
+    <div class="modal">
+      <div class="modal-title">Configuration</div>
+      <div class="modal-subtitle">
+        Your GitHub PAT and repo details are stored locally in this browser only.
+        API keys for LLM providers are stored securely in GitHub Secrets — never in this browser.
+      </div>
 
-                    <div className="mt-16 bg-white rounded border border-gray-200 shadow-sm p-8 fade-in">
-                        <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-6">
-                            <i className="ti ti-server text-navy text-xl"></i>
-                            <h2 className="text-sm font-semibold text-navy uppercase tracking-widest">Vault Archives</h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {vaultFiles.length > 0 ? vaultFiles.map((file, idx) => (
-                                <div key={idx} className="p-4 border border-gray-100 rounded hover:border-customBlue transition-colors bg-bgOffWhite cursor-pointer group">
-                                    <p className="text-xs font-semibold text-gray-700 mb-1 group-hover:text-customBlue transition-colors">{file.date}</p>
-                                    <p className="text-xs text-gray-500 truncate">{file.executive_summary ? file.executive_summary : 'Intelligence Record'}</p>
-                                </div>
-                            )) : (
-                                <p className="text-sm text-gray-400 col-span-3">Archives will populate automatically after successful pipeline executions.</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
+      <div class="field-group">
+        <label class="field-label" for="s-gh-pat">GitHub Personal Access Token (workflow:write scope)</label>
+        <input class="field-input" id="s-gh-pat" type="password" placeholder="ghp_…" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="s-gh-owner">GitHub Owner / Organisation</label>
+        <input class="field-input" id="s-gh-owner" type="text" placeholder="mixta-africa" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="s-gh-repo">GitHub Repository Name</label>
+        <input class="field-input" id="s-gh-repo" type="text" placeholder="tola-edge-brief" />
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+        <button class="btn-save-settings" onclick="saveSettings()">Save Configuration</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toast ──────────────────────────────────────────────────────── -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+  'use strict';
+
+  // ─── STATE ────────────────────────────────────────────────────────────────
+
+  const DOMAINS = {
+    D1: { name: 'Capital & Financing',  priority: 'high',    dot: 'priority-high' },
+    D2: { name: 'Land & Regulatory',    priority: 'high',    dot: 'priority-high' },
+    D3: { name: 'Demand Intelligence',  priority: 'medium',  dot: 'priority-medium' },
+    D4: { name: 'Partnership & JV',     priority: 'medium',  dot: 'priority-medium' },
+    D5: { name: 'Geopolitical Risk',    priority: 'low',     dot: 'priority-low' },
+    D6: { name: 'Market Creation',      priority: 'highest', dot: 'priority-highest' },
+  };
+
+  let activeMarket   = 'All';
+  let activeDomains  = new Set(['D1','D2','D3','D4','D5','D6']);
+  let isGenerating   = false;
+  let currentBrief   = null;
+  let pollInterval   = null;
+  let currentReqId   = null;
+
+  // ─── INIT ─────────────────────────────────────────────────────────────────
+
+  function init() {
+    renderDate();
+    renderDomains();
+    loadVault();
+
+    // Show settings modal if not configured
+    if (!localStorage.getItem('gh_pat')) {
+      setTimeout(() => openSettings(), 600);
+    }
+  }
+
+  function renderDate() {
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('header-date').textContent =
+      new Date().toLocaleDateString('en-GB', opts);
+  }
+
+  function renderDomains() {
+    const grid = document.getElementById('domain-grid');
+    grid.innerHTML = '';
+    for (const [code, domain] of Object.entries(DOMAINS)) {
+      const card = document.createElement('div');
+      card.className = 'domain-card' + (activeDomains.has(code) ? ' active' : '');
+      card.dataset.code = code;
+      card.onclick = () => toggleDomain(code);
+      card.innerHTML = `
+        <div class="domain-priority ${domain.dot}"></div>
+        <div class="domain-code">${code}</div>
+        <div class="domain-name">${domain.name}</div>
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  // ─── CONTROLS ────────────────────────────────────────────────────────────
+
+  function setMarket(market) {
+    activeMarket = market;
+    document.querySelectorAll('.pill').forEach(p => {
+      p.classList.toggle('active', p.dataset.market === market);
+    });
+  }
+
+  function toggleDomain(code) {
+    if (activeDomains.has(code)) {
+      if (activeDomains.size <= 1) return; // enforce minimum 1
+      activeDomains.delete(code);
+    } else {
+      activeDomains.add(code);
+    }
+    renderDomains();
+  }
+
+  // ─── GENERATE ────────────────────────────────────────────────────────────
+
+  async function generateBrief() {
+    const pat   = localStorage.getItem('gh_pat');
+    const owner = localStorage.getItem('gh_owner');
+    const repo  = localStorage.getItem('gh_repo');
+
+    if (!pat || !owner || !repo) {
+      showToast('Configure your GitHub credentials first', 'error');
+      openSettings();
+      return;
+    }
+
+    if (isGenerating) return;
+    isGenerating = true;
+    currentBrief = null;
+
+    // UI: loading state
+    const btnGenerate = document.getElementById('btn-generate');
+    const btnText     = document.getElementById('btn-text');
+    const btnArrow    = document.getElementById('btn-arrow');
+    btnGenerate.disabled = true;
+    btnGenerate.classList.add('loading');
+    btnText.textContent = 'Dispatching to intelligence engine…';
+    btnArrow.style.display = 'none';
+    showStatus('Triggering GitHub Actions intelligence run…', false);
+
+    // Build request ID
+    currentReqId = String(Date.now());
+
+    try {
+      // Trigger workflow_dispatch
+      const customPrompt = document.getElementById('custom-prompt').value.trim();
+      const domainsStr   = Array.from(activeDomains).sort().join(',');
+
+      const dispatchRes = await fetch(
+        `https://api.github.com/repos/${owner}/${repo}/actions/workflows/generate-brief.yml/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${pat}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: {
+              request_id:     currentReqId,
+              active_market:  activeMarket,
+              active_domains: domainsStr,
+              custom_prompt:  customPrompt,
+            },
+          }),
         }
+      );
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<TolaEdgeBrief />);
-    </script>
+      if (!dispatchRes.ok) {
+        const err = await dispatchRes.json().catch(() => ({}));
+        throw new Error(`GitHub API error ${dispatchRes.status}: ${err.message || dispatchRes.statusText}`);
+      }
+
+      // Begin polling
+      showStatus('Intelligence engine running — scanning markets, synthesising brief…', true);
+      btnText.textContent = 'Generating…';
+      startPolling(owner, repo);
+
+    } catch (err) {
+      resetGenerateButton();
+      showStatus(`Failed to trigger: ${err.message}`, false, true);
+      console.error('[App]', err);
+    }
+  }
+
+  function startPolling(owner, repo) {
+    let pollCount = 0;
+    const MAX_POLLS = 80; // 80 × 5s = 6m 40s max wait
+
+    const statusMessages = [
+      'Intelligence engine running — scanning markets…',
+      'Analysing capital & financing signals…',
+      'Cross-referencing with Mixta project portfolio…',
+      'Synthesising executive narrative…',
+      'Validating story citations and impact ratings…',
+      'Almost ready — finalising brief…',
+    ];
+
+    pollInterval = setInterval(async () => {
+      pollCount++;
+
+      // Rotate status messages
+      const msgIdx = Math.min(Math.floor(pollCount / 5), statusMessages.length - 1);
+      showStatus(statusMessages[msgIdx], true);
+
+      if (pollCount > MAX_POLLS) {
+        clearInterval(pollInterval);
+        resetGenerateButton();
+        showStatus('Brief generation timed out. Please try again.', false, true);
+        return;
+      }
+
+      try {
+        // Fetch with cache-bust
+        const res = await fetch(
+          `https://${owner}.github.io/${repo}/data/brief_output.json?t=${Date.now()}`,
+          { cache: 'no-store' }
+        );
+
+        if (!res.ok) return; // gh-pages might not have served the file yet
+
+        const data = await res.json();
+
+        // Check if this response matches our request
+        if (data.request_id !== currentReqId) return;
+
+        clearInterval(pollInterval);
+
+        if (data.status === 'success' && data.brief) {
+          currentBrief = data;
+          renderBrief(data);
+          resetGenerateButton();
+          hideStatus();
+          loadVault(); // refresh vault list
+        } else {
+          resetGenerateButton();
+          showStatus(`Brief generation failed: ${data.error || 'Unknown error'}`, false, true);
+        }
+      } catch (e) {
+        // Transient fetch error — keep polling
+      }
+    }, 5000);
+  }
+
+  function resetGenerateButton() {
+    isGenerating = false;
+    const btn    = document.getElementById('btn-generate');
+    const btnTxt = document.getElementById('btn-text');
+    const btnArr = document.getElementById('btn-arrow');
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    btnTxt.textContent = 'Generate Intelligence Brief';
+    btnArr.style.display = '';
+    if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+  }
+
+  // ─── RENDER BRIEF ────────────────────────────────────────────────────────
+
+  function renderBrief(data) {
+    const brief = data.brief;
+    const outputSection = document.getElementById('output-section');
+
+    // Narrative
+    const narrativeParagraphs = brief.narrative
+      .split('\n\n')
+      .filter(p => p.trim())
+      .map(p => `<p>${escHtml(p.trim())}</p>`)
+      .join('');
+
+    document.getElementById('narrative-body').innerHTML = narrativeParagraphs;
+    document.getElementById('narrative-meta').textContent =
+      formatTime(data.generated_at) + ' · ' + data.meta?.market || activeMarket;
+
+    // Stories
+    const container = document.getElementById('stories-container');
+    container.innerHTML = '';
+    document.getElementById('stories-count').textContent =
+      `${brief.stories.length} stor${brief.stories.length === 1 ? 'y' : 'ies'}`;
+
+    brief.stories.forEach((story, i) => {
+      const card = document.createElement('div');
+      card.className = 'story-card';
+      card.style.transitionDelay = `${i * 60}ms`;
+
+      const impactClass = {
+        High:   'tag-impact-high',
+        Medium: 'tag-impact-medium',
+        Low:    'tag-impact-low',
+      }[story.impact] || 'tag-impact-low';
+
+      const marketClass = story.market === 'Senegal' ? 'tag-market-sn' : 'tag-market-ng';
+
+      card.innerHTML = `
+        <div class="story-tags">
+          <span class="tag ${impactClass}">${escHtml(story.impact)}</span>
+          <span class="tag tag-domain">${escHtml(story.domain)}</span>
+          <span class="tag ${marketClass}">${escHtml(story.market)}</span>
+        </div>
+        <div class="story-title">${escHtml(story.title)}</div>
+        <div class="story-body">${escHtml(story.body)}</div>
+        <div class="relevance-block">
+          <div class="relevance-label">Mixta Relevance</div>
+          <div class="relevance-text">${escHtml(story.relevance)}</div>
+        </div>
+      `;
+
+      container.appendChild(card);
+
+      // Stagger fade-in
+      requestAnimationFrame(() => {
+        setTimeout(() => card.classList.add('visible'), 60 + i * 60);
+      });
+    });
+
+    // Save button state reset
+    const btnSave = document.getElementById('btn-save');
+    btnSave.classList.remove('saved');
+    btnSave.innerHTML = '<span>↓</span> Save to Vault';
+
+    // Show output
+    outputSection.classList.add('visible');
+    setTimeout(() => outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+
+  // ─── ACTIONS ─────────────────────────────────────────────────────────────
+
+  function copyBrief() {
+    if (!currentBrief) return;
+    const brief = currentBrief.brief;
+    let text = `THE TOLA EDGE BRIEF — ${new Date().toLocaleDateString('en-GB', { dateStyle: 'long' })}\n`;
+    text += `Generated: ${formatTime(currentBrief.generated_at)}\n\n`;
+    text += `EXECUTIVE NARRATIVE\n${'─'.repeat(40)}\n${brief.narrative}\n\n`;
+    text += `INTELLIGENCE STORIES\n${'─'.repeat(40)}\n`;
+    brief.stories.forEach((s, i) => {
+      text += `\n[${i+1}] ${s.impact.toUpperCase()} | ${s.domain} | ${s.market}\n`;
+      text += `${s.title}\n\n${s.body}\n\nMixta Relevance: ${s.relevance}\n`;
+    });
+
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('Brief copied to clipboard', 'success'))
+      .catch(() => showToast('Could not copy — please select and copy manually', 'error'));
+  }
+
+  async function saveBrief() {
+    if (!currentBrief) return;
+    const btnSave = document.getElementById('btn-save');
+    btnSave.disabled = true;
+    btnSave.innerHTML = '<span>↓</span> Saving…';
+
+    // The Actions workflow already saved it to the vault when it generated the brief.
+    // This button confirms that and shows the user it's already in the vault.
+    // It also triggers a clipboard copy as a secondary save.
+    copyBrief();
+
+    setTimeout(() => {
+      btnSave.classList.add('saved');
+      btnSave.innerHTML = '<span>✓</span> Saved to Vault';
+      btnSave.disabled = false;
+      showToast('Brief saved — vault updated', 'success');
+      loadVault();
+    }, 800);
+  }
+
+  // ─── VAULT ───────────────────────────────────────────────────────────────
+
+  async function loadVault() {
+    const owner = localStorage.getItem('gh_owner') || '';
+    const repo  = localStorage.getItem('gh_repo')  || '';
+    const list  = document.getElementById('vault-list');
+    const count = document.getElementById('vault-count');
+
+    if (!owner || !repo) {
+      list.innerHTML = '<div class="vault-empty">Configure GitHub credentials to view vault.</div>';
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://${owner}.github.io/${repo}/data/vault_index.json?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (!res.ok) throw new Error('Vault index not found');
+      const entries = await res.json();
+
+      if (!entries.length) {
+        list.innerHTML = '<div class="vault-empty">No briefs in vault yet — generate your first brief above.</div>';
+        count.textContent = '';
+        return;
+      }
+
+      count.textContent = `${entries.length} brief${entries.length === 1 ? '' : 's'} archived`;
+      list.innerHTML = '';
+
+      entries.slice(0, 15).forEach((entry, i) => {
+        const el = document.createElement('div');
+        el.className = 'vault-entry';
+        el.style.animationDelay = `${i * 35}ms`;
+
+        const displayDate = entry.date
+          ? new Date(entry.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+          : entry.date;
+
+        el.innerHTML = `
+          <span class="vault-filename">${escHtml(entry.filename)}</span>
+          <span class="vault-date">${escHtml(displayDate)}</span>
+        `;
+        el.title = `View brief from ${displayDate}`;
+        el.onclick = () => loadVaultEntry(owner, repo, entry.filename);
+        list.appendChild(el);
+      });
+
+    } catch (e) {
+      list.innerHTML = '<div class="vault-empty">Vault not yet initialised — generate your first brief to begin.</div>';
+      count.textContent = '';
+    }
+  }
+
+  async function loadVaultEntry(owner, repo, filename) {
+    try {
+      const res = await fetch(
+        `https://${owner}.github.io/${repo}/vault/${filename}?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (!res.ok) throw new Error('Could not load brief');
+      const data = await res.json();
+      currentBrief = data;
+      renderBrief(data);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast(`Loaded brief from ${filename.replace('TEB_','').replace('.json','')}`, 'success');
+    } catch (e) {
+      showToast('Could not load this brief', 'error');
+    }
+  }
+
+  // ─── SETTINGS ────────────────────────────────────────────────────────────
+
+  function openSettings() {
+    document.getElementById('s-gh-pat').value   = localStorage.getItem('gh_pat')   || '';
+    document.getElementById('s-gh-owner').value = localStorage.getItem('gh_owner') || '';
+    document.getElementById('s-gh-repo').value  = localStorage.getItem('gh_repo')  || '';
+    document.getElementById('settings-modal').classList.add('open');
+  }
+
+  function closeSettings() {
+    document.getElementById('settings-modal').classList.remove('open');
+  }
+
+  function saveSettings() {
+    const pat   = document.getElementById('s-gh-pat').value.trim();
+    const owner = document.getElementById('s-gh-owner').value.trim();
+    const repo  = document.getElementById('s-gh-repo').value.trim();
+
+    if (!pat || !owner || !repo) {
+      showToast('All three fields are required', 'error');
+      return;
+    }
+
+    localStorage.setItem('gh_pat',   pat);
+    localStorage.setItem('gh_owner', owner);
+    localStorage.setItem('gh_repo',  repo);
+    closeSettings();
+    showToast('Configuration saved', 'success');
+    loadVault();
+  }
+
+  // ─── STATUS / TOAST ──────────────────────────────────────────────────────
+
+  function showStatus(msg, pulsing = true, isError = false) {
+    const bar  = document.getElementById('status-bar');
+    const dot  = document.getElementById('status-dot');
+    const text = document.getElementById('status-text');
+    text.textContent = msg;
+    dot.classList.toggle('pulsing', pulsing);
+    bar.classList.add('visible');
+    bar.classList.toggle('error', isError);
+  }
+
+  function hideStatus() {
+    document.getElementById('status-bar').classList.remove('visible');
+  }
+
+  let toastTimer;
+  function showToast(msg, type = '') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast visible' + (type === 'success' ? ' success' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('visible'), 3000);
+  }
+
+  // ─── UTILS ───────────────────────────────────────────────────────────────
+
+  function escHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function formatTime(isoStr) {
+    if (!isoStr) return '';
+    try {
+      return new Date(isoStr).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' WAT';
+    } catch { return ''; }
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('settings-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeSettings();
+  });
+
+  // ─── BOOT ────────────────────────────────────────────────────────────────
+  init();
+  </script>
 </body>
 </html>
