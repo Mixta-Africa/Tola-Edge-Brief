@@ -47,17 +47,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-teb-
 
-      - name: Install system Chromium (pre-installed on runner — no download needed)
-        run: |
-          # Use the Chromium already on the ubuntu-latest runner.
-          # This avoids puppeteer downloading a ~200MB bundled Chrome on every run.
-          which chromium-browser || which chromium || echo "Chromium path check done"
-          chromium-browser --version 2>/dev/null || chromium --version 2>/dev/null || true
-
-      - name: Install dependencies (skip bundled Chromium download)
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
-        run: npm install axios puppeteer
+      - name: Install dependencies (axios + cheerio only — no Chromium needed)
+        run: npm install axios cheerio
 
       - name: Run intelligence engine
         id: run_engine
@@ -74,8 +65,6 @@ jobs:
           ACTIVE_MARKET:   ${{ inputs.active_market }}
           ACTIVE_DOMAINS:  ${{ inputs.active_domains }}
           CUSTOM_PROMPT:   ${{ inputs.custom_prompt }}
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
-          PUPPETEER_EXECUTABLE_PATH: '/usr/bin/chromium-browser'
         run: node scripts/engine.js
 
       - name: Checkout gh-pages branch for output
