@@ -50,28 +50,22 @@ jobs:
       - name: Install dependencies (axios + puppeteer)
         run: |
           npm install axios puppeteer
-          # Puppeteer downloads Chromium automatically (~170MB)
-          # This is cached via actions/cache above on subsequent runs
 
       - name: Run intelligence engine
         id: run_engine
         env:
-          # News source API keys
-          GNEWS_API_KEY:    ${{ secrets.GNEWS_API_KEY }}
-          NEWSAPI_KEY:      ${{ secrets.NEWSAPI_KEY }}
-          # 6-provider LLM fallback chain (comma-separated for multi-key support)
+          GNEWS_API_KEY:      ${{ secrets.GNEWS_API_KEY }}
+          NEWSAPI_KEY:        ${{ secrets.NEWSAPI_KEY }}
           GROQ_API_KEY:       ${{ secrets.GROQ_API_KEY }}
           SAMBANOVA_API_KEY:  ${{ secrets.SAMBANOVA_API_KEY }}
           CEREBRAS_API_KEY:   ${{ secrets.CEREBRAS_API_KEY }}
           MISTRAL_API_KEY:    ${{ secrets.MISTRAL_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GEMINI_API_KEY:     ${{ secrets.GEMINI_API_KEY }}
-          # Request parameters from UI
           REQUEST_ID:      ${{ inputs.request_id }}
           ACTIVE_MARKET:   ${{ inputs.active_market }}
           ACTIVE_DOMAINS:  ${{ inputs.active_domains }}
           CUSTOM_PROMPT:   ${{ inputs.custom_prompt }}
-          # Puppeteer sandbox config for GitHub Actions
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
         run: node .github/scripts/engine.js
 
@@ -85,16 +79,10 @@ jobs:
       - name: Write brief output and update vault
         run: |
           mkdir -p gh-pages-out/data gh-pages-out/vault
-
-          # Write the primary polling target
           cp /tmp/brief_output.json gh-pages-out/data/brief_output.json
-
-          # Save dated vault entry
           DATE_STR=$(date -u +"%Y-%m-%d")
           FILENAME="TEB_${DATE_STR}.json"
           cp /tmp/brief_output.json "gh-pages-out/vault/${FILENAME}"
-
-          # Update vault_index.json
           node -e "
             const fs = require('fs');
             const indexPath = 'gh-pages-out/data/vault_index.json';
@@ -102,11 +90,7 @@ jobs:
             try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
             const today = '${DATE_STR}';
             index = index.filter(e => e.date !== today);
-            index.unshift({
-              date: today,
-              filename: '${FILENAME}',
-              generatedAt: new Date().toISOString()
-            });
+            index.unshift({ date: today, filename: '${FILENAME}', generatedAt: new Date().toISOString() });
             index = index.slice(0, 30);
             fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
             console.log('Vault index: ' + index.length + ' entries');
