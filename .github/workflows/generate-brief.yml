@@ -3,25 +3,26 @@ name: Generate Intelligence Brief
 on:
   workflow_dispatch:
     inputs:
-  request_id:
-    description: 'Unique request ID (timestamp) used by browser to match the result'
-    required: true
-    type: string
-  active_market:
-    description: 'Market scope: All | Nigeria | Senegal'
-    required: true
-    type: string
-    default: 'All'
-  active_domains:
-    description: 'Comma-separated active domain codes e.g. D1,D2,D3,D4,D5,D6'
-    required: true
-    type: string
-    default: 'D1,D2,D3,D4,D5,D6'
-  custom_prompt:
-    description: 'Optional targeted brief request e.g. "DFI appetite affordable housing Nigeria 2026"'
-    required: false
-    type: string
-    default: ''
+      request_id:
+        description: 'Unique request ID (timestamp) used by browser to match the result'
+        required: true
+        type: string
+      active_market:
+        description: 'Market scope: All | Nigeria | Senegal'
+        required: true
+        type: string
+        default: 'All'
+      active_domains:
+        description: 'Comma-separated active domain codes e.g. D1,D2,D3,D4,D5,D6'
+        required: true
+        type: string
+        default: 'D1,D2,D3,D4,D5,D6'
+      custom_prompt:
+        description: 'Optional targeted brief request e.g. "DFI appetite affordable housing Nigeria 2026"'
+        required: false
+        type: string
+        default: ''
+
 jobs:
   generate:
     runs-on: ubuntu-latest
