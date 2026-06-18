@@ -1031,8 +1031,14 @@
   <script>
   'use strict';
 
-  // ─── CONFIG (fetched from /data/config.json — written by deploy.yml) ──────
-  let CFG = { owner: '', repo: '', token: '' };
+  // ─── CONFIG — injected at build time by deploy.yml via sed ──────────────
+  // Placeholders below are replaced with real values during the GitHub Actions
+  // deploy step. They are never committed with real credentials.
+  let CFG = {
+    owner: '%%GH_OWNER%%',
+    repo:  '%%GH_REPO%%',
+    token: '%%GH_PAT_APP%%',
+  };
 
   // ─── STATE ────────────────────────────────────────────────────────────────
   const DOMAINS = {
@@ -1056,27 +1062,14 @@
     setLoad('Initializing application…', 25);
     await sleep(200);
 
-    // Load config.json — written to the gh-pages branch at deploy time by deploy.yml.
-    // Relative path resolves to <pages-root>/data/config.json, so it works regardless
-    // of which branch/sub-path GitHub Pages serves from.
+    // Config is injected at build time by deploy.yml (sed replaces %%placeholders%%).
+    // If placeholders are still present, the workflow didn't run or sed failed.
     setLoad('Loading configuration…', 50);
-    try {
-      const res = await fetch(`data/config.json?t=${Date.now()}`, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`config.json HTTP ${res.status}`);
-      const cfg = await res.json();
-      CFG = {
-        owner: cfg.owner || '',
-        repo:  cfg.repo  || '',
-        token: cfg.token || '',
-      };
-      if (!CFG.token) {
-        console.warn('[Boot] config.json loaded but token is empty — check the GH_PAT_APP secret.');
-      } else {
-        console.log(`[Boot] Config loaded for ${CFG.owner}/${CFG.repo}`);
-      }
-    } catch (err) {
-      console.error('[Boot] Failed to load config.json:', err);
-      // CFG stays empty; generateBrief() will surface the "Not configured" message.
+    if (CFG.token.startsWith('%%') || CFG.owner.startsWith('%%')) {
+      console.error('[Boot] Config placeholders were not replaced — check deploy.yml and secrets.');
+      CFG = { owner: '', repo: '', token: '' };
+    } else {
+      console.log(`[Boot] Config ready for ${CFG.owner}/${CFG.repo}`);
     }
 
     setLoad('Configuration ready', 75);
