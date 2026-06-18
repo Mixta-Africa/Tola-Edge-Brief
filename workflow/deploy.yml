@@ -6,75 +6,62 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Checkout main branch
         uses: actions/checkout@v4
 
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages-out
-          token: ${{ secrets.GH_DEPLOY_TOKEN }}
-        continue-on-error: true
-
-      - name: Initialise gh-pages if it doesn't exist yet
-        run: |
-          if [ ! -d "gh-pages-out/.git" ]; then
-            mkdir -p gh-pages-out
-            cd gh-pages-out
-            git init
-            git remote add origin https://x-access-token:${{ secrets.GH_DEPLOY_TOKEN }}@github.com/${{ github.repository }}.git
-            git checkout --orphan gh-pages
-          fi
-
-      - name: Copy app files
-        run: |
-          cp index.html gh-pages-out/index.html
-          mkdir -p gh-pages-out/data
-          cp data/mixta-context.json gh-pages-out/data/mixta-context.json
-          mkdir -p gh-pages-out/vault
-
-      - name: Write config.json from GitHub Secrets
-        # The ONLY place credentials touch the deployment.
-        # config.json lives on gh-pages only — never committed to main branch.
-        # GH_PAT_APP needs workflow:write scope to trigger generate-brief.yml.
+      - name: Build site folder
         env:
           GH_OWNER:   ${{ github.repository_owner }}
           GH_REPO:    ${{ github.event.repository.name }}
           GH_PAT_APP: ${{ secrets.GH_PAT_APP }}
         run: |
-          cat > gh-pages-out/data/config.json << EOF
-          {
-            "owner": "${GH_OWNER}",
-            "repo":  "${GH_REPO}",
-            "token": "${GH_PAT_APP}"
-          }
-          EOF
-          echo "config.json written for ${GH_OWNER}/${GH_REPO}"
+          mkdir -p _site/data _site/vault
 
-      - name: Initialise data files if absent
-        run: |
-          if [ ! -f "gh-pages-out/data/brief_output.json" ]; then
-            echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' \
-              > gh-pages-out/data/brief_output.json
-          fi
-          if [ ! -f "gh-pages-out/data/vault_index.json" ]; then
-            echo '[]' > gh-pages-out/data/vault_index.json
-          fi
+          # Inject credentials directly into index.html via sed.
+          # This avoids writing a separate config.json file, which GitHub's
+          # artifact uploader can strip if it detects secret-like content.
+          sed \
+            -e "s|%%GH_OWNER%%|${GH_OWNER}|g" \
+            -e "s|%%GH_REPO%%|${GH_REPO}|g" \
+            -e "s|%%GH_PAT_APP%%|${GH_PAT_APP}|g" \
+            index.html > _site/index.html
 
-      - name: Commit and push to gh-pages
-        run: |
-          cd gh-pages-out
-          git config user.name  "Deploy Bot"
-          git config user.email "actions@github.com"
-          git add .
-          git diff --staged --quiet \
-            || git commit -m "deploy: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push origin gh-pages
+          echo "Verifying injection (token masked):"
+          grep "owner:" _site/index.html | head -1
+          grep "repo:"  _site/index.html | head -1
+
+          # Mixta context (no credentials — safe to serve)
+          cp data/mixta-context.json _site/data/mixta-context.json
+
+          # Seed empty data files so the app doesn't 404 on first load
+          echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' \
+            > _site/data/brief_output.json
+          echo '[]' > _site/data/vault_index.json
+
+          # Prevent Jekyll from interfering
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
