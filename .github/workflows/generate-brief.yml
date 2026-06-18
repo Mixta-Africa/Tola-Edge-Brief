@@ -67,23 +67,30 @@ jobs:
           CUSTOM_PROMPT:   ${{ inputs.custom_prompt }}
         run: node scripts/engine.js
 
-      - name: Checkout gh-pages branch for output
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages-out
-          token: ${{ secrets.GH_DEPLOY_TOKEN }}
-
-      - name: Write brief output and update vault
+      - name: Write brief output and update vault on main
         run: |
-          mkdir -p gh-pages-out/data gh-pages-out/vault
-          cp /tmp/brief_output.json gh-pages-out/data/brief_output.json
+          # The repo is already checked out at the start of this workflow.
+          # We write the brief output directly into data/ on main and commit it.
+          # The deploy.yml workflow then picks it up on the next push,
+          # OR the browser polls the already-deployed brief_output.json via Pages.
+          #
+          # Note: brief_output.json is also written to the DEPLOYED site by
+          # the deploy.yml — here we persist it to main so it survives redeployments.
+
+          mkdir -p data/vault
+
+          # Write the brief result
+          cp /tmp/brief_output.json data/brief_output.json
+
+          # Archive to vault
           DATE_STR=$(date -u +"%Y-%m-%d")
           FILENAME="TEB_${DATE_STR}.json"
-          cp /tmp/brief_output.json "gh-pages-out/vault/${FILENAME}"
+          cp /tmp/brief_output.json "data/vault/${FILENAME}"
+
+          # Update vault index
           node -e "
             const fs = require('fs');
-            const indexPath = 'gh-pages-out/data/vault_index.json';
+            const indexPath = 'data/vault_index.json';
             let index = [];
             try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
             const today = '${DATE_STR}';
@@ -91,17 +98,25 @@ jobs:
             index.unshift({ date: today, filename: '${FILENAME}', generatedAt: new Date().toISOString() });
             index = index.slice(0, 30);
             fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-            console.log('Vault index: ' + index.length + ' entries');
+            console.log('Vault index updated: ' + index.length + ' entries');
           "
 
-      - name: Commit and push to gh-pages
+      - name: Commit and push brief output to main
+        env:
+          GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
         run: |
-          cd gh-pages-out
           git config user.name  "Tola Edge Brief"
           git config user.email "actions@github.com"
-          git add data/brief_output.json data/vault_index.json vault/
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
+          git add data/brief_output.json data/vault_index.json data/vault/
           git diff --staged --quiet || git commit -m "brief: $(date -u +%Y-%m-%d) [req ${{ inputs.request_id }}]"
-          git push
+          git push origin main
+
+      - name: Trigger redeploy so live site serves the new brief
+        env:
+          GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
+        run: |
+          curl -s -X POST             -H "Authorization: Bearer ${GH_TOKEN}"             -H "Accept: application/vnd.github.v3+json"             https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches             -d '{"ref":"main"}' && echo "Deploy triggered" || echo "Deploy trigger failed (non-fatal)"
 
       - name: Log pipeline summary
         if: always()
