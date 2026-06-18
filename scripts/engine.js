@@ -312,6 +312,7 @@ async function attemptEnrich(article) {
   let browser;
   try {
     browser = await puppeteer.launch({
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
       headless: 'new',
       args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage',
              '--disable-gpu','--no-zygote','--single-process','--memory-pressure-off'],
