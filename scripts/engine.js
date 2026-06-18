@@ -24,7 +24,7 @@
 'use strict';
 
 const axios    = require('axios');
-const puppeteer = require('puppeteer');
+const cheerio  = require('cheerio');
 const fs       = require('fs');
 const path     = require('path');
 const https    = require('https');
@@ -304,61 +304,56 @@ function usableLength(article) {
   return cleanContent(article.content || article.description || '').length;
 }
 
-async function safeBrowserClose(browser) {
-  try { if (browser) await browser.close(); } catch (_) {}
-}
-
+// Axios-based HTML enricher — replaces Puppeteer.
+// Fetches raw HTML, extracts article text with cheerio.
+// Faster, zero install time, no Chromium needed.
 async function attemptEnrich(article) {
-  let browser;
   try {
-    browser = await puppeteer.launch({
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-      headless: 'new',
-      args: ['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage',
-             '--disable-gpu','--no-zygote','--single-process','--memory-pressure-off'],
+    const response = await axios.get(article.url, {
+      timeout: PAGE_TIMEOUT,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+      },
+      maxRedirects: 5,
     });
 
-    const page = await browser.newPage();
-    await page.setRequestInterception(true);
-    page.on('request', req => {
-      if (['image','media','font','stylesheet','websocket','manifest'].includes(req.resourceType())) {
-        req.abort();
-      } else {
-        req.continue();
+    const $ = cheerio.load(response.data);
+
+    // Remove noise elements
+    $('script,style,nav,header,footer,aside,iframe,noscript,form,.ad,.sidebar,.comments,.cookie,.popup').remove();
+
+    // Try article selectors in priority order
+    let text = '';
+    const selectors = ['article', '.entry-content', '.post-content', '.article-body', '.article-content', 'main', '#main'];
+    for (const sel of selectors) {
+      const el = $(sel);
+      if (el.length && el.text().trim().length > 200) {
+        text = el.text().trim();
+        break;
       }
-    });
+    }
 
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-    await page.setViewport({ width: 1280, height: 800 });
-    await page.goto(article.url, { waitUntil: 'domcontentloaded', timeout: PAGE_TIMEOUT });
-    await new Promise(r => setTimeout(r, 2500));
+    // Fallback: collect all paragraphs
+    if (!text) {
+      const paras = [];
+      $('p').each((_, el) => {
+        const t = $(el).text().trim();
+        if (t.length > 20) paras.push(t);
+      });
+      text = paras.join(' ');
+    }
 
-    const finalUrl = page.url();
-    const extractedText = await page.evaluate(() => {
-      if (!document.body) return '';
-      document.querySelectorAll('script,style,nav,header,footer,aside,iframe,noscript,form,.ad,.sidebar,.comments').forEach(el => el.remove());
-      const article = document.querySelector('article');
-      if (article && article.innerText.trim().length > 200) return article.innerText.trim();
-      for (const sel of ['.entry-content','.post-content','.article-body','.article-content','main','#main']) {
-        const el = document.querySelector(sel);
-        if (el && el.innerText.trim().length > 200) return el.innerText.trim();
-      }
-      const paras = Array.from(document.querySelectorAll('p')).map(p => p.innerText.trim()).filter(t => t.length > 20);
-      if (paras.length) return paras.join(' ');
-      return document.body.innerText.trim();
-    });
-
-    const cleanText = cleanContent(extractedText).substring(0, MAX_EXTRACT);
-    await safeBrowserClose(browser);
+    const cleanText = cleanContent(text).substring(0, MAX_EXTRACT);
 
     if (cleanText.length > 150) {
       console.log(`[Enricher] OK: ${cleanText.length} chars — "${article.title.substring(0,50)}"`);
-      return { ...article, content: cleanText, resolvedUrl: finalUrl, contentEnriched: true };
+      return { ...article, content: cleanText, resolvedUrl: article.url, contentEnriched: true };
     }
     console.log(`[Enricher] THIN: "${article.title.substring(0,50)}"`);
     return { ...article, contentEnriched: false };
   } catch (err) {
-    await safeBrowserClose(browser);
     console.error(`[Enricher] FAIL: "${article.title.substring(0,50)}" — ${err.message.split('\n')[0]}`);
     return { ...article, contentEnriched: false };
   }
