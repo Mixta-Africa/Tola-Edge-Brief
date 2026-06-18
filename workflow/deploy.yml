@@ -27,34 +27,25 @@ jobs:
 
       - name: Build site folder
         env:
-          GH_OWNER:   ${{ github.repository_owner }}
-          GH_REPO:    ${{ github.event.repository.name }}
           GH_PAT_APP: ${{ secrets.GH_PAT_APP }}
         run: |
           mkdir -p _site/data _site/vault
 
-          # Inject credentials directly into index.html via sed.
-          # This avoids writing a separate config.json file, which GitHub's
-          # artifact uploader can strip if it detects secret-like content.
-          sed \
-            -e "s|%%GH_OWNER%%|${GH_OWNER}|g" \
-            -e "s|%%GH_REPO%%|${GH_REPO}|g" \
-            -e "s|%%GH_PAT_APP%%|${GH_PAT_APP}|g" \
-            index.html > _site/index.html
+          # Inject only the token — owner and repo are hardcoded in index.html
+          sed "s|%%GH_PAT_APP%%|${GH_PAT_APP}|g" index.html > _site/index.html
 
-          echo "Verifying injection (token masked):"
-          grep "owner:" _site/index.html | head -1
-          grep "repo:"  _site/index.html | head -1
+          # Verify token was injected (show first 12 chars only)
+          TOKEN_CHECK=$(grep "token:" _site/index.html | head -1 | tr -d " '," | cut -c7-18)
+          echo "Token prefix injected: ${TOKEN_CHECK}..."
 
-          # Mixta context (no credentials — safe to serve)
+          # Mixta context
           cp data/mixta-context.json _site/data/mixta-context.json
 
-          # Seed empty data files so the app doesn't 404 on first load
+          # Seed empty data files
           echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' \
             > _site/data/brief_output.json
           echo '[]' > _site/data/vault_index.json
 
-          # Prevent Jekyll from interfering
           touch _site/.nojekyll
 
       - name: Upload Pages artifact
