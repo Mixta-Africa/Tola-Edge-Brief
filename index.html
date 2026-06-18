@@ -1110,12 +1110,12 @@
   <script>
   'use strict';
 
-  // ─── CONFIG — injected at build time by deploy.yml via sed ──────────────
-  // Placeholders below are replaced with real values during the GitHub Actions
-  // deploy step. They are never committed with real credentials.
+  // ─── CONFIG ───────────────────────────────────────────────────────────────
+  // owner + repo are public — hardcoded directly.
+  // token is injected at deploy time by deploy.yml via sed (%%GH_PAT_APP%%).
   let CFG = {
-    owner: '%%GH_OWNER%%',
-    repo:  '%%GH_REPO%%',
+    owner: 'mixta-africa',
+    repo:  'Tola-Edge-Brief',
     token: '%%GH_PAT_APP%%',
   };
 
@@ -1141,14 +1141,15 @@
     setLoad('Initializing application…', 25);
     await sleep(200);
 
-    // Config is injected at build time by deploy.yml (sed replaces %%placeholders%%).
-    // If placeholders are still present, the workflow didn't run or sed failed.
+    // owner + repo are hardcoded. Only token is injected by deploy.yml.
     setLoad('Loading configuration…', 50);
-    if (CFG.token.startsWith('%%') || CFG.owner.startsWith('%%')) {
-      console.error('[Boot] Config placeholders were not replaced — check deploy.yml and secrets.');
-      CFG = { owner: '', repo: '', token: '' };
+    if (CFG.token.startsWith('%%')) {
+      console.error('[Boot] GH_PAT_APP placeholder not replaced — deploy.yml sed failed or secret is missing.');
+      CFG.token = '';
+    } else if (!CFG.token) {
+      console.error('[Boot] GH_PAT_APP is empty — check the secret value in repo Settings → Secrets → Actions.');
     } else {
-      console.log(`[Boot] Config ready for ${CFG.owner}/${CFG.repo}`);
+      console.log(`[Boot] Config ready for ${CFG.owner}/${CFG.repo} token=${CFG.token.slice(0,8)}…`);
     }
 
     setLoad('Configuration ready', 75);
@@ -1572,13 +1573,13 @@
   async function runDiagnostics() {
     DIAG.init();
 
-    // 1 — Check if placeholders were replaced by deploy.yml
-    if (CFG.token.startsWith('%%') || CFG.owner.startsWith('%%')) {
-      DIAG.log('fail', 'Config injection', 'Placeholders not replaced — deploy.yml did not run or sed failed. Push to main to trigger deploy.');
+    // 1 — Check if token placeholder was replaced by deploy.yml
+    if (CFG.token.startsWith('%%')) {
+      DIAG.log('fail', 'Token injection', 'GH_PAT_APP placeholder not replaced — deploy.yml sed failed. Check Actions logs.');
     } else if (!CFG.token) {
-      DIAG.log('fail', 'GH_PAT_APP secret', 'Token is empty — add GH_PAT_APP secret in repo Settings → Secrets → Actions.');
+      DIAG.log('fail', 'GH_PAT_APP secret', 'Token is empty — update GH_PAT_APP secret in repo Settings → Secrets → Actions.');
     } else {
-      DIAG.log('ok',   'Config injection', `owner=${CFG.owner}  repo=${CFG.repo}  token=${CFG.token.slice(0,8)}…`);
+      DIAG.log('ok', 'Config', `owner=${CFG.owner}  repo=${CFG.repo}  token=${CFG.token.slice(0,8)}…`);
     }
 
     // 2 — Check GitHub API reachability + token validity
