@@ -1,122 +1,69 @@
-name: Generate Intelligence Brief
+name: Deploy to GitHub Pages
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-    inputs:
-      request_id:
-        description: 'Unique request ID (timestamp) used by browser to match the result'
-        required: true
-        type: string
-      active_market:
-        description: 'Market scope: All | Nigeria | Senegal'
-        required: true
-        type: string
-        default: 'All'
-      active_domains:
-        description: 'Comma-separated active domain codes e.g. D1,D2,D3,D4,D5,D6'
-        required: true
-        type: string
-        default: 'D1,D2,D3,D4,D5,D6'
-      custom_prompt:
-        description: 'Optional targeted brief request e.g. "DFI appetite affordable housing Nigeria 2026"'
-        required: false
-        type: string
-        default: ''
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
 
 jobs:
-  generate:
+  deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
-      - name: Checkout main branch (source + engine)
+      - name: Checkout main branch
         uses: actions/checkout@v4
-        with:
-          ref: main
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Cache node_modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-teb-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-teb-
-
-      - name: Install dependencies (axios + puppeteer)
-        run: |
-          npm install axios puppeteer
-
-      - name: Run intelligence engine
-        id: run_engine
+      - name: Build site folder
         env:
-          GNEWS_API_KEY:      ${{ secrets.GNEWS_API_KEY }}
-          NEWSAPI_KEY:        ${{ secrets.NEWSAPI_KEY }}
-          GROQ_API_KEY:       ${{ secrets.GROQ_API_KEY }}
-          SAMBANOVA_API_KEY:  ${{ secrets.SAMBANOVA_API_KEY }}
-          CEREBRAS_API_KEY:   ${{ secrets.CEREBRAS_API_KEY }}
-          MISTRAL_API_KEY:    ${{ secrets.MISTRAL_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          GEMINI_API_KEY:     ${{ secrets.GEMINI_API_KEY }}
-          REQUEST_ID:      ${{ inputs.request_id }}
-          ACTIVE_MARKET:   ${{ inputs.active_market }}
-          ACTIVE_DOMAINS:  ${{ inputs.active_domains }}
-          CUSTOM_PROMPT:   ${{ inputs.custom_prompt }}
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
-        run: node .github/scripts/engine.js
+          GH_OWNER:   ${{ github.repository_owner }}
+          GH_REPO:    ${{ github.event.repository.name }}
+          GH_PAT_APP: ${{ secrets.GH_PAT_APP }}
+        run: |
+          mkdir -p _site/data _site/vault
 
-      - name: Checkout gh-pages branch for output
-        uses: actions/checkout@v4
+          # App shell
+          cp index.html _site/index.html
+
+          # Mixta context (safe to be public — no credentials)
+          cp data/mixta-context.json _site/data/mixta-context.json
+
+          # config.json — credentials injected here, never committed to main
+          # GH_PAT_APP must be a fine-grained PAT scoped to this repo only,
+          # with Actions: read & write permission.
+          cat > _site/data/config.json << EOF
+          {
+            "owner": "${GH_OWNER}",
+            "repo":  "${GH_REPO}",
+            "token": "${GH_PAT_APP}"
+          }
+          EOF
+          echo "config.json written for ${GH_OWNER}/${GH_REPO}"
+
+          # Seed empty data files so the app doesn't 404 on first load
+          echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' \
+            > _site/data/brief_output.json
+          echo '[]' > _site/data/vault_index.json
+
+          # Stop Jekyll from processing the folder (it strips leading-underscore dirs etc.)
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          ref: gh-pages
-          path: gh-pages-out
-          token: ${{ secrets.GH_DEPLOY_TOKEN }}
+          path: _site
 
-      - name: Write brief output and update vault
-        run: |
-          mkdir -p gh-pages-out/data gh-pages-out/vault
-          cp /tmp/brief_output.json gh-pages-out/data/brief_output.json
-          DATE_STR=$(date -u +"%Y-%m-%d")
-          FILENAME="TEB_${DATE_STR}.json"
-          cp /tmp/brief_output.json "gh-pages-out/vault/${FILENAME}"
-          node -e "
-            const fs = require('fs');
-            const indexPath = 'gh-pages-out/data/vault_index.json';
-            let index = [];
-            try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
-            const today = '${DATE_STR}';
-            index = index.filter(e => e.date !== today);
-            index.unshift({ date: today, filename: '${FILENAME}', generatedAt: new Date().toISOString() });
-            index = index.slice(0, 30);
-            fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-            console.log('Vault index: ' + index.length + ' entries');
-          "
-
-      - name: Commit and push to gh-pages
-        run: |
-          cd gh-pages-out
-          git config user.name  "Tola Edge Brief"
-          git config user.email "actions@github.com"
-          git add data/brief_output.json data/vault_index.json vault/
-          git diff --staged --quiet || git commit -m "brief: $(date -u +%Y-%m-%d) [req ${{ inputs.request_id }}]"
-          git push
-
-      - name: Log pipeline summary
-        if: always()
-        run: |
-          if [ -f /tmp/brief_output.json ]; then
-            node -e "
-              const d = JSON.parse(require('fs').readFileSync('/tmp/brief_output.json','utf8'));
-              console.log('Status:', d.status);
-              console.log('Stories:', d.brief?.stories?.length ?? 0);
-              console.log('Articles fetched:', d.meta?.articles_fetched ?? 'n/a');
-              console.log('Articles analyzed:', d.meta?.articles_analyzed ?? 'n/a');
-              if (d.error) console.log('Error:', d.error);
-            "
-          else
-            echo "No output file found"
-          fi
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
