@@ -883,6 +883,85 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  /* ═══════════════════════════════════════════════════════════════
+     DIAGNOSTICS PANEL
+  ═══════════════════════════════════════════════════════════════ */
+  .diag-panel {
+    display: none;
+    position: fixed;
+    bottom: 72px; right: 16px;
+    width: min(480px, calc(100vw - 32px));
+    background: #fff;
+    border: 1.5px solid #e0e4ed;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(11,31,58,0.15);
+    z-index: 9999;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    overflow: hidden;
+  }
+  .diag-panel.visible { display: block; }
+
+  .diag-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #0B1F3A;
+    color: #fff;
+  }
+  .diag-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; }
+  .diag-close {
+    background: none; border: none; color: rgba(255,255,255,0.6);
+    font-size: 16px; cursor: pointer; line-height: 1; padding: 0 0 0 12px;
+  }
+  .diag-body { padding: 10px 0; max-height: 340px; overflow-y: auto; }
+
+  .diag-row {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 0 8px;
+    padding: 6px 16px;
+    border-bottom: 1px solid #f0f2f7;
+    align-items: start;
+  }
+  .diag-row:last-child { border-bottom: none; }
+  .diag-icon { font-size: 13px; margin-top: 1px; }
+  .diag-label { font-weight: 500; color: #0B1F3A; line-height: 1.4; }
+  .diag-detail {
+    grid-column: 2;
+    color: #667085;
+    font-size: 11px;
+    margin-top: 2px;
+    line-height: 1.5;
+    word-break: break-all;
+  }
+
+  .diag-ok    .diag-icon { color: #0EA572; }
+  .diag-fail  .diag-icon { color: #E85D3D; }
+  .diag-fail  .diag-label { color: #E85D3D; }
+  .diag-fail  .diag-detail { color: #C44A2C; }
+  .diag-warn  .diag-icon { color: #D4870A; }
+  .diag-warn  .diag-label { color: #D4870A; }
+  .diag-info  .diag-icon { color: #98A2B3; }
+
+  .diag-trigger {
+    position: fixed;
+    bottom: 20px; right: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: #0B1F3A;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(11,31,58,0.25);
+    z-index: 9998;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s;
+  }
+  .diag-trigger:hover { transform: scale(1.08); }
   </style>
 </head>
 <body>
@@ -1083,6 +1162,7 @@
     renderDate();
     renderDomains();
     loadVault();
+    runDiagnostics(); // runs all checks and auto-shows panel on any failure
   }
 
   function setLoad(msg, pct) {
@@ -1449,8 +1529,148 @@
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+  // ─── DIAGNOSTICS ─────────────────────────────────────────────────────────
+  // Visible on-screen panel so deployment issues are obvious without DevTools.
+  // Shows automatically whenever any check fails; can also be opened manually.
+
+  const DIAG = {
+    lines: [],
+    panel: null,
+
+    init() {
+      this.panel = document.getElementById('diag-panel');
+    },
+
+    log(status, label, detail = '') {
+      const icons = { ok: '✓', fail: '✗', warn: '⚠', info: '·' };
+      const icon = icons[status] || '·';
+      this.lines.push({ status, icon, label, detail });
+      this._render();
+      if (status === 'fail') this.show();
+    },
+
+    show() {
+      if (this.panel) this.panel.classList.add('visible');
+    },
+
+    hide() {
+      if (this.panel) this.panel.classList.remove('visible');
+    },
+
+    _render() {
+      if (!this.panel) return;
+      const body = this.panel.querySelector('#diag-body');
+      body.innerHTML = this.lines.map(l => `
+        <div class="diag-row diag-${l.status}">
+          <span class="diag-icon">${l.icon}</span>
+          <span class="diag-label">${l.label}</span>
+          ${l.detail ? `<span class="diag-detail">${esc(l.detail)}</span>` : ''}
+        </div>`).join('');
+    },
+  };
+
+  async function runDiagnostics() {
+    DIAG.init();
+
+    // 1 — Check if placeholders were replaced by deploy.yml
+    if (CFG.token.startsWith('%%') || CFG.owner.startsWith('%%')) {
+      DIAG.log('fail', 'Config injection', 'Placeholders not replaced — deploy.yml did not run or sed failed. Push to main to trigger deploy.');
+    } else if (!CFG.token) {
+      DIAG.log('fail', 'GH_PAT_APP secret', 'Token is empty — add GH_PAT_APP secret in repo Settings → Secrets → Actions.');
+    } else {
+      DIAG.log('ok',   'Config injection', `owner=${CFG.owner}  repo=${CFG.repo}  token=${CFG.token.slice(0,8)}…`);
+    }
+
+    // 2 — Check GitHub API reachability + token validity
+    if (CFG.token && !CFG.token.startsWith('%%')) {
+      try {
+        const r = await fetch(
+          `https://api.github.com/repos/${CFG.owner}/${CFG.repo}`,
+          { headers: { Authorization: `Bearer ${CFG.token}`, Accept: 'application/vnd.github.v3+json' } }
+        );
+        if (r.status === 200) {
+          DIAG.log('ok', 'GitHub API', `Reached repo — HTTP 200`);
+        } else if (r.status === 401) {
+          DIAG.log('fail', 'GitHub token', `HTTP 401 — token is invalid or expired. Regenerate GH_PAT_APP.`);
+        } else if (r.status === 403) {
+          DIAG.log('fail', 'GitHub token', `HTTP 403 — token lacks Actions permission. Set Actions: Read & Write on the PAT.`);
+        } else if (r.status === 404) {
+          DIAG.log('fail', 'GitHub repo', `HTTP 404 — repo not found. Check owner="${CFG.owner}" repo="${CFG.repo}".`);
+        } else {
+          DIAG.log('warn', 'GitHub API', `Unexpected HTTP ${r.status}`);
+        }
+      } catch (e) {
+        DIAG.log('fail', 'GitHub API', `Network error — ${e.message}`);
+      }
+    } else {
+      DIAG.log('warn', 'GitHub API', 'Skipped — no valid token.');
+    }
+
+    // 3 — Check workflow file exists
+    if (CFG.token && !CFG.token.startsWith('%%')) {
+      try {
+        const r = await fetch(
+          `https://api.github.com/repos/${CFG.owner}/${CFG.repo}/actions/workflows/generate-brief.yml`,
+          { headers: { Authorization: `Bearer ${CFG.token}`, Accept: 'application/vnd.github.v3+json' } }
+        );
+        if (r.status === 200) {
+          const d = await r.json();
+          DIAG.log('ok', 'generate-brief.yml', `Found — state: ${d.state}`);
+        } else {
+          DIAG.log('fail', 'generate-brief.yml', `HTTP ${r.status} — workflow file not found in .github/workflows/`);
+        }
+      } catch (e) {
+        DIAG.log('warn', 'generate-brief.yml', `Check skipped — ${e.message}`);
+      }
+    }
+
+    // 4 — Check brief_output.json is reachable
+    try {
+      const r = await fetch(
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/brief_output.json?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (r.ok) {
+        const d = await r.json();
+        DIAG.log('ok', 'brief_output.json', `Reachable — status: "${d.status}"`);
+      } else {
+        DIAG.log('fail', 'brief_output.json', `HTTP ${r.status} — file missing from deployed site. Deploy may not have completed.`);
+      }
+    } catch (e) {
+      DIAG.log('fail', 'brief_output.json', `Not reachable — ${e.message}`);
+    }
+
+    // 5 — Check vault_index.json
+    try {
+      const r = await fetch(
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault_index.json?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (r.ok) {
+        const d = await r.json();
+        DIAG.log('ok', 'vault_index.json', `Reachable — ${d.length} brief(s) archived`);
+      } else {
+        DIAG.log('fail', 'vault_index.json', `HTTP ${r.status} — file missing from deployed site.`);
+      }
+    } catch (e) {
+      DIAG.log('fail', 'vault_index.json', `Not reachable — ${e.message}`);
+    }
+  }
+
   // ─── START ───────────────────────────────────────────────────────────────
   boot();
   </script>
+  <!-- Diagnostics panel — appears automatically on any boot failure -->
+  <div class="diag-panel" id="diag-panel">
+    <div class="diag-header">
+      <span class="diag-title">⚙ System Diagnostics</span>
+      <button class="diag-close" onclick="DIAG.hide()">✕</button>
+    </div>
+    <div class="diag-body" id="diag-body">Running checks…</div>
+  </div>
+
+  <!-- Diagnostics trigger button (always visible, bottom-right) -->
+  <button class="diag-trigger" onclick="DIAG.show()" title="Show diagnostics">⚙</button>
+
 </body>
 </html>
