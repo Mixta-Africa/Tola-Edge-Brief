@@ -1,94 +1,82 @@
 {
-  "request_id": "1781809547739",
+  "request_id": "1781809715801",
   "status": "success",
   "brief": {
-    "narrative": "The Nigerian real estate sector is experiencing increased investor interest due to rising housing demand in major cities [0]. The Federal Government's withdrawal of police escorts from private citizens has disrupted project delivery and worsened insecurity for real estate developers [1]. The Dangote Group has signed a $600m loan agreement with the Africa Finance Corporation to support the expansion of its fertiliser production [2]. Today's intelligence suggests that Mixta Africa should focus on developing innovative financing solutions and partnerships to address the housing needs of the informal majority in Nigeria, while also monitoring the impact of government policies on the real estate sector.",
+    "narrative": "There are no high-consequence Nigeria signals in today's intelligence. However, in Senegal, the country is focused on sports and healthcare, with the recent defeat of the national football team and the First Lady's advocacy for universal health coverage. The demand-side market intelligence suggests a strong emphasis on social issues, which could inform Mixta's approach to market creation and informal sector engagement. This week, Mixta should consider how to leverage these social trends to support its strategic priorities, particularly in the context of building homeownership infrastructure.",
     "stories": [
       {
-        "title": "Nigerian Real Estate Sector Attracts Increasing Investor Interest",
+        "title": "First Lady Advocates for Universal Health Coverage",
         "domain": "Demand-Side Market Intelligence",
-        "market": "Nigeria",
+        "market": "Senegal",
         "impact": "Medium",
-        "body": "Nigeria's real estate sector is experiencing increased investor interest due to rising housing demand in major cities. The World Bank and United Nations population estimates indicate a growing need for housing. The top 10 real estate companies in Nigeria are capitalizing on this trend [0].",
-        "relevance": "This trend is relevant to Mixta Africa's strategic priority of building homeownership infrastructure in Nigeria, particularly for the informal majority. Our active project, 'Mixta Homes', can benefit from this increased investor interest and demand for housing.",
-        "sources": [
-          0
-        ],
-        "sourceArticles": [
-          {
-            "title": "Top 10 Real Estate Companies in Nigeria",
-            "url": "https://punchng.com/top-10-real-estate-companies-in-nigeria/",
-            "source": "The Punch"
-          }
-        ]
-      },
-      {
-        "title": "Insecurity and Escort Withdrawal Disrupt Real Estate Project Delivery",
-        "domain": "Land & Regulatory Alpha",
-        "market": "Nigeria",
-        "impact": "Medium",
-        "body": "The Federal Government's withdrawal of police escorts from private citizens has disrupted project delivery and worsened insecurity for real estate developers. This has led to increased costs and delays in project completion [1].",
-        "relevance": "This development is relevant to Mixta Africa's active project, 'Mixta Estates', which requires a stable and secure environment for construction and sales. We need to monitor the government's policies and their impact on the real estate sector.",
+        "body": "The First Lady of Senegal, Absa Faye, has called for improved access to healthcare for women, emphasizing the need for universal health coverage [1]. This advocacy effort highlights the importance of social issues in Senegal, particularly in the context of healthcare and gender equality.",
+        "relevance": "This development is relevant to Mixta's strategic priority of building homeownership infrastructure, as it underscores the need for a holistic approach to social development. The company's efforts to create market opportunities in Senegal could benefit from a deeper understanding of the country's social and healthcare landscape.",
         "sources": [
           1
         ],
         "sourceArticles": [
           {
-            "title": "Insecurity, escort withdrawal stall real estate delivery",
-            "url": "https://punchng.com/insecurity-escort-withdrawal-stall-real-estate-delivery/",
-            "source": "The Punch"
+            "title": "Couverture sanitaire universelle : Absa Faye défend l’accès équitable aux soins pour les femmes",
+            "url": "https://lesoleil.sn/actualites/sante/couverture-sanitaire-universelle-absa-faye-defend-lacces-equitable-aux-soins-pour-les-femmes/",
+            "source": "lesoleil.sn"
           }
         ]
       },
       {
-        "title": "Dangote Group Signs $600m Loan Agreement for Fertiliser Expansion",
-        "domain": "Capital & Financing Architecture",
-        "market": "Nigeria",
+        "title": "Intolérance Politique in Senegal",
+        "domain": "Land & Regulatory Alpha",
+        "market": "Senegal",
         "impact": "Medium",
-        "body": "The Dangote Group has signed a $600m loan agreement with the Africa Finance Corporation to support the expansion of its fertiliser production. This deal demonstrates the availability of financing for large-scale projects in Nigeria [2].",
-        "relevance": "This deal is relevant to Mixta Africa's strategic priority of developing innovative financing solutions for our projects. We can explore similar financing options for our 'Mixta Homes' project, which requires significant investment in infrastructure and construction.",
+        "body": "A recent article in Les Soleil highlights the issue of intolérance politique in Senegal, with concerns over the limitations on free speech and the need for greater political tolerance [3].",
+        "relevance": "This development is relevant to Mixta's strategic priority of navigating the regulatory landscape in Senegal. The company's efforts to build homeownership infrastructure will require a deep understanding of the country's political and regulatory context.",
         "sources": [
+          3
+        ],
+        "sourceArticles": [
+          {
+            "title": "Intolérance politique (Par Ibrahima Khaliloullah NDIAYE)",
+            "url": "https://lesoleil.sn/le-decodeur/chronique/intolerance-politique-par-ibrahima-khaliloullah-ndiaye/",
+            "source": "lesoleil.sn"
+          }
+        ]
+      },
+      {
+        "title": "Sénégalais React to Football Defeat",
+        "domain": "Demand-Side Market Intelligence",
+        "market": "Senegal",
+        "impact": "Low",
+        "body": "The Sénégalais are struggling to come to terms with the defeat of their national football team, with 24 years having passed since their historic win against France in 2002 [0]. The current defeat has sparked reflection on the team's performance, with concerns over defensive errors [2].",
+        "relevance": "This social trend is relevant to Mixta's market creation efforts, particularly in terms of understanding the informal sector's values and priorities. The company's strategic priority of building homeownership infrastructure could benefit from a deeper understanding of the social context in Senegal.",
+        "sources": [
+          0,
           2
         ],
         "sourceArticles": [
           {
-            "title": "Dangote, AFC sign $600m deal for fertiliser expansion",
-            "url": "https://punchng.com/dangote-afc-sign-600m-deal-for-fertiliser-expansion/",
-            "source": "The Punch"
-          }
-        ]
-      },
-      {
-        "title": "Lagos State Government Reforms Health Insurance Programme",
-        "domain": "Demand-Side Market Intelligence",
-        "market": "Nigeria",
-        "impact": "Medium",
-        "body": "The Lagos State Government is introducing reforms to its health insurance programme to curb medical tourism and ensure sustainability. The programme aims to provide universal health coverage to residents [8].",
-        "relevance": "This development is relevant to Mixta Africa's strategic priority of developing market creation solutions for the informal sector. Our 'Mixta Health' project can benefit from the government's efforts to increase access to healthcare and insurance for the informal majority.",
-        "sources": [
-          8
-        ],
-        "sourceArticles": [
+            "title": "Les Sénégalais encaissent difficilement la défaite des Lions face aux Bleus",
+            "url": "https://lesoleil.sn/actualites/sports/les-senegalais-encaissent-difficilement-la-defaite-des-lions-face-aux-bleus/",
+            "source": "lesoleil.sn"
+          },
           {
-            "title": "Lagos moves to block medical tourism within health scheme as enrollees game insurance system",
-            "url": "https://businessday.ng/news/article/lagos-moves-to-block-medical-tourism-within-health-scheme-as-enrollees-game-insurance-system/",
-            "source": "businessday.ng"
+            "title": "Pertes de balle, erreurs de marquage…: La défense ne respire toujours pas la sérénité",
+            "url": "https://lesoleil.sn/actualites/sports/pertes-de-balle-erreurs-de-marquage-la-defense-ne-respire-toujours-pas-la-serenite/",
+            "source": "lesoleil.sn"
           }
         ]
       }
     ]
   },
   "error": null,
-  "generated_at": "2026-06-18T19:07:08.995Z",
+  "generated_at": "2026-06-18T19:09:31.913Z",
   "meta": {
-    "market": "Nigeria",
+    "market": "Senegal",
     "domains": [
       "D1",
       "D2",
       "D3"
     ],
-    "articles_fetched": 38,
-    "articles_analyzed": 11,
+    "articles_fetched": 8,
+    "articles_analyzed": 4,
     "vault_entries_used": 0,
     "custom_prompt": null
   }
