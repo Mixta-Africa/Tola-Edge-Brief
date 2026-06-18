@@ -1053,20 +1053,21 @@
 
   // ─── BOOT ────────────────────────────────────────────────────────────────
   async function boot() {
-    setLoad('Loading configuration…', 25);
+    setLoad('Initializing application…', 25);
     await sleep(200);
 
-    try {
-      const res = await fetch(`./data/config.json?t=${Date.now()}`, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`config.json ${res.status}`);
-      CFG = await res.json();
-      if (!CFG.token) throw new Error('config.json incomplete');
-      setLoad('Configuration loaded', 75);
-    } catch (e) {
-      setLoad(`Config error: ${e.message}`, 100);
-      console.error('[Boot]', e);
+    // Initialize configuration — GitHub API credentials should be injected at build time
+    // If CFG is not already populated (e.g., from build process), use defaults
+    if (!CFG.token) {
+      CFG = {
+        owner: window.__ENV?.GH_OWNER || 'mixta-africa',
+        repo:  window.__ENV?.GH_REPO || 'Tola-Edge-Brief',
+        token: window.__ENV?.GH_TOKEN || ''  // Empty for now; will need to be set for API calls
+      };
+      console.log('[Boot] Using default GitHub config. API calls require GitHub token.');
     }
 
+    setLoad('Configuration ready', 75);
     await sleep(300);
     setLoad('Ready', 100);
     await sleep(350);
