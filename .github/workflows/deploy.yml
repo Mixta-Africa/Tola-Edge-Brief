@@ -41,10 +41,24 @@ jobs:
           # Mixta context
           cp data/mixta-context.json _site/data/mixta-context.json
 
-          # Seed empty data files
-          echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' \
-            > _site/data/brief_output.json
-          echo '[]' > _site/data/vault_index.json
+          # Copy brief output from main branch (written by generate-brief.yml).
+          # Falls back to empty seed if no brief has been generated yet.
+          if [ -f data/brief_output.json ]; then
+            cp data/brief_output.json _site/data/brief_output.json
+            echo "Deployed existing brief_output.json"
+          else
+            echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}'               > _site/data/brief_output.json
+            echo "Seeded empty brief_output.json"
+          fi
+
+          if [ -f data/vault_index.json ]; then
+            cp data/vault_index.json _site/data/vault_index.json
+            [ -d data/vault ] && cp -r data/vault _site/data/vault || true
+            echo "Deployed existing vault"
+          else
+            echo '[]' > _site/data/vault_index.json
+            echo "Seeded empty vault_index.json"
+          fi
 
           touch _site/.nojekyll
 
