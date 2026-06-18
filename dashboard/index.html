@@ -1,286 +1,1714 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Tola Edge Brief</title>
-    
-    <!-- Fonts: Playfair Display (Masthead) & Inter (Body) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-    
-    <!-- React & Babel for zero-build execution -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS & Tabler Icons -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons-webfont.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: '#0C2D5A',
-                        customBlue: '#185FA5',
-                        bgOffWhite: '#F7F8FA'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Playfair Display', 'serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #F7F8FA; }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0B1F3A" />
+  <title>Tola Edge Brief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+  /* ═══════════════════════════════════════════════════════════════
+     DESIGN TOKENS
+  ═══════════════════════════════════════════════════════════════ */
+  :root {
+    /* Brand */
+    --navy:         #0B1F3A;
+    --navy-mid:     #122744;
+    --navy-light:   #1C3557;
+    --blue:         #1A6BC4;
+    --blue-light:   #EBF3FC;
+    --coral:        #E85D3D;
+    --coral-light:  #FEF0EC;
+    --coral-dark:   #C44A2C;
+    --teal:         #0EA572;
+    --teal-light:   #E6F7F1;
+    --amber:        #D4870A;
+    --amber-light:  #FEF5E4;
+
+    /* Neutrals */
+    --white:        #FFFFFF;
+    --surface:      #F4F6FA;
+    --surface-2:    #ECEEF4;
+    --border:       rgba(11,31,58,0.08);
+
+    /* Text */
+    --text-100:     #0B1F3A;
+    --text-200:     #344054;
+    --text-300:     #667085;
+    --text-400:     #98A2B3;
+    --text-inv:     #FFFFFF;
+    --text-inv-2:   rgba(255,255,255,0.65);
+
+    /* Cards */
+    --card-bg:      #FFFFFF;
+    --card-shadow:  0 2px 12px rgba(11,31,58,0.07), 0 1px 3px rgba(11,31,58,0.05);
+    --card-shadow-lg: 0 8px 28px rgba(11,31,58,0.10), 0 2px 8px rgba(11,31,58,0.06);
+
+    /* Spacing & radius */
+    --r-sm:   10px;
+    --r-md:   14px;
+    --r-lg:   20px;
+    --r-xl:   28px;
+    --r-pill: 100px;
+
+    /* Safe areas for notch / Dynamic Island / home indicator */
+    --sat: env(safe-area-inset-top,    0px);
+    --sar: env(safe-area-inset-right,  0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left,   0px);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     RESET & BASE
+  ═══════════════════════════════════════════════════════════════ */
+  *, *::before, *::after {
+    box-sizing: border-box; margin: 0; padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    height: 100%;
+    /* Use dynamic viewport height — fixes iOS Safari address bar */
+    height: -webkit-fill-available;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--surface);
+    color: var(--text-100);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     APP SHELL
+  ═══════════════════════════════════════════════════════════════ */
+  .app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    max-width: 540px;
+    margin: 0 auto;
+    /* On desktop, show as a centered phone-like column */
+  }
+
+  /* Desktop: give it a phone-frame feel */
+  @media (min-width: 600px) {
+    body { background: #D8DCE8; }
+    .app {
+      box-shadow: 0 0 80px rgba(11,31,58,0.25);
+      background: var(--surface);
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     LOADING SCREEN
+  ═══════════════════════════════════════════════════════════════ */
+  .loading-screen {
+    position: fixed; inset: 0;
+    background: var(--navy);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 999;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    padding-top: var(--sat);
+  }
+
+  .loading-screen.out {
+    opacity: 0; transform: scale(0.97); pointer-events: none;
+  }
+
+  .loading-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 500;
+    color: var(--white);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .loading-sub {
+    font-size: 12px; font-weight: 400;
+    color: var(--text-inv-2);
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .loading-bar-track {
+    width: 120px; height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .loading-bar-fill {
+    height: 100%; width: 0%;
+    background: var(--coral);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .loading-status {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--text-inv-2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     HEADER — full bleed navy, safe area aware
+  ═══════════════════════════════════════════════════════════════ */
+  .app-header {
+    background: var(--navy);
+    padding: calc(var(--sat) + 20px) 24px 28px;
+    position: relative;
+    /* Subtle gradient for depth */
+    background-image: radial-gradient(ellipse at 100% 0%, #1C3F6E 0%, transparent 60%);
+    flex-shrink: 0;
+  }
+
+  .header-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .header-eyebrow::before {
+    content: '';
+    width: 14px; height: 1.5px;
+    background: var(--coral);
+    border-radius: 1px;
+    display: inline-block;
+  }
+
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; font-weight: 500;
+    color: var(--white);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  .header-title em {
+    font-style: italic;
+    color: rgba(255,255,255,0.75);
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-date {
+    font-size: 12px;
+    color: var(--text-inv-2);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--r-pill);
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.04em;
+  }
+
+  .live-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #4ADE80;
+    box-shadow: 0 0 0 2px rgba(74,222,128,0.3);
+    flex-shrink: 0;
+  }
+
+  .live-dot.generating {
+    background: var(--coral);
+    box-shadow: 0 0 0 2px rgba(232,93,61,0.3);
+    animation: pulse-dot 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SCROLLABLE CONTENT AREA
+  ═══════════════════════════════════════════════════════════════ */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 16px;
+    /* Bottom padding = sticky button height + home indicator */
+    padding-bottom: calc(88px + var(--sab) + 16px);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     SECTION HEADERS
+  ═══════════════════════════════════════════════════════════════ */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    margin-top: 24px;
+  }
+
+  .section-header:first-child { margin-top: 0; }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-300);
+  }
+
+  .section-meta {
+    font-size: 12px;
+    color: var(--text-400);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     MARKET FILTER PILLS
+  ═══════════════════════════════════════════════════════════════ */
+  .market-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .market-pill {
+    padding: 9px 18px;
+    border-radius: var(--r-pill);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-300);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    -webkit-user-select: none; user-select: none;
+    box-shadow: var(--card-shadow);
+  }
+
+  .market-pill.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(11,31,58,0.25);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     DOMAIN GRID
+  ═══════════════════════════════════════════════════════════════ */
+  .domain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .domain-card {
+    background: var(--card-bg);
+    border-radius: var(--r-md);
+    padding: 12px 10px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s ease;
+    -webkit-user-select: none; user-select: none;
+    position: relative;
+    overflow: hidden;
+    min-height: 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border: 1.5px solid transparent;
+  }
+
+  .domain-card::before {
+    content: '';
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .domain-card[data-priority="highest"]::before { background: #0EA572; box-shadow: 0 0 0 3px rgba(14,165,114,0.2); }
+  .domain-card[data-priority="high"]::before    { background: #1A6BC4; box-shadow: 0 0 0 3px rgba(26,107,196,0.2); }
+  .domain-card[data-priority="medium"]::before  { background: #D4870A; box-shadow: 0 0 0 3px rgba(212,135,10,0.2); }
+  .domain-card[data-priority="low"]::before     { background: #CBD5E1; }
+
+  .domain-card.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    box-shadow: 0 4px 14px rgba(11,31,58,0.25);
+  }
+
+  .domain-card.active .d-code,
+  .domain-card.active .d-name { color: var(--white); }
+  .domain-card.active .d-code { color: rgba(255,255,255,0.55); }
+
+  .d-code {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-400);
+    margin-bottom: 2px;
+    transition: color 0.2s;
+  }
+
+  .d-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-200);
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     CUSTOM PROMPT INPUT
+  ═══════════════════════════════════════════════════════════════ */
+  .prompt-wrap {
+    background: var(--card-bg);
+    border-radius: var(--r-md);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .prompt-wrap:focus-within {
+    border-color: var(--blue);
+    box-shadow: var(--card-shadow), 0 0 0 3px rgba(26,107,196,0.12);
+  }
+
+  .prompt-icon {
+    padding: 0 14px;
+    color: var(--text-400);
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .prompt-input {
+    flex: 1;
+    padding: 14px 16px 14px 0;
+    border: none;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-100);
+    background: transparent;
+    min-height: 50px;
+  }
+
+  .prompt-input::placeholder { color: var(--text-400); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     STATUS CARD — shown during generation
+  ═══════════════════════════════════════════════════════════════ */
+  .status-card {
+    display: none;
+    background: var(--navy);
+    border-radius: var(--r-md);
+    padding: 16px 18px;
+    margin-bottom: 16px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .status-card.visible { display: flex; }
+  .status-card.error   { background: var(--coral-light); }
+
+  .status-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .status-card.error .status-icon {
+    background: var(--coral);
+    color: var(--white);
+  }
+
+  .status-text-wrap { flex: 1; }
+
+  .status-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 2px;
+  }
+
+  .status-card.error .status-label { color: var(--coral); }
+
+  .status-msg {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.4;
+  }
+
+  .status-card.error .status-msg { color: var(--text-100); }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-top-color: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     BRIEF OUTPUT — EXECUTIVE NARRATIVE
+  ═══════════════════════════════════════════════════════════════ */
+  .output-section {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+
+  .output-section.visible { opacity: 1; transform: translateY(0); }
+
+  .narrative-card {
+    background: var(--navy);
+    border-radius: var(--r-lg);
+    padding: 22px 20px;
+    margin-bottom: 8px;
+    box-shadow: 0 6px 24px rgba(11,31,58,0.22);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle radial glow */
+  .narrative-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(232,93,61,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .narrative-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--r-pill);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 14px;
+  }
+
+  .narrative-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    margin-left: auto;
+  }
+
+  .narrative-body p {
+    font-size: 14px;
+    line-height: 1.72;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 14px;
+    font-weight: 300;
+  }
+
+  .narrative-body p:last-child { margin-bottom: 0; }
+
+  /* First paragraph gets a slightly heavier treatment */
+  .narrative-body p:first-child {
+    font-size: 14.5px;
+    font-weight: 400;
+    color: var(--white);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     STORY CARDS
+  ═══════════════════════════════════════════════════════════════ */
+  .story-card {
+    background: var(--card-bg);
+    border-radius: var(--r-lg);
+    padding: 18px 18px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--card-shadow);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .story-card.in { opacity: 1; transform: translateY(0); }
+
+  .story-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--r-pill);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  .tag-high   { background: var(--coral);      color: var(--white); }
+  .tag-medium { background: var(--amber-light); color: var(--amber); }
+  .tag-low    { background: var(--surface-2);   color: var(--text-300); }
+  .tag-domain { background: var(--blue-light);  color: var(--blue);  font-weight: 500; }
+  .tag-ng     { background: var(--teal-light);  color: var(--teal);  font-weight: 500; }
+  .tag-sn     { background: #EDE9FE;            color: #6D28D9;      font-weight: 500; }
+
+  .story-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-100);
+    line-height: 1.35;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .story-body {
+    font-size: 13.5px;
+    color: var(--text-200);
+    line-height: 1.65;
+    margin-bottom: 14px;
+    font-weight: 400;
+  }
+
+  .relevance-block {
+    background: var(--surface);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    border-left: 3px solid var(--coral);
+  }
+
+  .relevance-eyebrow {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 5px;
+  }
+
+  .relevance-text {
+    font-size: 13px;
+    color: var(--text-200);
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     ACTION ROW
+  ═══════════════════════════════════════════════════════════════ */
+  .action-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 4px;
+  }
+
+  .btn-secondary {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: var(--r-md);
+    background: var(--card-bg);
+    border: none;
+    color: var(--text-200);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 46px;
+    transition: all 0.18s ease;
+    -webkit-user-select: none; user-select: none;
+  }
+
+  .btn-secondary:active { transform: scale(0.97); }
+
+  .btn-secondary.saved {
+    background: var(--teal-light);
+    color: var(--teal);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     VAULT SECTION
+  ═══════════════════════════════════════════════════════════════ */
+  .vault-card {
+    background: var(--card-bg);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .vault-entry {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+    gap: 12px;
+  }
+
+  .vault-entry:last-child { border-bottom: none; }
+
+  .vault-entry:active { background: var(--surface); }
+
+  .vault-icon {
+    width: 36px; height: 36px;
+    border-radius: var(--r-sm);
+    background: var(--blue-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    color: var(--blue);
+  }
+
+  .vault-info { flex: 1; min-width: 0; }
+
+  .vault-filename {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-100);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vault-date {
+    font-size: 12px;
+    color: var(--text-300);
+    margin-top: 1px;
+  }
+
+  .vault-chevron {
+    font-size: 14px;
+    color: var(--text-400);
+    flex-shrink: 0;
+  }
+
+  .vault-empty {
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--text-300);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .vault-empty-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    opacity: 0.4;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     STICKY GENERATE BUTTON
+  ═══════════════════════════════════════════════════════════════ */
+  .sticky-footer {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 540px;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + var(--sab));
+    background: linear-gradient(to top, var(--surface) 70%, transparent);
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  .btn-generate {
+    width: 100%;
+    padding: 16px 24px;
+    border-radius: var(--r-xl);
+    background: var(--coral);
+    border: none;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 56px;
+    box-shadow: 0 8px 24px rgba(232,93,61,0.40);
+    transition: all 0.22s ease;
+    pointer-events: all;
+    -webkit-user-select: none; user-select: none;
+  }
+
+  .btn-generate:active:not(:disabled) {
+    transform: scale(0.975);
+    box-shadow: 0 4px 14px rgba(232,93,61,0.35);
+  }
+
+  .btn-generate:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-generate.loading {
+    background: var(--navy);
+    box-shadow: 0 8px 24px rgba(11,31,58,0.30);
+  }
+
+  .btn-spinner {
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.3);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TOAST
+  ═══════════════════════════════════════════════════════════════ */
+  .toast {
+    position: fixed;
+    bottom: calc(80px + var(--sab) + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--text-100);
+    color: var(--white);
+    padding: 11px 20px;
+    border-radius: var(--r-pill);
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.25s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(11,31,58,0.25);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .toast.success { background: var(--teal); }
+
+  /* ═══════════════════════════════════════════════════════════════
+     DIVIDER
+  ═══════════════════════════════════════════════════════════════ */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0 20px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     VAULT ANIMATION
+  ═══════════════════════════════════════════════════════════════ */
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .vault-entry {
+    animation: slide-up 0.3s ease both;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     REDUCED MOTION
+  ═══════════════════════════════════════════════════════════════ */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     DIAGNOSTICS PANEL
+  ═══════════════════════════════════════════════════════════════ */
+  .diag-panel {
+    display: none;
+    position: fixed;
+    bottom: 72px; right: 16px;
+    width: min(480px, calc(100vw - 32px));
+    background: #fff;
+    border: 1.5px solid #e0e4ed;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(11,31,58,0.15);
+    z-index: 9999;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    overflow: hidden;
+  }
+  .diag-panel.visible { display: block; }
+
+  .diag-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #0B1F3A;
+    color: #fff;
+  }
+  .diag-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; }
+  .diag-close {
+    background: none; border: none; color: rgba(255,255,255,0.6);
+    font-size: 16px; cursor: pointer; line-height: 1; padding: 0 0 0 12px;
+  }
+  .diag-body { padding: 10px 0; max-height: 340px; overflow-y: auto; }
+
+  .diag-row {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 0 8px;
+    padding: 6px 16px;
+    border-bottom: 1px solid #f0f2f7;
+    align-items: start;
+  }
+  .diag-row:last-child { border-bottom: none; }
+  .diag-icon { font-size: 13px; margin-top: 1px; }
+  .diag-label { font-weight: 500; color: #0B1F3A; line-height: 1.4; }
+  .diag-detail {
+    grid-column: 2;
+    color: #667085;
+    font-size: 11px;
+    margin-top: 2px;
+    line-height: 1.5;
+    word-break: break-all;
+  }
+
+  .diag-ok    .diag-icon { color: #0EA572; }
+  .diag-fail  .diag-icon { color: #E85D3D; }
+  .diag-fail  .diag-label { color: #E85D3D; }
+  .diag-fail  .diag-detail { color: #C44A2C; }
+  .diag-warn  .diag-icon { color: #D4870A; }
+  .diag-warn  .diag-label { color: #D4870A; }
+  .diag-info  .diag-icon { color: #98A2B3; }
+
+  .diag-trigger {
+    position: fixed;
+    bottom: 20px; right: 16px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: #0B1F3A;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(11,31,58,0.25);
+    z-index: 9998;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s;
+  }
+  .diag-trigger:hover { transform: scale(1.08); }
+
+  /* Cancel button */
+  .btn-cancel {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text-200);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-cancel:hover {
+    background: var(--coral-light);
+    color: var(--coral-dark);
+    border-color: var(--coral);
+  }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+  <!-- Loading screen -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="loading-logo">Tola Edge Brief</div>
+    <div class="loading-sub">Intelligence · Mixta Africa</div>
+    <div class="loading-bar-track">
+      <div class="loading-bar-fill" id="loading-fill"></div>
+    </div>
+    <div class="loading-status" id="loading-status">Loading…</div>
+  </div>
 
-        function TolaEdgeBrief() {
-            // State Management
-            const [activeMarket] = useState('Nigeria'); // Locked to Nigeria context
-            const [activeDomains, setActiveDomains] = useState(new Set(['Market Creation', 'Capital & Financing', 'Land & Regulatory Alpha']));
-            const [customPrompt, setCustomPrompt] = useState('');
-            const [loading, setLoading] = useState(false);
-            const [brief, setBrief] = useState(null);
-            const [vaultFiles, setVaultFiles] = useState([]);
+  <!-- App shell -->
+  <div class="app">
 
-            // The 6 strategic domains
-            const domains = [
-                { name: 'Market Creation', icon: 'ti-chart-arcs' },
-                { name: 'Capital & Financing', icon: 'ti-cash' },
-                { name: 'Land & Regulatory Alpha', icon: 'ti-map-pin' },
-                { name: 'Demand-Side Market', icon: 'ti-users' },
-                { name: 'Partnership & JV', icon: 'ti-hand-shake' },
-                { name: 'Geopolitical Risk', icon: 'ti-shield-alert' }
-            ];
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-eyebrow">Intelligence Brief · Tola Akinsulire</div>
+      <h1 class="header-title">The Tola<br><em>Edge Brief</em></h1>
+      <div class="header-meta">
+        <span class="header-date" id="header-date"></span>
+        <span class="live-badge" id="live-badge">
+          <span class="live-dot" id="live-dot"></span>
+          <span id="live-label">Ready</span>
+        </span>
+      </div>
+    </header>
 
-            // Load Knowledge Vault history on startup[cite: 1]
-            useEffect(() => {
-                fetch('../data/briefings-index.json')
-                    .then(res => res.json())
-                    .then(data => setVaultFiles(data.briefings || []))
-                    .catch(() => console.log("Vault empty. Awaiting first run."));
-                
-                // Automatically load the latest brief if available
-                fetch('../data/briefing.json')
-                    .then(res => res.json())
-                    .then(data => setBrief(data))
-                    .catch(() => console.log("No current brief data found."));
-            }, []);
+    <!-- Scrollable content -->
+    <div class="content">
 
-            const toggleDomain = (name) => {
-                const newDomains = new Set(activeDomains);
-                if (newDomains.has(name)) {
-                    if (newDomains.size > 1) newDomains.delete(name); 
-                } else {
-                    newDomains.add(name);
-                }
-                setActiveDomains(newDomains);
-            };
+      <!-- Market filter -->
+      <div class="section-header" style="margin-top:0">
+        <span class="section-title">Market Scope</span>
+      </div>
+      <div class="market-row">
+        <button class="market-pill active" data-market="All"     onclick="setMarket('All')">All Markets</button>
+        <button class="market-pill"        data-market="Nigeria" onclick="setMarket('Nigeria')">Nigeria</button>
+        <button class="market-pill"        data-market="Senegal" onclick="setMarket('Senegal')">Senegal</button>
+      </div>
 
-            // Secure Remote-Control Trigger
-            const handleGenerate = async () => {
-                setLoading(true);
-                
-                try {
-                    // SECURE TRIGGER: This pings your GitHub Actions to wake up the backend scraper
-                    // NOTE: You will need to replace GITHUB_USERNAME, REPO_NAME, and YOUR_PAT_TOKEN
-                    /*
-                    await fetch('https://api.github.com/repos/GITHUB_USERNAME/REPO_NAME/dispatches', {
-                        method: 'POST',
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Authorization': 'token YOUR_PAT_TOKEN' 
-                        },
-                        body: JSON.stringify({ event_type: 'trigger_brief_generation' })
-                    });
-                    */
-                    
-                    // Simulate processing time for UI feedback
-                    alert("Intelligence engine triggered securely. The backend scraper is now running. Please refresh the page in 3 minutes.");
-                } catch (e) {
-                    console.error("Trigger failed:", e);
-                    alert("Failed to reach the intelligence engine.");
-                } finally {
-                    setLoading(false);
-                }
-            };
+      <!-- Domain toggles -->
+      <div class="section-header">
+        <span class="section-title">Intelligence Domains</span>
+        <span class="section-meta" id="domain-count">6 active</span>
+      </div>
+      <div class="domain-grid" id="domain-grid"></div>
 
-            const handleCopy = () => {
-                if (!brief) return;
-                navigator.clipboard.writeText(JSON.stringify(brief, null, 2));
-                alert("Brief structured data copied to clipboard.");
-            };
+      <!-- Custom prompt -->
+      <div class="section-header">
+        <span class="section-title">Targeted Brief</span>
+        <span class="section-meta">Optional</span>
+      </div>
+      <div class="prompt-wrap">
+        <span class="prompt-icon">⌕</span>
+        <input
+          class="prompt-input"
+          id="custom-prompt"
+          type="text"
+          placeholder="e.g. DFI appetite for affordable housing 2026"
+          maxlength="280"
+        />
+      </div>
 
-            return (
-                <div className="max-w-6xl mx-auto px-4 py-10 fade-in">
-                    {/* Header: Executive styling[cite: 1] */}
-                    <div className="border-b border-gray-200 pb-6 mb-8 flex justify-between items-end">
-                        <div>
-                            <p className="text-xs uppercase tracking-widest text-gray-400 font-semibold mb-2">Intelligence Brief · Tola Akinsulire</p>
-                            <h1 className="text-4xl font-display text-navy">The Tola Edge Brief</h1>
-                        </div>
-                        <p className="text-sm text-gray-500 font-medium">
-                            {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                        </p>
-                    </div>
+      <!-- Status card -->
+      <div class="status-card" id="status-card">
+        <div class="status-icon" id="status-icon">
+          <div class="spinner"></div>
+        </div>
+        <div class="status-text-wrap">
+          <div class="status-label" id="status-label">Generating</div>
+          <div class="status-msg" id="status-msg">Scanning live market sources…</div>
+        </div>
+      </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                        {/* Sidebar Controls */}
-                        <div className="lg:col-span-4 space-y-6">
-                            {/* Market Focus */}
-                            <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
-                                <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-4">Market Focus</h3>
-                                <button className="w-full py-2 px-3 text-sm font-medium rounded bg-customBlue text-white shadow-sm flex justify-between items-center">
-                                    <span>Nigeria</span>
-                                    <i className="ti ti-lock text-white/70"></i>
-                                </button>
-                            </div>
+      <!-- Brief output -->
+      <div class="output-section" id="output-section">
 
-                            {/* Domain Matrix[cite: 1] */}
-                            <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
-                                <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-4">Strategic Domains</h3>
-                                <div className="space-y-2">
-                                    {domains.map(d => {
-                                        const isActive = activeDomains.has(d.name);
-                                        return (
-                                            <div 
-                                                key={d.name}
-                                                onClick={() => toggleDomain(d.name)}
-                                                className={`flex items-center p-3 rounded cursor-pointer border transition-colors ${isActive ? 'bg-blue-50 border-customBlue text-navy font-medium' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
-                                            >
-                                                <i className={`ti ${d.icon} text-lg mr-3 ${isActive ? 'text-customBlue' : 'text-gray-400'}`}></i>
-                                                <span className="text-sm">{d.name}</span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+        <!-- Executive Narrative -->
+        <div class="section-header">
+          <span class="section-title">Executive Narrative</span>
+          <span class="section-meta" id="narrative-time"></span>
+        </div>
 
-                            {/* Custom Prompt */}
-                            <div className="bg-white p-5 rounded border border-gray-200 shadow-sm">
-                                <h3 className="text-xs font-semibold uppercase text-gray-400 tracking-wider mb-3">Targeted Query</h3>
-                                <input 
-                                    type="text" 
-                                    className="w-full p-3 text-sm bg-bgOffWhite border border-gray-200 rounded focus:outline-none focus:border-customBlue transition-colors"
-                                    placeholder="e.g., Access Bank mortgage criteria..."
-                                    value={customPrompt}
-                                    onChange={(e) => setCustomPrompt(e.target.value)}
-                                />
-                            </div>
+        <div class="narrative-card">
+          <div style="display:flex; align-items:center; margin-bottom:14px;">
+            <div class="narrative-chip">
+              <span>◆</span>
+              <span>4-Paragraph Brief</span>
+            </div>
+          </div>
+          <div class="narrative-body" id="narrative-body"></div>
+        </div>
 
-                            {/* Generate Trigger */}
-                            <button 
-                                onClick={handleGenerate}
-                                disabled={loading}
-                                className="w-full bg-navy text-white font-medium py-3.5 rounded shadow-sm hover:bg-opacity-90 transition-all flex justify-center items-center gap-2 disabled:bg-gray-400"
-                            >
-                                {loading ? (
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                ) : (
-                                    <>
-                                        <i className="ti ti-bolt text-lg"></i>
-                                        <span>Execute Intelligence Scan</span>
-                                    </>
-                                )}
-                            </button>
-                        </div>
+        <!-- Stories -->
+        <div class="section-header" style="margin-top:20px;">
+          <span class="section-title">Impact-Rated Stories</span>
+          <span class="section-meta" id="stories-count"></span>
+        </div>
+        <div id="stories-container"></div>
 
-                        {/* Brief Output Area */}
-                        <div className="lg:col-span-8 space-y-8">
-                            {brief ? (
-                                <div className="fade-in space-y-8">
-                                    {/* Component 1: Narrative (Signature left border)[cite: 1] */}
-                                    <div className="bg-white p-8 rounded border border-gray-200 shadow-sm border-l-[3px] border-l-customBlue">
-                                        <h2 className="text-xs font-semibold text-navy uppercase tracking-widest mb-5">Executive Narrative</h2>
-                                        <div className="text-sm text-gray-800 leading-relaxed space-y-4 whitespace-pre-wrap">
-                                            {brief.executive_summary}
-                                        </div>
-                                    </div>
+        <!-- Action row -->
+        <div class="action-row">
+          <button class="btn-secondary" onclick="copyBrief()">
+            <span>⎘</span> Copy
+          </button>
+          <button class="btn-secondary" id="btn-save" onclick="saveBrief()">
+            <span>↓</span> Save to Vault
+          </button>
+        </div>
 
-                                    {/* Component 2: Story Cards[cite: 1] */}
-                                    <div>
-                                        <h2 className="text-xs font-semibold text-navy uppercase tracking-widest mb-4">Signal Analysis</h2>
-                                        <div className="space-y-4">
-                                            {(brief.themes || []).map((theme, idx) => (
-                                                <div key={idx} className="bg-white p-6 rounded border border-gray-200 shadow-sm">
-                                                    <div className="flex justify-between items-start mb-3">
-                                                        <span className="bg-bgOffWhite text-gray-600 border border-gray-200 text-xs font-medium px-2.5 py-1 rounded">
-                                                            {theme.label}
-                                                        </span>
-                                                        <span className={`text-[10px] uppercase font-bold px-2.5 py-1 rounded ${theme.confidence === 'high' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
-                                                            {theme.confidence} Impact
-                                                        </span>
-                                                    </div>
-                                                    <h3 className="text-base font-semibold text-navy mb-3">{theme.what_happened}</h3>
-                                                    
-                                                    <div className="bg-bgOffWhite p-4 rounded border border-gray-200 mb-3">
-                                                        <p className="text-[10px] font-bold text-customBlue uppercase tracking-widest mb-1.5">Mixta Relevance</p>
-                                                        <p className="text-sm text-gray-700">{theme.why_it_matters_to_mixta}</p>
-                                                    </div>
-                                                    
-                                                    <div className="text-sm text-gray-600 bg-white border border-gray-100 p-3 rounded">
-                                                        <span className="font-semibold text-navy">Action:</span> {theme.recommendation}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
+      </div>
 
-                                    {/* Actions */}
-                                    <div className="flex justify-end">
-                                        <button onClick={handleCopy} className="px-5 py-2.5 bg-white border border-gray-200 rounded text-sm font-medium text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
-                                            <i className="ti ti-copy"></i> Copy Structured Data
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="bg-white rounded border border-gray-200 p-16 text-center text-gray-400 shadow-sm">
-                                    <i className="ti ti-shield-lock text-5xl mb-4 text-gray-300"></i>
-                                    <p className="text-base font-medium text-gray-500 mb-1">System Ready</p>
-                                    <p className="text-sm">Click execute to synthesize today's market intelligence.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
+      <!-- Vault -->
+      <div class="divider"></div>
 
-                    {/* Component 3: Knowledge Vault Footer[cite: 1] */}
-                    <div className="mt-16 bg-white rounded border border-gray-200 shadow-sm p-8 fade-in">
-                        <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-6">
-                            <i className="ti ti-server text-navy text-xl"></i>
-                            <h2 className="text-sm font-semibold text-navy uppercase tracking-widest">Vault Archives</h2>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {vaultFiles.length > 0 ? vaultFiles.map((file, idx) => (
-                                <div key={idx} className="p-4 border border-gray-100 rounded hover:border-customBlue transition-colors bg-bgOffWhite cursor-pointer group">
-                                    <p className="text-xs font-semibold text-gray-700 mb-1 group-hover:text-customBlue transition-colors">{file.date}</p>
-                                    <p className="text-xs text-gray-500 truncate">{file.executive_summary ? file.executive_summary : 'Intelligence Record'}</p>
-                                </div>
-                            )) : (
-                                <p className="text-sm text-gray-400 col-span-3">Archives will populate automatically after successful pipeline executions.</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
+      <div class="section-header">
+        <span class="section-title">Knowledge Vault</span>
+        <span class="section-meta" id="vault-count"></span>
+      </div>
+
+      <div class="vault-card" id="vault-card">
+        <div class="vault-empty">
+          <div class="vault-empty-icon">🗄</div>
+          Loading vault…
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- Sticky generate button -->
+    <div class="sticky-footer">
+      <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
+        <span id="btn-label">Generate Intelligence Brief</span>
+        <span id="btn-icon">→</span>
+      </button>
+      <button class="btn-cancel" id="btn-cancel" onclick="cancelGeneration()" style="display:none">
+        ✕ Cancel
+      </button>
+    </div>
+
+  </div><!-- /app -->
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+  'use strict';
+
+  // ─── CONFIG ───────────────────────────────────────────────────────────────
+  // owner + repo are public — hardcoded directly.
+  // token is injected at deploy time by deploy.yml via sed (%%GH_PAT_APP%%).
+  let CFG = {
+    owner: 'mixta-africa',
+    repo:  'Tola-Edge-Brief',
+    token: '%%GH_PAT_APP%%',
+  };
+
+  // ─── STATE ────────────────────────────────────────────────────────────────
+  const DOMAINS = {
+    D1: { name: 'Capital & Financing',  priority: 'high'    },
+    D2: { name: 'Land & Regulatory',    priority: 'high'    },
+    D3: { name: 'Demand Intelligence',  priority: 'medium'  },
+    D4: { name: 'Partnership & JV',     priority: 'medium'  },
+    D5: { name: 'Geopolitical Risk',    priority: 'low'     },
+    D6: { name: 'Market Creation',      priority: 'highest' },
+  };
+
+  let activeMarket  = 'All';
+  let activeDomains = new Set(['D1','D2','D3','D4','D5','D6']);
+  let isGenerating  = false;
+  let currentBrief  = null;
+  let pollTimer     = null;
+  let currentReqId  = null;
+
+  // ─── BOOT ────────────────────────────────────────────────────────────────
+  async function boot() {
+    setLoad('Initializing application…', 25);
+    await sleep(200);
+
+    // owner + repo are hardcoded. Only token is injected by deploy.yml.
+    setLoad('Loading configuration…', 50);
+    if (CFG.token.startsWith('%%')) {
+      console.error('[Boot] GH_PAT_APP placeholder not replaced — deploy.yml sed failed or secret is missing.');
+      CFG.token = '';
+    } else if (!CFG.token) {
+      console.error('[Boot] GH_PAT_APP is empty — check the secret value in repo Settings → Secrets → Actions.');
+    } else {
+      console.log(`[Boot] Config ready for ${CFG.owner}/${CFG.repo} token=${CFG.token.slice(0,8)}…`);
+    }
+
+    setLoad('Configuration ready', 75);
+    await sleep(300);
+    setLoad('Ready', 100);
+    await sleep(350);
+
+    document.getElementById('loading-screen').classList.add('out');
+    setTimeout(() => document.getElementById('loading-screen')?.remove(), 600);
+
+    renderDate();
+    renderDomains();
+    loadVault();
+    runDiagnostics(); // runs all checks and auto-shows panel on any failure
+  }
+
+  function setLoad(msg, pct) {
+    document.getElementById('loading-status').textContent = msg;
+    document.getElementById('loading-fill').style.width = pct + '%';
+  }
+
+  function renderDate() {
+    document.getElementById('header-date').textContent =
+      new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function renderDomains() {
+    const grid = document.getElementById('domain-grid');
+    grid.innerHTML = '';
+    for (const [code, d] of Object.entries(DOMAINS)) {
+      const card = document.createElement('div');
+      card.className = 'domain-card' + (activeDomains.has(code) ? ' active' : '');
+      card.dataset.priority = d.priority;
+      card.onclick = () => toggleDomain(code);
+      card.innerHTML = `<div class="d-code">${code}</div><div class="d-name">${d.name}</div>`;
+      grid.appendChild(card);
+    }
+    document.getElementById('domain-count').textContent = `${activeDomains.size} active`;
+  }
+
+  // ─── CONTROLS ────────────────────────────────────────────────────────────
+  function setMarket(m) {
+    activeMarket = m;
+    document.querySelectorAll('.market-pill').forEach(p =>
+      p.classList.toggle('active', p.dataset.market === m)
+    );
+  }
+
+  function toggleDomain(code) {
+    if (activeDomains.has(code)) {
+      if (activeDomains.size <= 1) { showToast('Minimum 1 domain required'); return; }
+      activeDomains.delete(code);
+    } else {
+      activeDomains.add(code);
+    }
+    renderDomains();
+  }
+
+  // ─── GENERATE ────────────────────────────────────────────────────────────
+  async function generateBrief() {
+    if (!CFG.token || !CFG.owner || !CFG.repo) {
+      showStatus('error', 'Not configured', 'App config not loaded — check deploy logs');
+      return;
+    }
+    if (isGenerating) return;
+
+    isGenerating = true;
+    currentBrief = null;
+    currentReqId = String(Date.now());
+
+    setBtnLoading(true);
+    setLiveBadge('generating', 'Running');
+    showStatus('info', 'Dispatching', 'Triggering GitHub Actions intelligence engine…');
+
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${CFG.owner}/${CFG.repo}/actions/workflows/generate-brief.yml/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${CFG.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: {
+              request_id:     currentReqId,
+              active_market:  activeMarket,
+              active_domains: Array.from(activeDomains).sort().join(','),
+              custom_prompt:  document.getElementById('custom-prompt').value.trim(),
+            },
+          }),
         }
+      );
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<TolaEdgeBrief />);
-    </script>
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(`GitHub ${res.status}: ${err.message || res.statusText}`);
+      }
+
+      startPolling();
+
+    } catch (err) {
+      resetBtn();
+      showStatus('error', 'Dispatch failed', err.message);
+      setLiveBadge('ready', 'Ready');
+    }
+  }
+
+  const STATUS_MSGS = [
+    'Fetching articles from GNews, NewsAPI, RSS…',
+    'Enriching articles with full text via Puppeteer…',
+    'Running 6-LLM analysis chain per article…',
+    'Synthesising executive narrative — Groq 70b…',
+    'Validating story citations and impact ratings…',
+    'Finalising brief — almost ready…',
+  ];
+
+  function startPolling() {
+    let count = 0;
+    const MAX = 120;
+
+    pollTimer = setInterval(async () => {
+      count++;
+      const msgIdx = Math.min(Math.floor(count / 8), STATUS_MSGS.length - 1);
+      showStatus('info', 'Generating', STATUS_MSGS[msgIdx]);
+
+      if (count > MAX) {
+        clearInterval(pollTimer);
+        resetBtn();
+        showStatus('error', 'Still running…', 'This brief is taking longer than usual — the AI pipeline is still working. Check back in 2–3 minutes and refresh the page to see the result.');
+        setLiveBadge('ready', 'Ready');
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `https://${CFG.owner}.github.io/${CFG.repo}/data/brief_output.json?t=${Date.now()}`,
+          { cache: 'no-store' }
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.request_id !== currentReqId) return;
+
+        clearInterval(pollTimer);
+        resetBtn();
+
+        if (data.status === 'success' && data.brief) {
+          currentBrief = data;
+          renderBrief(data);
+          hideStatus();
+          setLiveBadge('ready', 'Ready');
+          loadVault();
+        } else {
+          showStatus('error', 'Failed', data.error || 'Brief generation failed');
+          setLiveBadge('ready', 'Ready');
+        }
+      } catch (_) { /* transient — keep polling */ }
+    }, 5000);
+  }
+
+  function resetBtn() {
+    isGenerating = false;
+    setBtnLoading(false);
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  }
+
+  function setBtnLoading(on) {
+    const btn    = document.getElementById('btn-generate');
+    const cancel = document.getElementById('btn-cancel');
+    const label  = document.getElementById('btn-label');
+    const icon   = document.getElementById('btn-icon');
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+    if (cancel) cancel.style.display = on ? 'block' : 'none';
+    if (on) {
+      label.textContent = 'Generating…';
+      icon.outerHTML = '<div class="btn-spinner" id="btn-icon"></div>';
+    } else {
+      label.textContent = 'Generate Intelligence Brief';
+      const el = document.getElementById('btn-icon');
+      if (el) { el.outerHTML = '<span id="btn-icon">→</span>'; }
+    }
+  }
+
+  // ─── RENDER ──────────────────────────────────────────────────────────────
+  function renderBrief(data) {
+    const brief = data.brief;
+    const out = document.getElementById('output-section');
+
+    // Narrative
+    document.getElementById('narrative-body').innerHTML =
+      brief.narrative.split('\n\n').filter(p => p.trim())
+        .map(p => `<p>${esc(p.trim())}</p>`).join('');
+
+    document.getElementById('narrative-time').textContent = fmtTime(data.generated_at);
+
+    // Stories
+    const container = document.getElementById('stories-container');
+    container.innerHTML = '';
+    document.getElementById('stories-count').textContent =
+      `${brief.stories.length} stor${brief.stories.length === 1 ? 'y' : 'ies'}`;
+
+    brief.stories.forEach((story, i) => {
+      const card = document.createElement('div');
+      card.className = 'story-card';
+      card.style.transitionDelay = `${i * 55}ms`;
+
+      const impactTag = { High: 'tag-high', Medium: 'tag-medium', Low: 'tag-low' }[story.impact] || 'tag-low';
+      const mktTag    = story.market === 'Senegal' ? 'tag-sn' : 'tag-ng';
+
+      card.innerHTML = `
+        <div class="story-tags">
+          <span class="tag ${impactTag}">${esc(story.impact)}</span>
+          <span class="tag tag-domain">${esc(story.domain)}</span>
+          <span class="tag ${mktTag}">${esc(story.market)}</span>
+        </div>
+        <div class="story-title">${esc(story.title)}</div>
+        <div class="story-body">${esc(story.body)}</div>
+        <div class="relevance-block">
+          <div class="relevance-eyebrow">Mixta Relevance</div>
+          <div class="relevance-text">${esc(story.relevance)}</div>
+        </div>
+      `;
+      container.appendChild(card);
+      requestAnimationFrame(() => setTimeout(() => card.classList.add('in'), 40 + i * 55));
+    });
+
+    document.getElementById('btn-save').classList.remove('saved');
+    document.getElementById('btn-save').innerHTML = '<span>↓</span> Save to Vault';
+
+    out.classList.add('visible');
+    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+
+  // ─── ACTIONS ─────────────────────────────────────────────────────────────
+  function copyBrief() {
+    if (!currentBrief) return;
+    const b = currentBrief.brief;
+    let txt = `THE TOLA EDGE BRIEF — ${new Date().toLocaleDateString('en-GB',{dateStyle:'long'})}\n\n`;
+    txt += `EXECUTIVE NARRATIVE\n${'─'.repeat(36)}\n${b.narrative}\n\n`;
+    txt += `INTELLIGENCE STORIES\n${'─'.repeat(36)}\n`;
+    b.stories.forEach((s, i) => {
+      txt += `\n[${i+1}] ${s.impact} | ${s.domain} | ${s.market}\n${s.title}\n\n${s.body}\n\nMixta Relevance: ${s.relevance}\n`;
+    });
+    navigator.clipboard.writeText(txt)
+      .then(() => showToast('Brief copied', 'success'))
+      .catch(() => showToast('Copy failed — select text manually'));
+  }
+
+  function saveBrief() {
+    if (!currentBrief) return;
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    btn.innerHTML = '<span>↓</span> Saving…';
+    copyBrief();
+    setTimeout(() => {
+      btn.classList.add('saved');
+      btn.innerHTML = '<span>✓</span> Saved';
+      btn.disabled = false;
+      showToast('Vault updated', 'success');
+      loadVault();
+    }, 700);
+  }
+
+  // ─── VAULT ───────────────────────────────────────────────────────────────
+  async function loadVault() {
+    const card  = document.getElementById('vault-card');
+    const count = document.getElementById('vault-count');
+
+    if (!CFG.owner || !CFG.repo) {
+      card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">⚙</div>Config not loaded</div>`;
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault_index.json?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (!res.ok) throw new Error('not found');
+      const entries = await res.json();
+
+      if (!entries.length) {
+        card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">🗄</div>No briefs yet — generate your first brief above.</div>`;
+        count.textContent = '';
+        return;
+      }
+
+      count.textContent = `${entries.length} archived`;
+      card.innerHTML = '';
+
+      entries.slice(0, 12).forEach((entry, i) => {
+        const el = document.createElement('div');
+        el.className = 'vault-entry';
+        el.style.animationDelay = `${i * 30}ms`;
+        const displayDate = entry.date
+          ? new Date(entry.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+          : entry.date;
+        el.innerHTML = `
+          <div class="vault-icon">📄</div>
+          <div class="vault-info">
+            <div class="vault-filename">${esc(entry.filename)}</div>
+            <div class="vault-date">${esc(displayDate)}</div>
+          </div>
+          <div class="vault-chevron">›</div>
+        `;
+        el.onclick = () => loadVaultEntry(entry.filename);
+        card.appendChild(el);
+      });
+
+    } catch (_) {
+      card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">🗄</div>Vault not yet initialised.</div>`;
+      count.textContent = '';
+    }
+  }
+
+  async function loadVaultEntry(filename) {
+    try {
+      const res = await fetch(
+        `https://${CFG.owner}.github.io/${CFG.repo}/vault/${filename}?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (!res.ok) throw new Error('not found');
+      currentBrief = await res.json();
+      renderBrief(currentBrief);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast(`Loaded ${filename.replace('TEB_','').replace('.json','')}`, 'success');
+    } catch (_) { showToast('Could not load brief'); }
+  }
+
+  // ─── STATUS / LIVE BADGE ─────────────────────────────────────────────────
+  function showStatus(type, label, msg) {
+    const card = document.getElementById('status-card');
+    const icon = document.getElementById('status-icon');
+    document.getElementById('status-label').textContent = label;
+    document.getElementById('status-msg').textContent   = msg;
+
+    card.classList.remove('error');
+    if (type === 'error') {
+      card.classList.add('error');
+      icon.innerHTML = '✕';
+    } else {
+      icon.innerHTML = '<div class="spinner"></div>';
+    }
+    card.classList.add('visible');
+  }
+
+  function hideStatus() {
+    document.getElementById('status-card').classList.remove('visible');
+  }
+
+  function setLiveBadge(state, label) {
+    const dot = document.getElementById('live-dot');
+    document.getElementById('live-label').textContent = label;
+    dot.classList.toggle('generating', state === 'generating');
+  }
+
+  // ─── TOAST ───────────────────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (type === 'success' ? ' success' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ─── UTILS ───────────────────────────────────────────────────────────────
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function fmtTime(iso) {
+    try { return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' WAT'; }
+    catch { return ''; }
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ─── DIAGNOSTICS ─────────────────────────────────────────────────────────
+  // Visible on-screen panel so deployment issues are obvious without DevTools.
+  // Shows automatically whenever any check fails; can also be opened manually.
+
+  const DIAG = {
+    lines: [],
+    panel: null,
+
+    init() {
+      this.panel = document.getElementById('diag-panel');
+    },
+
+    log(status, label, detail = '') {
+      const icons = { ok: '✓', fail: '✗', warn: '⚠', info: '·' };
+      const icon = icons[status] || '·';
+      this.lines.push({ status, icon, label, detail });
+      this._render();
+      if (status === 'fail') this.show();
+    },
+
+    show() {
+      if (this.panel) this.panel.classList.add('visible');
+    },
+
+    hide() {
+      if (this.panel) this.panel.classList.remove('visible');
+    },
+
+    _render() {
+      if (!this.panel) return;
+      const body = this.panel.querySelector('#diag-body');
+      body.innerHTML = this.lines.map(l => `
+        <div class="diag-row diag-${l.status}">
+          <span class="diag-icon">${l.icon}</span>
+          <span class="diag-label">${l.label}</span>
+          ${l.detail ? `<span class="diag-detail">${esc(l.detail)}</span>` : ''}
+        </div>`).join('');
+    },
+  };
+
+  async function runDiagnostics() {
+    DIAG.init();
+
+    // 1 — Check if token placeholder was replaced by deploy.yml
+    if (CFG.token.startsWith('%%')) {
+      DIAG.log('fail', 'Token injection', 'GH_PAT_APP placeholder not replaced — deploy.yml sed failed. Check Actions logs.');
+    } else if (!CFG.token) {
+      DIAG.log('fail', 'GH_PAT_APP secret', 'Token is empty — update GH_PAT_APP secret in repo Settings → Secrets → Actions.');
+    } else {
+      DIAG.log('ok', 'Config', `owner=${CFG.owner}  repo=${CFG.repo}  token=${CFG.token.slice(0,8)}…`);
+    }
+
+    // 2 — Check GitHub API reachability + token validity
+    if (CFG.token && !CFG.token.startsWith('%%')) {
+      try {
+        const r = await fetch(
+          `https://api.github.com/repos/${CFG.owner}/${CFG.repo}`,
+          { headers: { Authorization: `Bearer ${CFG.token}`, Accept: 'application/vnd.github.v3+json' } }
+        );
+        if (r.status === 200) {
+          DIAG.log('ok', 'GitHub API', `Reached repo — HTTP 200`);
+        } else if (r.status === 401) {
+          DIAG.log('fail', 'GitHub token', `HTTP 401 — token is invalid or expired. Regenerate GH_PAT_APP.`);
+        } else if (r.status === 403) {
+          DIAG.log('fail', 'GitHub token', `HTTP 403 — token lacks Actions permission. Set Actions: Read & Write on the PAT.`);
+        } else if (r.status === 404) {
+          DIAG.log('fail', 'GitHub repo', `HTTP 404 — repo not found. Check owner="${CFG.owner}" repo="${CFG.repo}".`);
+        } else {
+          DIAG.log('warn', 'GitHub API', `Unexpected HTTP ${r.status}`);
+        }
+      } catch (e) {
+        DIAG.log('fail', 'GitHub API', `Network error — ${e.message}`);
+      }
+    } else {
+      DIAG.log('warn', 'GitHub API', 'Skipped — no valid token.');
+    }
+
+    // 3 — Check workflow file exists
+    if (CFG.token && !CFG.token.startsWith('%%')) {
+      try {
+        const r = await fetch(
+          `https://api.github.com/repos/${CFG.owner}/${CFG.repo}/actions/workflows/generate-brief.yml`,
+          { headers: { Authorization: `Bearer ${CFG.token}`, Accept: 'application/vnd.github.v3+json' } }
+        );
+        if (r.status === 200) {
+          const d = await r.json();
+          DIAG.log('ok', 'generate-brief.yml', `Found — state: ${d.state}`);
+        } else {
+          DIAG.log('fail', 'generate-brief.yml', `HTTP ${r.status} — workflow file not found in .github/workflows/`);
+        }
+      } catch (e) {
+        DIAG.log('warn', 'generate-brief.yml', `Check skipped — ${e.message}`);
+      }
+    }
+
+    // 4 — Check brief_output.json is reachable
+    try {
+      const r = await fetch(
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/brief_output.json?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (r.ok) {
+        const d = await r.json();
+        DIAG.log('ok', 'brief_output.json', `Reachable — status: "${d.status}"`);
+      } else {
+        DIAG.log('fail', 'brief_output.json', `HTTP ${r.status} — file missing from deployed site. Deploy may not have completed.`);
+      }
+    } catch (e) {
+      DIAG.log('fail', 'brief_output.json', `Not reachable — ${e.message}`);
+    }
+
+    // 5 — Check vault_index.json
+    try {
+      const r = await fetch(
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault_index.json?t=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (r.ok) {
+        const d = await r.json();
+        DIAG.log('ok', 'vault_index.json', `Reachable — ${d.length} brief(s) archived`);
+      } else {
+        DIAG.log('fail', 'vault_index.json', `HTTP ${r.status} — file missing from deployed site.`);
+      }
+    } catch (e) {
+      DIAG.log('fail', 'vault_index.json', `Not reachable — ${e.message}`);
+    }
+  }
+
+  // ─── CANCEL ──────────────────────────────────────────────────────────────
+  function cancelGeneration() {
+    if (!isGenerating) return;
+    resetBtn();
+    document.getElementById('btn-cancel').style.display = 'none';
+    showStatus('error', 'Cancelled', 'Brief generation was cancelled. The pipeline may still be running in the background — it will stop automatically.');
+    setLiveBadge('ready', 'Ready');
+    showToast('Generation cancelled');
+  }
+
+  // ─── START ───────────────────────────────────────────────────────────────
+  boot();
+  </script>
+  <!-- Diagnostics panel — appears automatically on any boot failure -->
+  <div class="diag-panel" id="diag-panel">
+    <div class="diag-header">
+      <span class="diag-title">⚙ System Diagnostics</span>
+      <button class="diag-close" onclick="DIAG.hide()">✕</button>
+    </div>
+    <div class="diag-body" id="diag-body">Running checks…</div>
+  </div>
+
+  <!-- Diagnostics trigger button (always visible, bottom-right) -->
+  <button class="diag-trigger" onclick="DIAG.show()" title="Show diagnostics">⚙</button>
+
 </body>
 </html>
