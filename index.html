@@ -962,6 +962,28 @@
     transition: transform 0.15s;
   }
   .diag-trigger:hover { transform: scale(1.08); }
+
+  /* Cancel button */
+  .btn-cancel {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    color: var(--text-200);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .btn-cancel:hover {
+    background: var(--coral-light);
+    color: var(--coral-dark);
+    border-color: var(--coral);
+  }
   </style>
 </head>
 <body>
@@ -1099,6 +1121,9 @@
       <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
         <span id="btn-label">Generate Intelligence Brief</span>
         <span id="btn-icon">→</span>
+      </button>
+      <button class="btn-cancel" id="btn-cancel" onclick="cancelGeneration()" style="display:none">
+        ✕ Cancel
       </button>
     </div>
 
@@ -1281,7 +1306,7 @@
       if (count > MAX) {
         clearInterval(pollTimer);
         resetBtn();
-        showStatus('error', 'Timed out', 'Brief generation took too long. Pipeline may still be running — refresh in 1 minute.');
+        showStatus('error', 'Still running…', 'This brief is taking longer than usual — the AI pipeline is still working. Check back in 2–3 minutes and refresh the page to see the result.');
         setLiveBadge('ready', 'Ready');
         return;
       }
@@ -1319,11 +1344,13 @@
   }
 
   function setBtnLoading(on) {
-    const btn   = document.getElementById('btn-generate');
-    const label = document.getElementById('btn-label');
-    const icon  = document.getElementById('btn-icon');
+    const btn    = document.getElementById('btn-generate');
+    const cancel = document.getElementById('btn-cancel');
+    const label  = document.getElementById('btn-label');
+    const icon   = document.getElementById('btn-icon');
     btn.disabled = on;
     btn.classList.toggle('loading', on);
+    if (cancel) cancel.style.display = on ? 'block' : 'none';
     if (on) {
       label.textContent = 'Generating…';
       icon.outerHTML = '<div class="btn-spinner" id="btn-icon"></div>';
@@ -1656,6 +1683,16 @@
     } catch (e) {
       DIAG.log('fail', 'vault_index.json', `Not reachable — ${e.message}`);
     }
+  }
+
+  // ─── CANCEL ──────────────────────────────────────────────────────────────
+  function cancelGeneration() {
+    if (!isGenerating) return;
+    resetBtn();
+    document.getElementById('btn-cancel').style.display = 'none';
+    showStatus('error', 'Cancelled', 'Brief generation was cancelled. The pipeline may still be running in the background — it will stop automatically.');
+    setLiveBadge('ready', 'Ready');
+    showToast('Generation cancelled');
   }
 
   // ─── START ───────────────────────────────────────────────────────────────
