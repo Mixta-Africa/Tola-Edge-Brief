@@ -1,0 +1,129 @@
+name: Generate Weekly Thought Leadership Brief
+
+# Separate cadence from the daily commercial brief by design — see
+# thought-leadership-engine.js header comment for why these two tracks
+# are kept structurally apart (prompt, schedule, UI button, vault folder).
+on:
+  schedule:
+    # Every Monday at 07:00 WAT (06:00 UTC) — adjust if Tola's preferred
+    # generation time differs. Cron is always UTC.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: 'Unique request ID (timestamp) used by browser to match the result'
+        required: true
+        type: string
+      scope:
+        description: 'Market scope: Local (Nigeria/Senegal only) | Global (adds African + mature market comparators)'
+        required: true
+        type: string
+        default: 'Local'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout main branch (source + engine)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-teb-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-teb-
+
+      - name: Install dependencies (axios + puppeteer)
+        run: |
+          npm install axios puppeteer
+
+      - name: Run thought leadership engine
+        id: run_engine
+        env:
+          GNEWS_API_KEY:      ${{ secrets.GNEWS_API_KEY }}
+          NEWSAPI_KEY:        ${{ secrets.NEWSAPI_KEY }}
+          GROQ_API_KEY:       ${{ secrets.GROQ_API_KEY }}
+          SAMBANOVA_API_KEY:  ${{ secrets.SAMBANOVA_API_KEY }}
+          CEREBRAS_API_KEY:   ${{ secrets.CEREBRAS_API_KEY }}
+          MISTRAL_API_KEY:    ${{ secrets.MISTRAL_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY:     ${{ secrets.GEMINI_API_KEY }}
+          # On a scheduled (cron) run there are no workflow_dispatch inputs,
+          # so REQUEST_ID falls back to the run id and TL_SCOPE defaults to
+          # Local inside the engine itself if unset here.
+          REQUEST_ID: ${{ inputs.request_id || github.run_id }}
+          TL_SCOPE:   ${{ inputs.scope || 'Local' }}
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
+        run: node .github/scripts/thought-leadership-engine.js
+
+      - name: Checkout gh-pages branch for output
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-out
+          token: ${{ secrets.GH_DEPLOY_TOKEN }}
+
+      - name: Write brief output and update thought-leadership vault
+        run: |
+          # Separate data file and separate vault subfolder from the daily
+          # commercial brief — these must never share a path.
+          mkdir -p gh-pages-out/data gh-pages-out/vault/thought-leadership
+
+          cp /tmp/tl_brief_output.json gh-pages-out/data/tl_brief_output.json
+
+          WEEK_STR=$(date -u +"%Y-W%V")
+          FILENAME="TL_${WEEK_STR}.json"
+          cp /tmp/tl_brief_output.json "gh-pages-out/vault/thought-leadership/${FILENAME}"
+
+          node -e "
+            const fs = require('fs');
+            const indexPath = 'gh-pages-out/data/tl_vault_index.json';
+            let index = [];
+            try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
+            const week = '${WEEK_STR}';
+            index = index.filter(e => e.week !== week);
+            index.unshift({
+              week: week,
+              filename: '${FILENAME}',
+              generatedAt: new Date().toISOString()
+            });
+            index = index.slice(0, 52); // ~1 year of weekly briefs
+            fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
+            console.log('TL vault index: ' + index.length + ' entries');
+          "
+
+      - name: Commit and push to gh-pages
+        run: |
+          cd gh-pages-out
+          git config user.name  "Tola Edge Brief — Thought Leadership"
+          git config user.email "actions@github.com"
+          git add data/tl_brief_output.json data/tl_vault_index.json vault/thought-leadership/
+          git diff --staged --quiet || git commit -m "thought-leadership brief: $(date -u +%Y-W%V) [req ${{ inputs.request_id || github.run_id }}]"
+          git push
+
+      - name: Log pipeline summary
+        if: always()
+        run: |
+          if [ -f /tmp/tl_brief_output.json ]; then
+            node -e "
+              const d = JSON.parse(require('fs').readFileSync('/tmp/tl_brief_output.json','utf8'));
+              console.log('Status:', d.status);
+              console.log('Scope:', d.meta?.scope ?? 'n/a');
+              console.log('Findings:', d.brief?.findings?.length ?? 0);
+              console.log('Articles fetched:', d.meta?.articles_fetched ?? 'n/a');
+              if (d.error) console.log('Error:', d.error);
+            "
+          else
+            echo "No output file found"
+          fi
