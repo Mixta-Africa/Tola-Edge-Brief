@@ -23,9 +23,6 @@ on:
         type: string
         default: ''
 
-permissions:
-  contents: write   # needed to commit brief output back to main
-
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -50,76 +47,79 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-teb-
 
-      - name: Install dependencies
-        run: npm install --prefer-offline
+      - name: Install dependencies (axios + puppeteer)
+        run: |
+          npm install axios puppeteer
+          # Puppeteer downloads Chromium automatically (~170MB)
+          # This is cached via actions/cache above on subsequent runs
 
       - name: Run intelligence engine
         id: run_engine
         env:
-          GNEWS_API_KEY:      ${{ secrets.GNEWS_API_KEY }}
-          NEWSAPI_KEY:        ${{ secrets.NEWSAPI_KEY }}
+          # News source API keys
+          GNEWS_API_KEY:    ${{ secrets.GNEWS_API_KEY }}
+          NEWSAPI_KEY:      ${{ secrets.NEWSAPI_KEY }}
+          # 6-provider LLM fallback chain (comma-separated for multi-key support)
           GROQ_API_KEY:       ${{ secrets.GROQ_API_KEY }}
           SAMBANOVA_API_KEY:  ${{ secrets.SAMBANOVA_API_KEY }}
           CEREBRAS_API_KEY:   ${{ secrets.CEREBRAS_API_KEY }}
           MISTRAL_API_KEY:    ${{ secrets.MISTRAL_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GEMINI_API_KEY:     ${{ secrets.GEMINI_API_KEY }}
+          # Request parameters from UI
           REQUEST_ID:      ${{ inputs.request_id }}
           ACTIVE_MARKET:   ${{ inputs.active_market }}
           ACTIVE_DOMAINS:  ${{ inputs.active_domains }}
           CUSTOM_PROMPT:   ${{ inputs.custom_prompt }}
-        run: node scripts/engine.js
+          # Puppeteer sandbox config for GitHub Actions
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
+        run: node .github/scripts/engine.js
 
-      - name: Write brief output and update vault on main
+      - name: Checkout gh-pages branch for output
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages-out
+          token: ${{ secrets.GH_DEPLOY_TOKEN }}
+
+      - name: Write brief output and update vault
         run: |
-          # The repo is already checked out at the start of this workflow.
-          # We write the brief output directly into data/ on main and commit it.
-          # The deploy.yml workflow then picks it up on the next push,
-          # OR the browser polls the already-deployed brief_output.json via Pages.
-          #
-          # Note: brief_output.json is also written to the DEPLOYED site by
-          # the deploy.yml — here we persist it to main so it survives redeployments.
+          mkdir -p gh-pages-out/data gh-pages-out/vault
 
-          mkdir -p data/vault
+          # Write the primary polling target
+          cp /tmp/brief_output.json gh-pages-out/data/brief_output.json
 
-          # Write the brief result
-          cp /tmp/brief_output.json data/brief_output.json
-
-          # Archive to vault
+          # Save dated vault entry
           DATE_STR=$(date -u +"%Y-%m-%d")
           FILENAME="TEB_${DATE_STR}.json"
-          cp /tmp/brief_output.json "data/vault/${FILENAME}"
+          cp /tmp/brief_output.json "gh-pages-out/vault/${FILENAME}"
 
-          # Update vault index
+          # Update vault_index.json
           node -e "
             const fs = require('fs');
-            const indexPath = 'data/vault_index.json';
+            const indexPath = 'gh-pages-out/data/vault_index.json';
             let index = [];
             try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
             const today = '${DATE_STR}';
             index = index.filter(e => e.date !== today);
-            index.unshift({ date: today, filename: '${FILENAME}', generatedAt: new Date().toISOString() });
+            index.unshift({
+              date: today,
+              filename: '${FILENAME}',
+              generatedAt: new Date().toISOString()
+            });
             index = index.slice(0, 30);
             fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-            console.log('Vault index updated: ' + index.length + ' entries');
+            console.log('Vault index: ' + index.length + ' entries');
           "
 
-      - name: Commit and push brief output to main
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and push to gh-pages
         run: |
+          cd gh-pages-out
           git config user.name  "Tola Edge Brief"
           git config user.email "actions@github.com"
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
-          git add data/brief_output.json data/vault_index.json data/vault/
+          git add data/brief_output.json data/vault_index.json vault/
           git diff --staged --quiet || git commit -m "brief: $(date -u +%Y-%m-%d) [req ${{ inputs.request_id }}]"
-          git push origin main
-
-      - name: Trigger redeploy so live site serves the new brief
-        env:
-          GH_TOKEN: ${{ secrets.GH_DEPLOY_TOKEN }}
-        run: |
-          curl -s -X POST             -H "Authorization: Bearer ${GH_TOKEN}"             -H "Accept: application/vnd.github.v3+json"             https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches             -d '{"ref":"main"}' && echo "Deploy triggered" || echo "Deploy trigger failed (non-fatal)"
+          git push
 
       - name: Log pipeline summary
         if: always()
@@ -129,8 +129,10 @@ jobs:
               const d = JSON.parse(require('fs').readFileSync('/tmp/brief_output.json','utf8'));
               console.log('Status:', d.status);
               console.log('Stories:', d.brief?.stories?.length ?? 0);
+              console.log('Domain coverage notes:', d.brief?.domain_coverage_notes?.length ?? 0);
               console.log('Articles fetched:', d.meta?.articles_fetched ?? 'n/a');
               console.log('Articles analyzed:', d.meta?.articles_analyzed ?? 'n/a');
+              console.log('Prompt version:', d.meta?.prompt_version ?? 'n/a');
               if (d.error) console.log('Error:', d.error);
             "
           else
