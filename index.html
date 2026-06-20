@@ -650,6 +650,55 @@
     line-height: 1.6;
   }
 
+  /* Watch next — forward-looking line, visually distinct from body/relevance:
+     italic, smaller, with a forward-arrow marker, per v2 spec. */
+  .watch-next {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border, #E5E7EB);
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-300);
+    line-height: 1.55;
+  }
+
+  .watch-next-arrow {
+    flex-shrink: 0;
+    font-style: normal;
+    color: var(--blue);
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  /* Domain coverage footer — quiet/muted note beneath story cards listing
+     any active domain that returned no material signals today. NOT a
+     story card; deliberately understated. */
+  .coverage-footer {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--surface);
+    border-radius: var(--r-sm);
+    border: 1px dashed var(--border, #E5E7EB);
+  }
+
+  .coverage-footer-title {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-300);
+    margin-bottom: 6px;
+  }
+
+  .coverage-footer-line {
+    font-size: 12px;
+    color: var(--text-300);
+    line-height: 1.6;
+  }
+
   /* ═══════════════════════════════════════════════════════════════
      ACTION ROW
   ═══════════════════════════════════════════════════════════════ */
@@ -825,6 +874,93 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
+     THOUGHT LEADERSHIP TRACK — deliberately separate visual identity
+     (navy, not coral) so this is never mistaken for the daily
+     commercial brief's generate action. Own section, own toggle,
+     own button.
+  ═══════════════════════════════════════════════════════════════ */
+  .tl-section {
+    margin-top: 28px;
+    padding: 18px;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    border: 1px solid var(--border, #E5E7EB);
+  }
+
+  .tl-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .tl-section-sub {
+    font-size: 12.5px;
+    color: var(--text-300);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .tl-scope-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .tl-scope-pill {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: var(--r-pill);
+    border: 1.5px solid var(--border, #E5E7EB);
+    background: var(--card-bg);
+    color: var(--text-200);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.18s ease;
+  }
+
+  .tl-scope-pill.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--white);
+  }
+
+  .btn-tl-generate {
+    width: 100%;
+    padding: 14px 22px;
+    border-radius: var(--r-xl);
+    background: var(--navy);
+    border: none;
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 50px;
+    box-shadow: 0 6px 18px rgba(11,31,58,0.30);
+    transition: all 0.22s ease;
+  }
+
+  .btn-tl-generate:active:not(:disabled) {
+    transform: scale(0.975);
+  }
+
+  .btn-tl-generate:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
      TOAST
   ═══════════════════════════════════════════════════════════════ */
   .toast {
@@ -882,107 +1018,6 @@
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
     }
-  }
-
-  /* ═══════════════════════════════════════════════════════════════
-     DIAGNOSTICS PANEL
-  ═══════════════════════════════════════════════════════════════ */
-  .diag-panel {
-    display: none;
-    position: fixed;
-    bottom: 72px; right: 16px;
-    width: min(480px, calc(100vw - 32px));
-    background: #fff;
-    border: 1.5px solid #e0e4ed;
-    border-radius: 14px;
-    box-shadow: 0 8px 32px rgba(11,31,58,0.15);
-    z-index: 9999;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    overflow: hidden;
-  }
-  .diag-panel.visible { display: block; }
-
-  .diag-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: #0B1F3A;
-    color: #fff;
-  }
-  .diag-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; }
-  .diag-close {
-    background: none; border: none; color: rgba(255,255,255,0.6);
-    font-size: 16px; cursor: pointer; line-height: 1; padding: 0 0 0 12px;
-  }
-  .diag-body { padding: 10px 0; max-height: 340px; overflow-y: auto; }
-
-  .diag-row {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    gap: 0 8px;
-    padding: 6px 16px;
-    border-bottom: 1px solid #f0f2f7;
-    align-items: start;
-  }
-  .diag-row:last-child { border-bottom: none; }
-  .diag-icon { font-size: 13px; margin-top: 1px; }
-  .diag-label { font-weight: 500; color: #0B1F3A; line-height: 1.4; }
-  .diag-detail {
-    grid-column: 2;
-    color: #667085;
-    font-size: 11px;
-    margin-top: 2px;
-    line-height: 1.5;
-    word-break: break-all;
-  }
-
-  .diag-ok    .diag-icon { color: #0EA572; }
-  .diag-fail  .diag-icon { color: #E85D3D; }
-  .diag-fail  .diag-label { color: #E85D3D; }
-  .diag-fail  .diag-detail { color: #C44A2C; }
-  .diag-warn  .diag-icon { color: #D4870A; }
-  .diag-warn  .diag-label { color: #D4870A; }
-  .diag-info  .diag-icon { color: #98A2B3; }
-
-  .diag-trigger {
-    position: fixed;
-    bottom: 20px; right: 16px;
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: #0B1F3A;
-    color: #fff;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(11,31,58,0.25);
-    z-index: 9998;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.15s;
-  }
-  .diag-trigger:hover { transform: scale(1.08); }
-
-  /* Cancel button */
-  .btn-cancel {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-    padding: 14px;
-    border-radius: 14px;
-    border: 1.5px solid var(--border);
-    background: var(--white);
-    color: var(--text-200);
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  .btn-cancel:hover {
-    background: var(--coral-light);
-    color: var(--coral-dark);
-    border-color: var(--coral);
   }
   </style>
 </head>
@@ -1087,6 +1122,9 @@
         </div>
         <div id="stories-container"></div>
 
+        <!-- Domain coverage footer — quiet note for domains checked but empty -->
+        <div id="coverage-footer-container"></div>
+
         <!-- Action row -->
         <div class="action-row">
           <button class="btn-secondary" onclick="copyBrief()">
@@ -1114,16 +1152,58 @@
         </div>
       </div>
 
+      <!-- Thought Leadership Track — separate track, separate cadence (weekly),
+           separate vault, separate relevance test. Deliberately not styled or
+           wired like the daily commercial brief above. -->
+      <div class="divider"></div>
+
+      <div class="tl-section">
+        <div class="tl-section-title">Thought Leadership Track</div>
+        <div class="tl-section-sub">
+          Weekly research brief on housing finance for the working and emerging
+          middle class — gig workers, freelancers, irregular-income households.
+          Independent of the daily commercial brief above: different relevance
+          test, different cadence, own vault folder.
+        </div>
+
+        <div class="tl-scope-row">
+          <button class="tl-scope-pill active" data-tl-scope="Local"  onclick="setTLScope('Local')">Local (NG/SN)</button>
+          <button class="tl-scope-pill"        data-tl-scope="Global" onclick="setTLScope('Global')">Global (+ comparators)</button>
+        </div>
+
+        <button class="btn-tl-generate" id="btn-tl-generate" onclick="generateThoughtLeadershipBrief()">
+          <span id="btn-tl-label">Generate Weekly Thought Leadership Brief</span>
+          <span id="btn-tl-icon">→</span>
+        </button>
+
+        <!-- Weekly TL output renders here, fully separate from #output-section above -->
+        <div class="tl-output" id="tl-output-section" style="display:none; margin-top:18px;">
+          <div class="section-header" style="margin-top:0;">
+            <span class="section-title">Weekly Synthesis</span>
+            <span class="section-meta" id="tl-week-label"></span>
+          </div>
+          <div class="narrative-card">
+            <div class="narrative-body" id="tl-synthesis-body"></div>
+          </div>
+
+          <div class="section-header" style="margin-top:20px;">
+            <span class="section-title">Findings</span>
+            <span class="section-meta" id="tl-findings-count"></span>
+          </div>
+          <div id="tl-findings-container"></div>
+        </div>
+      </div>
+
     </div><!-- /content -->
 
-    <!-- Sticky generate button -->
+    <!-- Sticky generate button — daily commercial brief ONLY.
+         The weekly Thought Leadership button above is intentionally
+         NOT in this sticky footer, to keep the two actions visually
+         and physically separate. -->
     <div class="sticky-footer">
       <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
         <span id="btn-label">Generate Intelligence Brief</span>
         <span id="btn-icon">→</span>
-      </button>
-      <button class="btn-cancel" id="btn-cancel" onclick="cancelGeneration()" style="display:none">
-        ✕ Cancel
       </button>
     </div>
 
@@ -1135,14 +1215,8 @@
   <script>
   'use strict';
 
-  // ─── CONFIG ───────────────────────────────────────────────────────────────
-  // owner + repo are public — hardcoded directly.
-  // token is injected at deploy time by deploy.yml via sed (%%GH_PAT_APP%%).
-  let CFG = {
-    owner: 'mixta-africa',
-    repo:  'Tola-Edge-Brief',
-    token: '%%GH_PAT_APP%%',
-  };
+  // ─── CONFIG (fetched from /data/config.json — written by deploy.yml) ──────
+  let CFG = { owner: '', repo: '', token: '' };
 
   // ─── STATE ────────────────────────────────────────────────────────────────
   const DOMAINS = {
@@ -1161,23 +1235,34 @@
   let pollTimer     = null;
   let currentReqId  = null;
 
+  // Thought Leadership Track — entirely separate state from the commercial
+  // brief above. Own scope toggle (Local/Global), own generating flag, own
+  // brief, own poll timer, own request id — never shares state with the
+  // commercial track's variables.
+  let tlActiveScope = 'Local';
+  let tlIsGenerating = false;
+  let tlCurrentBrief = null;
+  let tlPollTimer    = null;
+  let tlCurrentReqId = null;
+
   // ─── BOOT ────────────────────────────────────────────────────────────────
   async function boot() {
-    setLoad('Initializing application…', 25);
+    setLoad('Loading configuration…', 25);
     await sleep(200);
 
-    // owner + repo are hardcoded. Only token is injected by deploy.yml.
-    setLoad('Loading configuration…', 50);
-    if (CFG.token.startsWith('%%')) {
-      console.error('[Boot] GH_PAT_APP placeholder not replaced — deploy.yml sed failed or secret is missing.');
-      CFG.token = '';
-    } else if (!CFG.token) {
-      console.error('[Boot] GH_PAT_APP is empty — check the secret value in repo Settings → Secrets → Actions.');
-    } else {
-      console.log(`[Boot] Config ready for ${CFG.owner}/${CFG.repo} token=${CFG.token.slice(0,8)}…`);
+    try {
+      const res = await fetch(`./data/config.json?t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`config.json ${res.status}`);
+      const cfg = await res.json();
+      if (!cfg.token) throw new Error('config.json missing token');
+      CFG = cfg;
+      setLoad('Configuration loaded', 75);
+    } catch (e) {
+      console.warn('[Boot] config.json not available:', e.message);
+      // Graceful degradation — app UI loads but generate button will be blocked
+      setLoad('Config unavailable', 75);
     }
 
-    setLoad('Configuration ready', 75);
     await sleep(300);
     setLoad('Ready', 100);
     await sleep(350);
@@ -1188,7 +1273,6 @@
     renderDate();
     renderDomains();
     loadVault();
-    runDiagnostics(); // runs all checks and auto-shows panel on any failure
   }
 
   function setLoad(msg, pct) {
@@ -1220,6 +1304,16 @@
     activeMarket = m;
     document.querySelectorAll('.market-pill').forEach(p =>
       p.classList.toggle('active', p.dataset.market === m)
+    );
+  }
+
+  // TL scope toggle is per-brief (not a fixed setting), separate from the
+  // commercial track's market toggle above — selecting Local/Global here
+  // has zero effect on activeMarket or the daily brief.
+  function setTLScope(s) {
+    tlActiveScope = s;
+    document.querySelectorAll('.tl-scope-pill').forEach(p =>
+      p.classList.toggle('active', p.dataset.tlScope === s)
     );
   }
 
@@ -1306,7 +1400,7 @@
       if (count > MAX) {
         clearInterval(pollTimer);
         resetBtn();
-        showStatus('error', 'Still running…', 'This brief is taking longer than usual — the AI pipeline is still working. Check back in 2–3 minutes and refresh the page to see the result.');
+        showStatus('error', 'Timed out', 'Brief generation took too long. Pipeline may still be running — refresh in 1 minute.');
         setLiveBadge('ready', 'Ready');
         return;
       }
@@ -1343,14 +1437,174 @@
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   }
 
+  // ─── THOUGHT LEADERSHIP TRACK — separate dispatch, poll, and render ──────
+  // Deliberately not refactored to share code with generateBrief()/
+  // startPolling()/renderBrief() above, even though the shapes are similar.
+  // Keeping them textually separate matches the "different functions"
+  // instruction and means a future change to the daily brief's polling
+  // logic can never accidentally alter the weekly track's behaviour.
+
+  async function generateThoughtLeadershipBrief() {
+    if (!CFG.token || !CFG.owner || !CFG.repo) {
+      showToast('App config not loaded — check deploy logs');
+      return;
+    }
+    if (tlIsGenerating) return;
+
+    tlIsGenerating = true;
+    tlCurrentBrief = null;
+    tlCurrentReqId = String(Date.now());
+
+    setTLBtnLoading(true);
+    showToast('Dispatching weekly thought leadership engine…');
+
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${CFG.owner}/${CFG.repo}/actions/workflows/generate-thought-leadership.yml/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${CFG.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: {
+              request_id: tlCurrentReqId,
+              scope:      tlActiveScope,
+            },
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(`GitHub ${res.status}: ${err.message || res.statusText}`);
+      }
+
+      startTLPolling();
+
+    } catch (err) {
+      resetTLBtn();
+      showToast(`Dispatch failed: ${err.message}`);
+    }
+  }
+
+  const TL_STATUS_MSGS = [
+    'Fetching housing finance articles…',
+    'Enriching articles with full text…',
+    'Synthesising weekly findings across four pillars…',
+    'Validating pillar tags and citations…',
+    'Finalising weekly brief — almost ready…',
+  ];
+
+  function startTLPolling() {
+    let count = 0;
+    const MAX = 120;
+
+    tlPollTimer = setInterval(async () => {
+      count++;
+      const msgIdx = Math.min(Math.floor(count / 10), TL_STATUS_MSGS.length - 1);
+      showToast(TL_STATUS_MSGS[msgIdx]);
+
+      if (count > MAX) {
+        clearInterval(tlPollTimer);
+        resetTLBtn();
+        showToast('Timed out — pipeline may still be running, check back shortly');
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `https://${CFG.owner}.github.io/${CFG.repo}/data/tl_brief_output.json?t=${Date.now()}`,
+          { cache: 'no-store' }
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.request_id !== tlCurrentReqId) return;
+
+        clearInterval(tlPollTimer);
+        resetTLBtn();
+
+        if (data.status === 'success' && data.brief) {
+          tlCurrentBrief = data;
+          renderTLBrief(data);
+          showToast('Weekly brief ready', 'success');
+        } else {
+          showToast(data.error || 'Thought leadership brief generation failed');
+        }
+      } catch (_) { /* transient — keep polling */ }
+    }, 5000);
+  }
+
+  function resetTLBtn() {
+    tlIsGenerating = false;
+    setTLBtnLoading(false);
+    if (tlPollTimer) { clearInterval(tlPollTimer); tlPollTimer = null; }
+  }
+
+  function setTLBtnLoading(on) {
+    const btn   = document.getElementById('btn-tl-generate');
+    const label = document.getElementById('btn-tl-label');
+    const icon  = document.getElementById('btn-tl-icon');
+    btn.disabled = on;
+    if (on) {
+      label.textContent = 'Generating…';
+      icon.outerHTML = '<div class="btn-spinner" id="btn-tl-icon"></div>';
+    } else {
+      label.textContent = 'Generate Weekly Thought Leadership Brief';
+      const el = document.getElementById('btn-tl-icon');
+      if (el) { el.outerHTML = '<span id="btn-tl-icon">→</span>'; }
+    }
+  }
+
+  function renderTLBrief(data) {
+    const brief = data.brief;
+    const out = document.getElementById('tl-output-section');
+
+    document.getElementById('tl-week-label').textContent = brief.week_of || '';
+
+    document.getElementById('tl-synthesis-body').innerHTML =
+      (brief.synthesis || '').split('\n\n').filter(p => p.trim())
+        .map(p => `<p>${esc(p.trim())}</p>`).join('');
+
+    const container = document.getElementById('tl-findings-container');
+    container.innerHTML = '';
+    document.getElementById('tl-findings-count').textContent =
+      `${brief.findings.length} finding${brief.findings.length === 1 ? '' : 's'}`;
+
+    brief.findings.forEach((finding, i) => {
+      const card = document.createElement('div');
+      card.className = 'story-card in'; // reuse story-card visual style; TL has its own data shape
+      card.style.transitionDelay = `${i * 55}ms`;
+
+      card.innerHTML = `
+        <div class="story-tags">
+          <span class="tag tag-domain">${esc(finding.pillar)}</span>
+          <span class="tag tag-ng">${esc(finding.market || '')}</span>
+        </div>
+        <div class="story-title">${esc(finding.title)}</div>
+        <div class="story-body">${esc(finding.body)}</div>
+        <div class="relevance-block">
+          <div class="relevance-eyebrow">Why this matters for your thesis</div>
+          <div class="relevance-text">${esc(finding.thesis_relevance)}</div>
+        </div>
+        <div class="watch-next"><span class="watch-next-arrow">✎</span><span>${esc(finding.possible_angle || 'Reference material only')}</span></div>
+      `;
+      container.appendChild(card);
+    });
+
+    out.style.display = 'block';
+    setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+
   function setBtnLoading(on) {
-    const btn    = document.getElementById('btn-generate');
-    const cancel = document.getElementById('btn-cancel');
-    const label  = document.getElementById('btn-label');
-    const icon   = document.getElementById('btn-icon');
+    const btn   = document.getElementById('btn-generate');
+    const label = document.getElementById('btn-label');
+    const icon  = document.getElementById('btn-icon');
     btn.disabled = on;
     btn.classList.toggle('loading', on);
-    if (cancel) cancel.style.display = on ? 'block' : 'none';
     if (on) {
       label.textContent = 'Generating…';
       icon.outerHTML = '<div class="btn-spinner" id="btn-icon"></div>';
@@ -1387,6 +1641,12 @@
       const impactTag = { High: 'tag-high', Medium: 'tag-medium', Low: 'tag-low' }[story.impact] || 'tag-low';
       const mktTag    = story.market === 'Senegal' ? 'tag-sn' : 'tag-ng';
 
+      // watch_next is a v2-required field, but render defensively in case
+      // an older cached brief without it is loaded from the vault.
+      const watchNextHtml = story.watch_next
+        ? `<div class="watch-next"><span class="watch-next-arrow">→</span><span>${esc(story.watch_next)}</span></div>`
+        : '';
+
       card.innerHTML = `
         <div class="story-tags">
           <span class="tag ${impactTag}">${esc(story.impact)}</span>
@@ -1399,10 +1659,27 @@
           <div class="relevance-eyebrow">Mixta Relevance</div>
           <div class="relevance-text">${esc(story.relevance)}</div>
         </div>
+        ${watchNextHtml}
       `;
       container.appendChild(card);
       requestAnimationFrame(() => setTimeout(() => card.classList.add('in'), 40 + i * 55));
     });
+
+    // Domain coverage footer — quiet note for any active domain that
+    // returned no qualifying stories today. Not shown if every active
+    // domain produced at least one story.
+    const coverageContainer = document.getElementById('coverage-footer-container');
+    const notes = Array.isArray(brief.domain_coverage_notes) ? brief.domain_coverage_notes : [];
+    if (notes.length > 0) {
+      coverageContainer.innerHTML = `
+        <div class="coverage-footer">
+          <div class="coverage-footer-title">Domain Coverage</div>
+          ${notes.map(n => `<div class="coverage-footer-line">${esc(n)}</div>`).join('')}
+        </div>
+      `;
+    } else {
+      coverageContainer.innerHTML = '';
+    }
 
     document.getElementById('btn-save').classList.remove('saved');
     document.getElementById('btn-save').innerHTML = '<span>↓</span> Save to Vault';
@@ -1420,7 +1697,12 @@
     txt += `INTELLIGENCE STORIES\n${'─'.repeat(36)}\n`;
     b.stories.forEach((s, i) => {
       txt += `\n[${i+1}] ${s.impact} | ${s.domain} | ${s.market}\n${s.title}\n\n${s.body}\n\nMixta Relevance: ${s.relevance}\n`;
+      if (s.watch_next) txt += `Watch next: ${s.watch_next}\n`;
     });
+    if (Array.isArray(b.domain_coverage_notes) && b.domain_coverage_notes.length > 0) {
+      txt += `\nDOMAIN COVERAGE\n${'─'.repeat(36)}\n`;
+      b.domain_coverage_notes.forEach(n => { txt += `${n}\n`; });
+    }
     navigator.clipboard.writeText(txt)
       .then(() => showToast('Brief copied', 'success'))
       .catch(() => showToast('Copy failed — select text manually'));
@@ -1557,158 +1839,8 @@
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  // ─── DIAGNOSTICS ─────────────────────────────────────────────────────────
-  // Visible on-screen panel so deployment issues are obvious without DevTools.
-  // Shows automatically whenever any check fails; can also be opened manually.
-
-  const DIAG = {
-    lines: [],
-    panel: null,
-
-    init() {
-      this.panel = document.getElementById('diag-panel');
-    },
-
-    log(status, label, detail = '') {
-      const icons = { ok: '✓', fail: '✗', warn: '⚠', info: '·' };
-      const icon = icons[status] || '·';
-      this.lines.push({ status, icon, label, detail });
-      this._render();
-      if (status === 'fail') this.show();
-    },
-
-    show() {
-      if (this.panel) this.panel.classList.add('visible');
-    },
-
-    hide() {
-      if (this.panel) this.panel.classList.remove('visible');
-    },
-
-    _render() {
-      if (!this.panel) return;
-      const body = this.panel.querySelector('#diag-body');
-      body.innerHTML = this.lines.map(l => `
-        <div class="diag-row diag-${l.status}">
-          <span class="diag-icon">${l.icon}</span>
-          <span class="diag-label">${l.label}</span>
-          ${l.detail ? `<span class="diag-detail">${esc(l.detail)}</span>` : ''}
-        </div>`).join('');
-    },
-  };
-
-  async function runDiagnostics() {
-    DIAG.init();
-
-    // 1 — Check if token placeholder was replaced by deploy.yml
-    if (CFG.token.startsWith('%%')) {
-      DIAG.log('fail', 'Token injection', 'GH_PAT_APP placeholder not replaced — deploy.yml sed failed. Check Actions logs.');
-    } else if (!CFG.token) {
-      DIAG.log('fail', 'GH_PAT_APP secret', 'Token is empty — update GH_PAT_APP secret in repo Settings → Secrets → Actions.');
-    } else {
-      DIAG.log('ok', 'Config', `owner=${CFG.owner}  repo=${CFG.repo}  token=${CFG.token.slice(0,8)}…`);
-    }
-
-    // 2 — Check GitHub API reachability + token validity
-    if (CFG.token && !CFG.token.startsWith('%%')) {
-      try {
-        const r = await fetch(
-          `https://api.github.com/repos/${CFG.owner}/${CFG.repo}`,
-          { headers: { Authorization: `Bearer ${CFG.token}`, Accept: 'application/vnd.github.v3+json' } }
-        );
-        if (r.status === 200) {
-          DIAG.log('ok', 'GitHub API', `Reached repo — HTTP 200`);
-        } else if (r.status === 401) {
-          DIAG.log('fail', 'GitHub token', `HTTP 401 — token is invalid or expired. Regenerate GH_PAT_APP.`);
-        } else if (r.status === 403) {
-          DIAG.log('fail', 'GitHub token', `HTTP 403 — token lacks Actions permission. Set Actions: Read & Write on the PAT.`);
-        } else if (r.status === 404) {
-          DIAG.log('fail', 'GitHub repo', `HTTP 404 — repo not found. Check owner="${CFG.owner}" repo="${CFG.repo}".`);
-        } else {
-          DIAG.log('warn', 'GitHub API', `Unexpected HTTP ${r.status}`);
-        }
-      } catch (e) {
-        DIAG.log('fail', 'GitHub API', `Network error — ${e.message}`);
-      }
-    } else {
-      DIAG.log('warn', 'GitHub API', 'Skipped — no valid token.');
-    }
-
-    // 3 — Check workflow file exists
-    if (CFG.token && !CFG.token.startsWith('%%')) {
-      try {
-        const r = await fetch(
-          `https://api.github.com/repos/${CFG.owner}/${CFG.repo}/actions/workflows/generate-brief.yml`,
-          { headers: { Authorization: `Bearer ${CFG.token}`, Accept: 'application/vnd.github.v3+json' } }
-        );
-        if (r.status === 200) {
-          const d = await r.json();
-          DIAG.log('ok', 'generate-brief.yml', `Found — state: ${d.state}`);
-        } else {
-          DIAG.log('fail', 'generate-brief.yml', `HTTP ${r.status} — workflow file not found in .github/workflows/`);
-        }
-      } catch (e) {
-        DIAG.log('warn', 'generate-brief.yml', `Check skipped — ${e.message}`);
-      }
-    }
-
-    // 4 — Check brief_output.json is reachable
-    try {
-      const r = await fetch(
-        `https://${CFG.owner}.github.io/${CFG.repo}/data/brief_output.json?t=${Date.now()}`,
-        { cache: 'no-store' }
-      );
-      if (r.ok) {
-        const d = await r.json();
-        DIAG.log('ok', 'brief_output.json', `Reachable — status: "${d.status}"`);
-      } else {
-        DIAG.log('fail', 'brief_output.json', `HTTP ${r.status} — file missing from deployed site. Deploy may not have completed.`);
-      }
-    } catch (e) {
-      DIAG.log('fail', 'brief_output.json', `Not reachable — ${e.message}`);
-    }
-
-    // 5 — Check vault_index.json
-    try {
-      const r = await fetch(
-        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault_index.json?t=${Date.now()}`,
-        { cache: 'no-store' }
-      );
-      if (r.ok) {
-        const d = await r.json();
-        DIAG.log('ok', 'vault_index.json', `Reachable — ${d.length} brief(s) archived`);
-      } else {
-        DIAG.log('fail', 'vault_index.json', `HTTP ${r.status} — file missing from deployed site.`);
-      }
-    } catch (e) {
-      DIAG.log('fail', 'vault_index.json', `Not reachable — ${e.message}`);
-    }
-  }
-
-  // ─── CANCEL ──────────────────────────────────────────────────────────────
-  function cancelGeneration() {
-    if (!isGenerating) return;
-    resetBtn();
-    document.getElementById('btn-cancel').style.display = 'none';
-    showStatus('error', 'Cancelled', 'Brief generation was cancelled. The pipeline may still be running in the background — it will stop automatically.');
-    setLiveBadge('ready', 'Ready');
-    showToast('Generation cancelled');
-  }
-
   // ─── START ───────────────────────────────────────────────────────────────
   boot();
   </script>
-  <!-- Diagnostics panel — appears automatically on any boot failure -->
-  <div class="diag-panel" id="diag-panel">
-    <div class="diag-header">
-      <span class="diag-title">⚙ System Diagnostics</span>
-      <button class="diag-close" onclick="DIAG.hide()">✕</button>
-    </div>
-    <div class="diag-body" id="diag-body">Running checks…</div>
-  </div>
-
-  <!-- Diagnostics trigger button (always visible, bottom-right) -->
-  <button class="diag-trigger" onclick="DIAG.show()" title="Show diagnostics">⚙</button>
-
 </body>
 </html>
