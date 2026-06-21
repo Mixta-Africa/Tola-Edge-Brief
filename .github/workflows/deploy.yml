@@ -60,6 +60,34 @@ jobs:
             echo "Seeded empty vault_index.json"
           fi
 
+          # Thought Leadership track — separate files, separate vault
+          # subfolder. This copy is independent of the commercial vault
+          # block above — it must not assume the commercial brief has ever
+          # run (a repo could have TL briefs with zero commercial briefs,
+          # or vice versa).
+          mkdir -p _site/data/vault/thought-leadership
+          if [ -f data/tl_brief_output.json ]; then
+            cp data/tl_brief_output.json _site/data/tl_brief_output.json
+            echo "Deployed existing tl_brief_output.json"
+          else
+            echo '{"request_id":"","status":"idle","brief":null,"generated_at":""}' \
+              > _site/data/tl_brief_output.json
+            echo "Seeded empty tl_brief_output.json"
+          fi
+
+          if [ -f data/tl_vault_index.json ]; then
+            cp data/tl_vault_index.json _site/data/tl_vault_index.json
+            echo "Deployed existing thought-leadership vault index"
+          else
+            echo '[]' > _site/data/tl_vault_index.json
+            echo "Seeded empty tl_vault_index.json"
+          fi
+
+          if [ -d data/vault/thought-leadership ]; then
+            cp -r data/vault/thought-leadership/. _site/data/vault/thought-leadership/
+            echo "Deployed existing thought-leadership vault archive"
+          fi
+
           touch _site/.nojekyll
 
       - name: Upload Pages artifact
