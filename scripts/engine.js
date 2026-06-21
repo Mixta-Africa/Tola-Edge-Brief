@@ -31,7 +31,7 @@
  *   Phase 3 — Enrich:   Puppeteer full-text extraction (shared lib)
  *   Phase 4 — Analyze:  6-LLM fallback chain per article (Groq 8b tier)
  *   Phase 5 — Synthesize: Groq 70b tier → v2 brief JSON schema (6000 tokens)
- *   Output  — Write /tmp/brief_output.json → Actions pushes to gh-pages
+ *   Output  — Write /tmp/brief_output.json → workflow commits to main's data/
  *
  * GitHub Secrets consumed:
  *   GNEWS_API_KEY, NEWSAPI_KEY,
