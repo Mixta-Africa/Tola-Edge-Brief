@@ -1215,8 +1215,19 @@
   <script>
   'use strict';
 
-  // ─── CONFIG (fetched from /data/config.json — written by deploy.yml) ──────
-  let CFG = { owner: '', repo: '', token: '' };
+  // ─── CONFIG ──────────────────────────────────────────────────────────────
+  // owner/repo are hardcoded (this app only ever targets one repo). token is
+  // NOT hardcoded as a literal — %%GH_PAT_APP%% is a placeholder that
+  // deploy.yml's sed step replaces with the real secret value at build time,
+  // directly into the deployed copy of this file. The source file on the
+  // `main` branch always contains the literal placeholder text, never a
+  // real token — only the built artifact in `_site` (deployed to Pages)
+  // has the real value substituted in.
+  let CFG = {
+    owner: 'Mixta-Africa',
+    repo:  'Tola-Edge-Brief',
+    token: '%%GH_PAT_APP%%',
+  };
 
   // ─── STATE ────────────────────────────────────────────────────────────────
   const DOMAINS = {
@@ -1246,26 +1257,24 @@
   let tlCurrentReqId = null;
 
   // ─── BOOT ────────────────────────────────────────────────────────────────
+  // No network fetch needed — CFG.token was either substituted at build
+  // time (deployed Pages copy) or is still the literal placeholder string
+  // (local/dev copy straight from the repo, or build step didn't run).
+  // Either way boot() just checks what's already in memory.
   async function boot() {
-    setLoad('Loading configuration…', 25);
+    setLoad('Initialising…', 40);
     await sleep(200);
 
-    try {
-      const res = await fetch(`./data/config.json?t=${Date.now()}`, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`config.json ${res.status}`);
-      const cfg = await res.json();
-      if (!cfg.token) throw new Error('config.json missing token');
-      CFG = cfg;
-      setLoad('Configuration loaded', 75);
-    } catch (e) {
-      console.warn('[Boot] config.json not available:', e.message);
-      // Graceful degradation — app UI loads but generate button will be blocked
+    if (!CFG.token || CFG.token === '%%GH_PAT_APP%%') {
+      console.warn('[Boot] Token placeholder not substituted — check deploy.yml ran and GH_PAT_APP secret is set.');
       setLoad('Config unavailable', 75);
+    } else {
+      setLoad('Configuration loaded', 75);
     }
 
-    await sleep(300);
+    await sleep(250);
     setLoad('Ready', 100);
-    await sleep(350);
+    await sleep(300);
 
     document.getElementById('loading-screen').classList.add('out');
     setTimeout(() => document.getElementById('loading-screen')?.remove(), 600);
