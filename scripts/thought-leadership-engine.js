@@ -44,7 +44,7 @@
  *                        commercial engine's domain keywords)
  *   Phase 3 — Enrich:   Puppeteer full-text extraction (shared lib)
  *   Phase 4 — Synthesize: weekly findings JSON schema (four pillars)
- *   Output  — Write /tmp/tl_brief_output.json → Actions pushes to gh-pages
+ *   Output  — Write /tmp/tl_brief_output.json → workflow commits to main's data/
  *             under vault/thought-leadership/
  *
  * GitHub Secrets consumed (same pool as the commercial engine — these are
