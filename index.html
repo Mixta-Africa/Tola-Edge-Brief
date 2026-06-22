@@ -120,51 +120,70 @@
   ═══════════════════════════════════════════════════════════════ */
   .loading-screen {
     position: fixed; inset: 0;
-    background: var(--navy);
+    background: #0B1F3A;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
     z-index: 999;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition: opacity 0.55s ease, transform 0.55s ease;
     padding-top: var(--sat);
   }
 
   .loading-screen.out {
-    opacity: 0; transform: scale(0.97); pointer-events: none;
+    opacity: 0; transform: scale(0.98); pointer-events: none;
   }
 
-  .loading-logo {
+  /* Icon with heartbeat — single pulse: expand slightly, return.
+     Timing mimics a resting heartbeat (~60bpm = 1s cycle) but stretched
+     to 1.6s so it reads as calm and premium, not anxious. */
+  .loading-icon {
+    width: 96px;
+    height: 96px;
+    border-radius: 22px;
+    overflow: hidden;
+    animation: heartbeat 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    will-change: transform, opacity;
+  }
+
+  .loading-icon img {
+    width: 100%; height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Fallback shown if icon.png hasn't loaded yet (e.g. very first deploy) */
+  .loading-icon-fallback {
+    width: 96px; height: 96px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
     font-family: 'Playfair Display', serif;
-    font-size: 28px; font-weight: 500;
-    color: var(--white);
-    margin-bottom: 6px;
-    letter-spacing: -0.02em;
+    font-size: 32px;
+    color: rgba(255,255,255,0.7);
+    animation: heartbeat 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
-  .loading-sub {
-    font-size: 12px; font-weight: 400;
-    color: var(--text-inv-2);
-    letter-spacing: 0.06em; text-transform: uppercase;
-    margin-bottom: 48px;
+  @keyframes heartbeat {
+    0%   { transform: scale(1);    opacity: 0.85; }
+    14%  { transform: scale(1.08); opacity: 1;    }
+    28%  { transform: scale(1);    opacity: 0.85; }
+    42%  { transform: scale(1.04); opacity: 0.95; }
+    70%  { transform: scale(1);    opacity: 0.85; }
+    100% { transform: scale(1);    opacity: 0.85; }
   }
 
-  .loading-bar-track {
-    width: 120px; height: 2px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 2px; overflow: hidden;
-  }
-
-  .loading-bar-fill {
-    height: 100%; width: 0%;
-    background: var(--coral);
-    border-radius: 2px;
-    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  @media (prefers-reduced-motion: reduce) {
+    .loading-icon, .loading-icon-fallback {
+      animation: none;
+      opacity: 1;
+    }
   }
 
   .loading-status {
-    margin-top: 16px;
+    margin-top: 32px;
     font-size: 11px;
-    color: var(--text-inv-2);
+    color: rgba(255,255,255,0.35);
     font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -1108,10 +1127,11 @@
 
   <!-- Loading screen -->
   <div class="loading-screen" id="loading-screen">
-    <div class="loading-logo">Tola Edge Brief</div>
-    <div class="loading-sub">Intelligence · Mixta Africa</div>
-    <div class="loading-bar-track">
-      <div class="loading-bar-fill" id="loading-fill"></div>
+    <!-- Icon with heartbeat pulse. Falls back to text initial if icon.png
+         hasn't been deployed yet. onerror swaps to the text fallback. -->
+    <div class="loading-icon" id="loading-icon-wrap">
+      <img src="./icon.png" alt="Tola Edge Brief"
+           onerror="this.parentElement.outerHTML='<div class=&quot;loading-icon-fallback&quot;>TE</div>'" />
     </div>
     <div class="loading-status" id="loading-status">Loading…</div>
   </div>
@@ -1390,8 +1410,8 @@
   }
 
   function setLoad(msg, pct) {
-    document.getElementById('loading-status').textContent = msg;
-    document.getElementById('loading-fill').style.width = pct + '%';
+    const el = document.getElementById('loading-status');
+    if (el) el.textContent = msg;
   }
 
   function renderDate() {
