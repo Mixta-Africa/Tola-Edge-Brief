@@ -12,7 +12,7 @@
   <link rel="manifest" id="pwa-manifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     /* Force Poppins as an additional failsafe — browsers sometimes serve
        cached stylesheet with old font list. This @import fires independently. */
@@ -169,7 +169,8 @@
     border-radius: 26px;
     background: rgba(255,255,255,0.08);
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
     font-size: 32px;
     color: rgba(255,255,255,0.7);
     animation: heartbeat 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -248,20 +249,21 @@
   }
 
   .header-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px; font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
     color: var(--white);
     letter-spacing: -0.01em;
     line-height: 1.2;
-    /* Single line: "The Tola Edge Brief" with italic on last two words */
     white-space: nowrap;
     margin-bottom: 12px;
     margin-top: 4px;
   }
 
   .header-title em {
-    font-style: italic;
-    color: rgba(255,255,255,0.85);
+    font-style: normal;
+    font-weight: 300; /* Font weight contrast makes it modern and pop */
+    color: rgba(255,255,255,0.9);
   }
 
   .header-meta {
@@ -319,17 +321,17 @@
   }
 
   .greeting-title {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 18px; /* Softened from 22px to obey hierarchy */
+    font-weight: 500; /* Softened from 600 */
     color: var(--text-100);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     margin-bottom: 4px;
-    line-height: 1.2;
+    line-height: 1.3;
   }
 
   .greeting-sub {
     font-size: 14px;
-    color: var(--text-300);
+    color: var(--text-400); /* Pushed back for supporting hierarchy */
     font-weight: 400;
   }
 
@@ -1116,14 +1118,14 @@
   }
 
   .drawer-brand {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
     color: rgba(255,255,255,0.9);
     line-height: 1.2;
   }
 
-  .drawer-brand em { font-style: italic; color: rgba(255,255,255,0.65); }
+  .drawer-brand em { font-style: normal; font-weight: 300; color: rgba(255,255,255,0.75); }
 
   .drawer-close {
     width: 36px; height: 36px;
