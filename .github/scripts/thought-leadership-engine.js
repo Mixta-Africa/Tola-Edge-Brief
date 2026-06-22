@@ -82,25 +82,41 @@ const PILLARS = [
 // Keyword set distinct from the commercial engine's DOMAIN_KEYWORDS — this
 // scores for "housing finance system serving non-traditional income," not
 // for Mixta-specific commercial signals.
+// NOTE: Use terms that actually appear in Nigerian/Senegalese news copy,
+// not only the academic/Western terminology in the spec — "rent-to-own" and
+// "shared equity" are rare in local headlines; "affordable housing", "low
+// income", "NHF", "informal" are common.
 const THESIS_KEYWORDS = [
-  'rent-to-own', 'shared equity', 'alternative underwriting', 'informal income',
-  'gig worker', 'freelancer', 'irregular income', 'employer-backed housing',
-  'housing finance', 'mortgage innovation', 'microfinance housing', 'cooperative housing',
-  'affordable housing finance', 'pension fund housing', 'DFI housing', 'guarantee scheme',
-  'housing subsidy', 'financial inclusion housing', 'income volatility', 'underwriting model',
-  'mass market housing', 'housing stability productivity', 'workforce housing',
+  // Academic/international terms (appear in DFI/policy press releases)
+  'rent-to-own', 'shared equity', 'alternative underwriting', 'employer-backed housing',
+  'housing finance', 'microfinance housing', 'cooperative housing', 'housing subsidy',
+  'financial inclusion', 'income volatility', 'underwriting model', 'workforce housing',
   'logement abordable', 'financement participatif', 'micro-hypothèque',
+  // Nigerian vernacular terms (appear in local news)
+  'affordable housing', 'low income housing', 'mass housing', 'social housing',
+  'informal sector', 'informal income', 'gig worker', 'gig economy',
+  'NHF', 'FMBN', 'MREIF', 'BOI housing', 'pension fund housing',
+  'cooperative society', 'housing cooperative', 'off-plan', 'rent to own',
+  'housing loan', 'mortgage access', 'homeownership', 'housing deficit',
+  'housing scheme', 'federal housing', 'estate development', 'public housing',
+  // Senegal French terms
+  'logement', 'habitat', 'BCEAO financement', 'programme logement',
+  // Outcome / measurement terms
+  'housing stability', 'productivity housing', 'household income', 'workforce productivity',
+  'DFI housing', 'guarantee scheme', 'pension housing', 'employer housing',
 ];
 
 // ─── QUERY BUILDING (scope-aware: Local vs Global) ───────────────────────────
 
 const LOCAL_QUERIES = [
   'Nigeria housing finance informal sector gig workers',
-  'Senegal logement abordable financement Sénégal',
+  'Nigeria affordable housing low income mortgage',
   'Nigeria rent-to-own shared equity housing model',
-  'Nigeria employer-backed housing scheme',
-  'Nigeria mortgage alternative underwriting income',
-  'FMBN MREIF housing finance innovation Nigeria',
+  'Nigeria employer-backed housing scheme cooperative',
+  'Nigeria NHF FMBN housing loan access',
+  'Nigeria MREIF BOI housing finance innovation',
+  'Nigeria housing deficit homeownership mass market',
+  'Senegal logement abordable financement habitat',
 ];
 
 const AFRICA_COMPARATIVE_QUERIES = [
@@ -204,11 +220,11 @@ function filterAndRankArticles(articles) {
   const deduped = deduplicateArticles(articles);
   const scored = deduped
     .map(a => ({ ...a, relevanceScore: scoreThesisRelevance(a) }))
-    // Threshold higher than the commercial engine's >0 — this track is
-    // "intentionally narrow in subject (financing systems for non-traditional
-    // income) even when wide in geography" per the spec, so a bare mention
-    // of "housing" alone (score 1) shouldn't qualify.
-    .filter(a => a.relevanceScore >= 3)
+    // Threshold of 1 — any keyword match passes to synthesis. The synthesis
+    // prompt's own relevance test ("would this make Tola's thinking sharper")
+    // is the real quality gate; this pre-filter just removes clearly off-topic
+    // articles (scored 0) so we don't waste LLM context on them.
+    .filter(a => a.relevanceScore >= 1)
     .sort((a, b) => b.relevanceScore - a.relevanceScore);
 
   const top = scored.slice(0, ARTICLE_CAP);
