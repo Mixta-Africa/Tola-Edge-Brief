@@ -201,34 +201,43 @@ function deduplicateArticles(articles) {
 }
 
 function scoreThesisRelevance(article) {
-  const text = `${article.title} ${article.description} ${article.content}`.toLowerCase();
+  // Score against title alone AND full text — RSS articles often have empty
+  // content/description; title-only scoring ensures they can still qualify.
+  const title = (article.title || '').toLowerCase();
+  const full  = `${title} ${article.description || ''} ${article.content || ''}`.toLowerCase();
   let score = 0;
 
-  THESIS_KEYWORDS.forEach(kw => { if (text.includes(kw.toLowerCase())) score += 3; });
+  // Primary: thesis-specific keywords (+3 each)
+  THESIS_KEYWORDS.forEach(kw => { if (full.includes(kw.toLowerCase())) score += 3; });
 
-  // General housing/finance terms get a smaller bonus — present but not
-  // sufficient on their own (matches the spec: "a story about general real
-  // estate price trends with no connection to financing models... does not
-  // belong here").
-  const generalTerms = ['housing', 'mortgage', 'real estate', 'finance', 'homeownership'];
-  generalTerms.forEach(kw => { if (text.includes(kw)) score += 1; });
+  // Secondary: broad housing/finance terms in full text (+1 each)
+  const broadTerms = [
+    'housing', 'mortgage', 'real estate', 'finance', 'homeownership',
+    'property', 'rent', 'tenant', 'landlord', 'construction', 'estate',
+    'residential', 'lender', 'borrower', 'credit', 'loan',
+  ];
+  broadTerms.forEach(kw => { if (full.includes(kw)) score += 1; });
+
+  // Title bonus: if ANY relevant term appears in the title, add +2
+  // This compensates for RSS articles with no content body at all.
+  const titleTerms = [...THESIS_KEYWORDS.map(k => k.toLowerCase()), ...broadTerms];
+  if (titleTerms.some(kw => title.includes(kw))) score += 2;
 
   return score;
 }
 
 function filterAndRankArticles(articles) {
   const deduped = deduplicateArticles(articles);
+  const THRESHOLD = 1; // Any housing/finance mention passes — synthesis prompt is the real filter
   const scored = deduped
     .map(a => ({ ...a, relevanceScore: scoreThesisRelevance(a) }))
-    // Threshold of 1 — any keyword match passes to synthesis. The synthesis
-    // prompt's own relevance test ("would this make Tola's thinking sharper")
-    // is the real quality gate; this pre-filter just removes clearly off-topic
-    // articles (scored 0) so we don't waste LLM context on them.
-    .filter(a => a.relevanceScore >= 1)
+    .filter(a => a.relevanceScore >= THRESHOLD)
     .sort((a, b) => b.relevanceScore - a.relevanceScore);
 
   const top = scored.slice(0, ARTICLE_CAP);
-  console.log(`[TL Phase 2] After dedup + thesis-filter: ${deduped.length} unique → ${top.length} selected (cap ${ARTICLE_CAP}, score threshold >= 3)`);
+  console.log(`[TL Phase 2] After dedup + thesis-filter: ${deduped.length} unique → ${top.length} selected (cap ${ARTICLE_CAP}, score threshold >= ${THRESHOLD})`);
+  // Debug: log top scores to understand what's coming through
+  top.slice(0, 5).forEach(a => console.log(`  score=${a.relevanceScore} | "${(a.title||'').substring(0,60)}"`));
   return top;
 }
 
