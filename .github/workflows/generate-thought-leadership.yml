@@ -24,12 +24,15 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write   # needed to commit brief output back to main
 
     steps:
       - name: Checkout main branch (source + engine)
         uses: actions/checkout@v4
         with:
           ref: main
+          token: ${{ secrets.GH_DEPLOY_TOKEN }}
 
       - name: Set up Node.js 20
         uses: actions/setup-node@v4
@@ -67,28 +70,23 @@ jobs:
           PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
         run: node .github/scripts/thought-leadership-engine.js
 
-      - name: Checkout gh-pages branch for output
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages-out
-          token: ${{ secrets.GH_DEPLOY_TOKEN }}
-
-      - name: Write brief output and update thought-leadership vault
+      - name: Write brief output and update thought-leadership vault (on main branch)
+        # deploy.yml (extended) reads data/tl_brief_output.json,
+        # data/tl_vault_index.json, and data/vault/thought-leadership/
+        # directly from main on every deploy — same contract as the
+        # commercial brief, kept in its own separate set of files/paths.
         run: |
-          # Separate data file and separate vault subfolder from the daily
-          # commercial brief — these must never share a path.
-          mkdir -p gh-pages-out/data gh-pages-out/vault/thought-leadership
+          mkdir -p data/vault/thought-leadership
 
-          cp /tmp/tl_brief_output.json gh-pages-out/data/tl_brief_output.json
+          cp /tmp/tl_brief_output.json data/tl_brief_output.json
 
           WEEK_STR=$(date -u +"%Y-W%V")
           FILENAME="TL_${WEEK_STR}.json"
-          cp /tmp/tl_brief_output.json "gh-pages-out/vault/thought-leadership/${FILENAME}"
+          cp /tmp/tl_brief_output.json "data/vault/thought-leadership/${FILENAME}"
 
           node -e "
             const fs = require('fs');
-            const indexPath = 'gh-pages-out/data/tl_vault_index.json';
+            const indexPath = 'data/tl_vault_index.json';
             let index = [];
             try { index = JSON.parse(fs.readFileSync(indexPath, 'utf8')); } catch(e) {}
             const week = '${WEEK_STR}';
@@ -103,12 +101,11 @@ jobs:
             console.log('TL vault index: ' + index.length + ' entries');
           "
 
-      - name: Commit and push to gh-pages
+      - name: Commit and push to main
         run: |
-          cd gh-pages-out
           git config user.name  "Tola Edge Brief — Thought Leadership"
           git config user.email "actions@github.com"
-          git add data/tl_brief_output.json data/tl_vault_index.json vault/thought-leadership/
+          git add data/tl_brief_output.json data/tl_vault_index.json data/vault/thought-leadership/
           git diff --staged --quiet || git commit -m "thought-leadership brief: $(date -u +%Y-W%V) [req ${{ inputs.request_id || github.run_id }}]"
           git push
 
