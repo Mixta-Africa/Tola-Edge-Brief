@@ -107,8 +107,10 @@ jobs:
           git config user.email "actions@github.com"
           git add data/tl_brief_output.json data/tl_vault_index.json data/vault/thought-leadership/
           git diff --staged --quiet || git commit -m "thought-leadership brief: $(date -u +%Y-W%V) [req ${{ inputs.request_id || github.run_id }}]"
+          git stash --include-untracked || true
           git pull --rebase origin main
           git push
+          git stash pop || true
 
       - name: Log pipeline summary
         if: always()
