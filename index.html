@@ -856,20 +856,35 @@
 
   .vault-info { flex: 1; min-width: 0; }
 
+  /* Small type pill above the date label — distinguishes commercial from TL */
+  .vault-type-tag {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-bottom: 3px;
+  }
+
+  .vault-type-commercial {
+    background: var(--blue-light);
+    color: var(--blue);
+  }
+
+  .vault-type-thought-leadership {
+    background: var(--teal-light);
+    color: var(--teal);
+  }
+
   .vault-filename {
     font-size: 13px;
     font-weight: 500;
     color: var(--text-100);
-    font-family: 'JetBrains Mono', monospace;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .vault-date {
-    font-size: 12px;
-    color: var(--text-300);
-    margin-top: 1px;
   }
 
   .vault-chevron {
@@ -2052,39 +2067,68 @@
       return;
     }
 
-    try {
-      const res = await fetch(
-        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault_index.json?t=${Date.now()}`,
-        { cache: 'no-store' }
-      );
-      if (!res.ok) throw new Error('not found');
-      const entries = await res.json();
+    const base = `https://${CFG.owner}.github.io/${CFG.repo}`;
 
-      if (!entries.length) {
+    try {
+      // Fetch both indexes in parallel — commercial and thought leadership
+      const [commRes, tlRes] = await Promise.allSettled([
+        fetch(`${base}/data/vault_index.json?t=${Date.now()}`,    { cache: 'no-store' }),
+        fetch(`${base}/data/tl_vault_index.json?t=${Date.now()}`, { cache: 'no-store' }),
+      ]);
+
+      // Parse whichever resolved, tag each entry with its type and path
+      const commEntries = (commRes.status === 'fulfilled' && commRes.value.ok)
+        ? (await commRes.value.json()).map(e => ({
+            ...e,
+            type:      'commercial',
+            label:     new Date(e.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+            sortKey:   e.date,
+            fetchPath: `${base}/data/vault/${e.filename}`,
+            icon:      '📊',
+            typeLabel: 'Intelligence Brief',
+          }))
+        : [];
+
+      const tlEntries = (tlRes.status === 'fulfilled' && tlRes.value.ok)
+        ? (await tlRes.value.json()).map(e => ({
+            ...e,
+            type:      'thought-leadership',
+            label:     `Week of ${e.week}`,
+            sortKey:   e.week,
+            fetchPath: `${base}/data/vault/thought-leadership/${e.filename}`,
+            icon:      '💡',
+            typeLabel: 'Thought Leadership',
+          }))
+        : [];
+
+      // Merge and sort newest-first
+      const all = [...commEntries, ...tlEntries]
+        .sort((a, b) => b.sortKey.localeCompare(a.sortKey));
+
+      if (!all.length) {
         card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">🗄</div>No briefs yet — generate your first brief above.</div>`;
         count.textContent = '';
         return;
       }
 
-      count.textContent = `${entries.length} archived`;
+      const commCount = commEntries.length;
+      const tlCount   = tlEntries.length;
+      count.textContent = `${commCount} brief${commCount !== 1 ? 's' : ''} · ${tlCount} TL`;
       card.innerHTML = '';
 
-      entries.slice(0, 12).forEach((entry, i) => {
+      all.slice(0, 20).forEach((entry, i) => {
         const el = document.createElement('div');
         el.className = 'vault-entry';
-        el.style.animationDelay = `${i * 30}ms`;
-        const displayDate = entry.date
-          ? new Date(entry.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-          : entry.date;
+        el.style.animationDelay = `${i * 25}ms`;
         el.innerHTML = `
-          <div class="vault-icon">📄</div>
+          <div class="vault-icon">${entry.icon}</div>
           <div class="vault-info">
-            <div class="vault-filename">${esc(entry.filename)}</div>
-            <div class="vault-date">${esc(displayDate)}</div>
+            <div class="vault-type-tag vault-type-${entry.type}">${entry.typeLabel}</div>
+            <div class="vault-filename">${entry.label}</div>
           </div>
           <div class="vault-chevron">›</div>
         `;
-        el.onclick = () => loadVaultEntry(entry.filename);
+        el.onclick = () => loadVaultEntry(entry.fetchPath, entry.type);
         card.appendChild(el);
       });
 
@@ -2094,16 +2138,23 @@
     }
   }
 
-  async function loadVaultEntry(filename) {
+  async function loadVaultEntry(fetchPath, type) {
     try {
-      const res = await fetch(
-        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault/${filename}?t=${Date.now()}`,
-        { cache: 'no-store' }
-      );
+      const res = await fetch(`${fetchPath}?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error('not found');
       const data = await res.json();
-      // Open as a slide-in page — no scroll-to-top, no disrupting the vault list
-      openBriefPage(data, filename.replace('TEB_','').replace('.json',''));
+
+      if (type === 'thought-leadership') {
+        // TL briefs render in the TL output section inside the drawer
+        renderTLBrief(data);
+        // Close drawer and scroll to TL output is handled in renderTLBrief
+        showToast('Thought Leadership brief loaded', 'success');
+      } else {
+        // Commercial briefs open as a slide-in page
+        openBriefPage(data, data.generated_at
+          ? new Date(data.generated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+          : fetchPath);
+      }
     } catch (_) { showToast('Could not load brief'); }
   }
 
