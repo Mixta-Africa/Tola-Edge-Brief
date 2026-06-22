@@ -204,26 +204,23 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     HEADER — full bleed navy, safe area aware
+     HEADER — Edge-to-Edge Apple Navigation Bar Style
   ═══════════════════════════════════════════════════════════════ */
   .app-header {
     background: var(--navy);
-    /* Gradient fills all the way to top including status bar on iOS/Android */
-    padding: 0 24px 32px; /* Increased padding */
+    padding: 0 24px 20px; 
     padding-top: calc(var(--sat) + 20px);
     position: relative;
     background-image: 
-      radial-gradient(ellipse at 80% 0%, rgba(28,63,110,0.9) 0%, transparent 65%),
-      radial-gradient(ellipse at 20% 100%, rgba(26,107,196,0.15) 0%, transparent 50%);
+      radial-gradient(ellipse at 50% -20%, rgba(28,63,110,0.6) 0%, transparent 80%);
     flex-shrink: 0;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Soft rounded bottom mirroring the maroon design */
-    border-bottom-left-radius: 32px;
-    border-bottom-right-radius: 32px;
-    box-shadow: 0 4px 20px rgba(11,31,58,0.1);
+    /* Clean flat edge with a soft border replaces the heavy aggressive corner radius */
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 4px 24px rgba(11,31,58,0.15);
   }
 
   /* Hamburger — top left, overlaid on header */
@@ -421,7 +418,7 @@
   ═══════════════════════════════════════════════════════════════ */
   .domain-grid {
     display: grid;
-    /* Changed to 2 columns for a more airy, premium look */
+    /* 2 columns for a more airy, premium look */
     grid-template-columns: repeat(2, 1fr);
     gap: 16px; 
     margin-bottom: 24px;
@@ -862,11 +859,8 @@
   .vault-icon {
     width: 40px; height: 40px;
     border-radius: var(--r-sm);
-    background: var(--blue-light);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-size: 16px;
-    color: var(--blue);
   }
 
   .vault-info { flex: 1; min-width: 0; }
@@ -913,12 +907,9 @@
     color: var(--text-300);
     font-size: 14px;
     line-height: 1.6;
-  }
-
-  .vault-empty-icon {
-    font-size: 32px;
-    margin-bottom: 12px;
-    opacity: 0.4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -1103,7 +1094,7 @@
     align-items: flex-end;
     justify-content: space-between;
     flex-shrink: 0;
-    background-image: radial-gradient(ellipse at 100% 0%, rgba(28,63,110,0.9) 0%, transparent 65%);
+    background-image: radial-gradient(ellipse at 100% 0%, rgba(28,63,110,0.8) 0%, transparent 80%);
   }
 
   .drawer-brand {
@@ -1291,7 +1282,10 @@
 </head>
 <body>
 
+  <!-- Loading screen -->
   <div class="loading-screen" id="loading-screen">
+    <!-- Icon with heartbeat pulse. Falls back to text initial if icon.png
+         hasn't been deployed yet. onerror swaps to the text fallback. -->
     <div class="loading-icon" id="loading-icon-wrap">
       <img src="./icon.png" alt="Tola Edge Brief"
            onerror="this.parentElement.outerHTML='<div class=&quot;loading-icon-fallback&quot;>TE</div>'" />
@@ -1299,8 +1293,10 @@
     <div class="loading-status" id="loading-status">Loading…</div>
   </div>
 
+  <!-- App shell -->
   <div class="app">
 
+    <!-- Header -->
     <header class="app-header">
       <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -1312,8 +1308,10 @@
       </div>
     </header>
 
+    <!-- Scrollable content -->
     <div class="content">
 
+      <!-- Market filter -->
       <div class="section-header" style="margin-top:0">
         <span class="section-title">Market Scope</span>
       </div>
@@ -1323,12 +1321,14 @@
         <button class="market-pill"        data-market="Senegal" onclick="setMarket('Senegal')"><span class="market-flag">🇸🇳</span> Senegal</button>
       </div>
 
+      <!-- Domain toggles -->
       <div class="section-header">
         <span class="section-title">Intelligence Domains</span>
         <span class="section-meta" id="domain-count">6 active</span>
       </div>
       <div class="domain-grid" id="domain-grid"></div>
 
+      <!-- Custom prompt -->
       <div class="section-header">
         <span class="section-title">Targeted Brief</span>
         <span class="section-meta">Optional</span>
@@ -1344,6 +1344,7 @@
         />
       </div>
 
+      <!-- Status card -->
       <div class="status-card" id="status-card">
         <div class="status-icon" id="status-icon">
           <div class="spinner"></div>
@@ -1354,8 +1355,10 @@
         </div>
       </div>
 
+      <!-- Brief output -->
       <div class="output-section" id="output-section">
 
+        <!-- Executive Narrative -->
         <div class="section-header">
           <span class="section-title">Executive Narrative</span>
           <span class="section-meta" id="narrative-time"></span>
@@ -1371,14 +1374,17 @@
           <div class="narrative-body" id="narrative-body"></div>
         </div>
 
+        <!-- Stories -->
         <div class="section-header" style="margin-top:20px;">
           <span class="section-title">Impact-Rated Stories</span>
           <span class="section-meta" id="stories-count"></span>
         </div>
         <div id="stories-container"></div>
 
+        <!-- Domain coverage footer — quiet note for domains checked but empty -->
         <div id="coverage-footer-container"></div>
 
+        <!-- Action row -->
         <div class="action-row">
           <button class="btn-secondary" onclick="if(currentBrief) openBriefPage(currentBrief)">
             <span>⤢</span> Full View
@@ -1393,14 +1399,20 @@
 
       </div>
 
-    </div><div class="sticky-footer">
+    </div><!-- /content -->
+
+    <!-- Sticky generate button -->
+    <div class="sticky-footer">
       <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
         <span id="btn-label">Generate Intelligence Brief</span>
         <span id="btn-icon">→</span>
       </button>
     </div>
 
-  </div><div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+  </div><!-- /app -->
+
+  <!-- ═══ SIDE DRAWER — Vault + Thought Leadership ═══════════════════════ -->
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
     <div class="drawer-header">
       <div class="drawer-brand">The Tola <em>Edge Brief</em></div>
@@ -1408,6 +1420,7 @@
     </div>
     <div class="drawer-body">
 
+      <!-- Knowledge Vault -->
       <div class="drawer-section-title">Knowledge Vault</div>
       <div style="padding: 0 20px 8px; display:flex; align-items:center; justify-content:space-between;">
         <span style="font-size:12px; color:var(--text-300);" id="vault-count"></span>
@@ -1415,12 +1428,13 @@
       <div style="padding: 0 20px 24px;">
         <div class="vault-card" id="vault-card">
           <div class="vault-empty">
-            <div class="vault-empty-icon">🗄</div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;opacity:0.4;margin-bottom:12px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
             Loading vault…
           </div>
         </div>
       </div>
 
+      <!-- Thought Leadership Track -->
       <div class="drawer-section-title">Thought Leadership</div>
       <div class="drawer-tl">
         <div class="tl-section">
@@ -1439,6 +1453,7 @@
             <span id="btn-tl-icon">→</span>
           </button>
 
+          <!-- TL output renders here -->
           <div class="tl-output" id="tl-output-section" style="display:none; margin-top:24px;">
             <div class="section-header" style="margin-top:0;">
               <span class="section-title">Weekly Synthesis</span>
@@ -1459,6 +1474,10 @@
     </div>
   </div>
 
+  <!-- Brief Detail Page — shared node reused for every brief open.
+       Content is written in by openBriefPage(); the page slides in
+       from the right and back dismisses it. One DOM element, zero
+       extra requests, premium feel. -->
   <div class="brief-page" id="brief-page" role="dialog" aria-modal="true" aria-label="Brief detail">
     <div class="brief-page-header">
       <button class="brief-page-back" onclick="closeBriefPage()" aria-label="Back">‹</button>
@@ -1474,6 +1493,7 @@
     </div>
   </div>
 
+  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script>
@@ -1612,9 +1632,6 @@
     );
   }
 
-  // TL scope toggle is per-brief (not a fixed setting), separate from the
-  // commercial track's market toggle above — selecting Local/Global here
-  // has zero effect on activeMarket or the daily brief.
   function setTLScope(s) {
     tlActiveScope = s;
     document.querySelectorAll('.tl-scope-pill').forEach(p =>
@@ -1742,13 +1759,7 @@
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   }
 
-  // ─── THOUGHT LEADERSHIP TRACK — separate dispatch, poll, and render ──────
-  // Deliberately not refactored to share code with generateBrief()/
-  // startPolling()/renderBrief() above, even though the shapes are similar.
-  // Keeping them textually separate matches the "different functions"
-  // instruction and means a future change to the daily brief's polling
-  // logic can never accidentally alter the weekly track's behaviour.
-
+  // ─── THOUGHT LEADERSHIP TRACK ────────────────────────────────────────────
   async function generateThoughtLeadershipBrief() {
     if (!CFG.token || !CFG.owner || !CFG.repo) {
       showToast('App config not loaded — check deploy logs');
@@ -1868,7 +1879,7 @@
     const brief = data.brief;
     const out = document.getElementById('tl-output-section');
 
-    document.getElementById('tl-week-label').textContent = brief.week_of || '';
+    document.getElementById('tl-week-label').textContent = parseISOWeek(brief.week_of) || '';
 
     document.getElementById('tl-synthesis-body').innerHTML =
       (brief.synthesis || '').split('\n\n').filter(p => p.trim())
@@ -1881,7 +1892,7 @@
 
     brief.findings.forEach((finding, i) => {
       const card = document.createElement('div');
-      card.className = 'story-card in'; // reuse story-card visual style; TL has its own data shape
+      card.className = 'story-card in'; 
       card.style.transitionDelay = `${i * 55}ms`;
 
       card.innerHTML = `
@@ -1925,14 +1936,12 @@
     const brief = data.brief;
     const out = document.getElementById('output-section');
 
-    // Narrative
     document.getElementById('narrative-body').innerHTML =
       brief.narrative.split('\n\n').filter(p => p.trim())
         .map(p => `<p>${esc(p.trim())}</p>`).join('');
 
     document.getElementById('narrative-time').textContent = fmtTime(data.generated_at);
 
-    // Stories
     const container = document.getElementById('stories-container');
     container.innerHTML = '';
     document.getElementById('stories-count').textContent =
@@ -1946,8 +1955,6 @@
       const impactTag = { High: 'tag-high', Medium: 'tag-medium', Low: 'tag-low' }[story.impact] || 'tag-low';
       const mktTag    = story.market === 'Senegal' ? 'tag-sn' : 'tag-ng';
 
-      // watch_next is a v2-required field, but render defensively in case
-      // an older cached brief without it is loaded from the vault.
       const watchNextHtml = story.watch_next
         ? `<div class="watch-next"><span class="watch-next-arrow">→</span><span>${esc(story.watch_next)}</span></div>`
         : '';
@@ -1970,9 +1977,6 @@
       requestAnimationFrame(() => setTimeout(() => card.classList.add('in'), 40 + i * 55));
     });
 
-    // Domain coverage footer — quiet note for any active domain that
-    // returned no qualifying stories today. Not shown if every active
-    // domain produced at least one story.
     const coverageContainer = document.getElementById('coverage-footer-container');
     const notes = Array.isArray(brief.domain_coverage_notes) ? brief.domain_coverage_notes : [];
     if (notes.length > 0) {
@@ -2034,20 +2038,18 @@
     const count = document.getElementById('vault-count');
 
     if (!CFG.owner || !CFG.repo) {
-      card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">⚙</div>Config not loaded</div>`;
+      card.innerHTML = `<div class="vault-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;opacity:0.4;margin-bottom:12px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Config not loaded</div>`;
       return;
     }
 
     const base = `https://${CFG.owner}.github.io/${CFG.repo}`;
 
     try {
-      // Fetch both indexes in parallel — commercial and thought leadership
       const [commRes, tlRes] = await Promise.allSettled([
         fetch(`${base}/data/vault_index.json?t=${Date.now()}`,    { cache: 'no-store' }),
         fetch(`${base}/data/tl_vault_index.json?t=${Date.now()}`, { cache: 'no-store' }),
       ]);
 
-      // Parse whichever resolved, tag each entry with its type and path
       const commEntries = (commRes.status === 'fulfilled' && commRes.value.ok)
         ? (await commRes.value.json()).map(e => ({
             ...e,
@@ -2055,7 +2057,7 @@
             label:     new Date(e.date + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
             sortKey:   e.date,
             fetchPath: `${base}/data/vault/${e.filename}`,
-            icon:      '📊',
+            icon:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M8 13h6"></path><path d="M8 17h8"></path><path d="M8 9h2"></path></svg>`,
             typeLabel: 'Intelligence Brief',
           }))
         : [];
@@ -2064,20 +2066,19 @@
         ? (await tlRes.value.json()).map(e => ({
             ...e,
             type:      'thought-leadership',
-            label:     `Week of ${e.week}`,
+            label:     `Week of ${parseISOWeek(e.week)}`,
             sortKey:   e.week,
             fetchPath: `${base}/data/vault/thought-leadership/${e.filename}`,
-            icon:      '💡',
+            icon:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M9 18h6"></path><path d="M10 22h4"></path><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"></path></svg>`,
             typeLabel: 'Thought Leadership',
           }))
         : [];
 
-      // Merge and sort newest-first
       const all = [...commEntries, ...tlEntries]
         .sort((a, b) => b.sortKey.localeCompare(a.sortKey));
 
       if (!all.length) {
-        card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">🗄</div>No briefs yet — generate your first brief above.</div>`;
+        card.innerHTML = `<div class="vault-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;opacity:0.4;margin-bottom:12px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>No briefs yet — generate your first brief above.</div>`;
         count.textContent = '';
         return;
       }
@@ -2091,8 +2092,12 @@
         const el = document.createElement('div');
         el.className = 'vault-entry';
         el.style.animationDelay = `${i * 25}ms`;
+        
+        const isTL = entry.type === 'thought-leadership';
+        const colorClass = isTL ? 'teal' : 'blue';
+
         el.innerHTML = `
-          <div class="vault-icon">${entry.icon}</div>
+          <div class="vault-icon" style="background: var(--${colorClass}-light); color: var(--${colorClass});">${entry.icon}</div>
           <div class="vault-info">
             <div class="vault-type-tag vault-type-${entry.type}">${entry.typeLabel}</div>
             <div class="vault-filename">${entry.label}</div>
@@ -2104,7 +2109,7 @@
       });
 
     } catch (_) {
-      card.innerHTML = `<div class="vault-empty"><div class="vault-empty-icon">🗄</div>Vault not yet initialised.</div>`;
+      card.innerHTML = `<div class="vault-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px;opacity:0.4;margin-bottom:12px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>Vault not yet initialised.</div>`;
       count.textContent = '';
     }
   }
@@ -2116,12 +2121,9 @@
       const data = await res.json();
 
       if (type === 'thought-leadership') {
-        // TL briefs render in the TL output section inside the drawer
         renderTLBrief(data);
-        // Close drawer and scroll to TL output is handled in renderTLBrief
         showToast('Thought Leadership brief loaded', 'success');
       } else {
-        // Commercial briefs open as a slide-in page
         openBriefPage(data, data.generated_at
           ? new Date(data.generated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
           : fetchPath);
@@ -2191,11 +2193,29 @@
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  // ─── BRIEF DETAIL PAGE NAVIGATION ────────────────────────────────────────
-  // Each vault entry and live brief opens as a slide-in page, eliminating
-  // tired scroll-back-to-top UX. pushState gives each brief its own URL
-  // (#brief/FILENAME) for sharing, back-button support, and home-screen adds.
+  function parseISOWeek(isoStr) {
+    if (!isoStr) return '';
+    try {
+      // Check if it matches pattern e.g. 2026-W26
+      const parts = isoStr.split('-W');
+      if (parts.length !== 2) return isoStr;
+      const year = parseInt(parts[0], 10);
+      const week = parseInt(parts[1], 10);
+      
+      const d = new Date(Date.UTC(year, 0, 1));
+      const dayNum = d.getUTCDay() || 7;
+      
+      // Calculate to correct start of the ISO week
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      d.setUTCDate(d.getUTCDate() + (week - 1) * 7 - 3);
+      
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch(e) {
+      return isoStr;
+    }
+  }
 
+  // ─── BRIEF DETAIL PAGE NAVIGATION ────────────────────────────────────────
   let _pageCurrentBrief = null;
 
   function openBriefPage(data, label) {
@@ -2203,18 +2223,15 @@
     const brief = data.brief;
     if (!brief) return;
 
-    // Title and meta
     const date = data.generated_at
       ? new Date(data.generated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
       : label || 'Intelligence Brief';
     document.getElementById('brief-page-title').textContent = 'Intelligence Brief';
     document.getElementById('brief-page-meta').textContent = date;
 
-    // Build body HTML — same field order as the main view
     const body = document.getElementById('brief-page-body');
     body.innerHTML = '';
 
-    // Narrative
     const narDiv = document.createElement('div');
     narDiv.className = 'narrative-card';
     narDiv.innerHTML = `<div class="narrative-eyebrow">Executive Narrative</div><div class="narrative-body">${
@@ -2222,7 +2239,6 @@
     }</div>`;
     body.appendChild(narDiv);
 
-    // Stories
     if (Array.isArray(brief.stories) && brief.stories.length) {
       const hdr = document.createElement('div');
       hdr.className = 'section-header';
@@ -2254,7 +2270,6 @@
       });
     }
 
-    // Domain coverage notes
     const notes = Array.isArray(brief.domain_coverage_notes) ? brief.domain_coverage_notes : [];
     if (notes.length) {
       const footer = document.createElement('div');
@@ -2263,7 +2278,6 @@
       body.appendChild(footer);
     }
 
-    // Slide the page in
     const page = document.getElementById('brief-page');
     page.classList.add('open');
     body.scrollTop = 0;
@@ -2278,14 +2292,12 @@
 
   function copyPageBrief() {
     if (!_pageCurrentBrief) return;
-    // Re-use the main copyBrief logic by temporarily setting currentBrief
     const prev = currentBrief;
     currentBrief = _pageCurrentBrief;
     copyBrief();
     currentBrief = prev;
   }
 
-  // Handle browser back button and Android back gesture
   window.addEventListener('popstate', () => {
     const page = document.getElementById('brief-page');
     if (page.classList.contains('open')) {
@@ -2294,7 +2306,7 @@
     }
   });
 
-  // ─── PWA MANIFEST (injected at runtime) ─────────────────────────────────
+  // ─── PWA MANIFEST ────────────────────────────────────────────────────────
   (function injectPWAManifest() {
     const manifest = {
       name: "Tola's Edge Brief",
@@ -2312,9 +2324,6 @@
     };
     const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
     document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
-    // Also wire the apple-touch-icon to the same file
-    const appleIcon = document.getElementById('apple-icon');
-    if (appleIcon) appleIcon.href = './icon.png';
   })();
 
   // ─── START ───────────────────────────────────────────────────────────────
