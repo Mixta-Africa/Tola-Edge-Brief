@@ -63,14 +63,14 @@
 
     /* Cards */
     --card-bg:      #FFFFFF;
-    --card-shadow:  0 2px 12px rgba(11,31,58,0.07), 0 1px 3px rgba(11,31,58,0.05);
-    --card-shadow-lg: 0 8px 28px rgba(11,31,58,0.10), 0 2px 8px rgba(11,31,58,0.06);
+    --card-shadow:  0 4px 16px rgba(11,31,58,0.06), 0 2px 4px rgba(11,31,58,0.04);
+    --card-shadow-lg: 0 12px 32px rgba(11,31,58,0.08), 0 4px 12px rgba(11,31,58,0.04);
 
-    /* Spacing & radius */
-    --r-sm:   10px;
-    --r-md:   14px;
-    --r-lg:   20px;
-    --r-xl:   28px;
+    /* Spacing & radius - Increased for a premium, airy feel */
+    --r-sm:   12px;
+    --r-md:   16px;
+    --r-lg:   24px;
+    --r-xl:   32px;
     --r-pill: 100px;
 
     /* Safe areas for notch / Dynamic Island / home indicator */
@@ -155,7 +155,7 @@
   .loading-icon {
     width: 96px;
     height: 96px;
-    border-radius: 22px;
+    border-radius: 26px; /* Softer radius */
     overflow: hidden;
     animation: heartbeat 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     will-change: transform, opacity;
@@ -170,7 +170,7 @@
   /* Fallback shown if icon.png hasn't loaded yet (e.g. very first deploy) */
   .loading-icon-fallback {
     width: 96px; height: 96px;
-    border-radius: 22px;
+    border-radius: 26px;
     background: rgba(255,255,255,0.08);
     display: flex; align-items: center; justify-content: center;
     font-family: 'Playfair Display', serif;
@@ -196,11 +196,11 @@
   }
 
   .loading-status {
-    margin-top: 32px;
-    font-size: 11px;
-    color: rgba(255,255,255,0.35);
+    margin-top: 36px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
     font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -209,8 +209,8 @@
   .app-header {
     background: var(--navy);
     /* Gradient fills all the way to top including status bar on iOS/Android */
-    padding: 0 20px 22px;
-    padding-top: calc(var(--sat) + 18px);
+    padding: 0 24px 32px; /* Increased padding */
+    padding-top: calc(var(--sat) + 20px);
     position: relative;
     background-image: 
       radial-gradient(ellipse at 80% 0%, rgba(28,63,110,0.9) 0%, transparent 65%),
@@ -220,81 +220,91 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* Soft rounded bottom mirroring the maroon design */
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+    box-shadow: 0 4px 20px rgba(11,31,58,0.1);
   }
 
   /* Hamburger — top left, overlaid on header */
   .hamburger-btn {
     position: absolute;
-    left: 16px;
-    top: calc(var(--sat) + 14px);
-    width: 36px; height: 36px;
+    left: 20px;
+    top: calc(var(--sat) + 16px);
+    width: 40px; height: 40px;
     border: none;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 4.5px;
+    gap: 5px;
     cursor: pointer;
     z-index: 10;
     -webkit-user-select: none; user-select: none;
+    transition: background 0.2s ease;
+  }
+  
+  .hamburger-btn:active {
+    background: rgba(255,255,255,0.15);
   }
 
   .hamburger-btn span {
     display: block;
-    width: 16px; height: 1.5px;
-    background: rgba(255,255,255,0.8);
+    width: 18px; height: 1.5px;
+    background: rgba(255,255,255,0.9);
     border-radius: 2px;
     transition: all 0.2s ease;
   }
 
   .header-title {
     font-family: 'Playfair Display', serif;
-    font-size: 26px; font-weight: 500;
+    font-size: 28px; font-weight: 500;
     color: var(--white);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     line-height: 1.2;
     /* Single line: "The Tola Edge Brief" with italic on last two words */
     white-space: nowrap;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    margin-top: 4px;
   }
 
   .header-title em {
     font-style: italic;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.85);
   }
 
   .header-meta {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 12px;
   }
 
   .header-date {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-inv-2);
     font-family: 'JetBrains Mono', monospace;
   }
 
   /* Health dot only — no pill, no text, just a subtle living indicator */
   .live-dot {
-    width: 6px; height: 6px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     background: #4ADE80;
-    box-shadow: 0 0 0 2.5px rgba(74,222,128,0.25);
+    box-shadow: 0 0 0 3px rgba(74,222,128,0.2);
     flex-shrink: 0;
     display: inline-block;
   }
 
   .live-dot.generating {
     background: var(--coral);
-    box-shadow: 0 0 0 2.5px rgba(232,93,61,0.3);
+    box-shadow: 0 0 0 3px rgba(232,93,61,0.25);
     animation: pulse-dot 1s ease-in-out infinite;
   }
 
   @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.35; }
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 3px rgba(232,93,61,0.25); }
+    50%      { opacity: 0.5; box-shadow: 0 0 0 6px rgba(232,93,61,0.1); }
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -304,9 +314,9 @@
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 20px 16px;
+    padding: 24px 20px;
     /* Bottom padding = sticky button height + home indicator */
-    padding-bottom: calc(88px + var(--sab) + 16px);
+    padding-bottom: calc(100px + var(--sab) + 20px);
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -316,22 +326,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
-    margin-top: 24px;
+    margin-bottom: 16px;
+    margin-top: 32px;
   }
 
   .section-header:first-child { margin-top: 0; }
 
   .section-title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-300);
   }
 
   .section-meta {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-400);
     font-family: 'JetBrains Mono', monospace;
   }
@@ -341,34 +351,36 @@
   ═══════════════════════════════════════════════════════════════ */
   .market-row {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 12px;
+    margin-bottom: 20px;
   }
 
   .market-pill {
-    padding: 8px 14px;
+    padding: 12px 18px;
     border-radius: var(--r-pill);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     border: 1.5px solid var(--border);
     background: var(--card-bg);
     color: var(--text-300);
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
     white-space: nowrap;
-    min-height: 38px;
+    min-height: 44px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px;
     -webkit-user-select: none; user-select: none;
     box-shadow: var(--card-shadow);
+    flex: 1; /* Stretch to fill space elegantly */
   }
 
   .market-pill.active {
     background: var(--navy);
     border-color: var(--navy);
     color: var(--white);
-    box-shadow: 0 4px 12px rgba(11,31,58,0.25);
+    box-shadow: 0 6px 16px rgba(11,31,58,0.2);
   }
 
   /* Nigeria — light green to echo the flag */
@@ -382,7 +394,7 @@
     background: #16A34A;
     border-color: #16A34A;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(22,163,74,0.3);
+    box-shadow: 0 6px 16px rgba(22,163,74,0.25);
   }
 
   /* Senegal — very light amber to echo the flag */
@@ -396,11 +408,11 @@
     background: #CA8A04;
     border-color: #CA8A04;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(202,138,4,0.3);
+    box-shadow: 0 6px 16px rgba(202,138,4,0.25);
   }
 
   .market-flag {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1;
   }
 
@@ -409,22 +421,23 @@
   ═══════════════════════════════════════════════════════════════ */
   .domain-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-bottom: 16px;
+    /* Changed to 2 columns for a more airy, premium look */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px; 
+    margin-bottom: 24px;
   }
 
   .domain-card {
     background: var(--card-bg);
     border-radius: var(--r-md);
-    padding: 10px 10px 8px;
+    padding: 16px 16px 14px;
     cursor: pointer;
     box-shadow: var(--card-shadow);
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
     -webkit-user-select: none; user-select: none;
     position: relative;
     overflow: hidden;
-    min-height: 86px;
+    min-height: 104px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -434,52 +447,54 @@
   .domain-card::before {
     content: '';
     position: absolute;
-    top: 8px; right: 8px;
-    width: 6px; height: 6px;
+    top: 12px; right: 12px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     transition: all 0.2s;
   }
 
-  .domain-card[data-priority="highest"]::before { background: #0EA572; box-shadow: 0 0 0 3px rgba(14,165,114,0.2); }
-  .domain-card[data-priority="high"]::before    { background: #1A6BC4; box-shadow: 0 0 0 3px rgba(26,107,196,0.2); }
-  .domain-card[data-priority="medium"]::before  { background: #D4870A; box-shadow: 0 0 0 3px rgba(212,135,10,0.2); }
+  .domain-card[data-priority="highest"]::before { background: #0EA572; box-shadow: 0 0 0 4px rgba(14,165,114,0.15); }
+  .domain-card[data-priority="high"]::before    { background: #1A6BC4; box-shadow: 0 0 0 4px rgba(26,107,196,0.15); }
+  .domain-card[data-priority="medium"]::before  { background: #D4870A; box-shadow: 0 0 0 4px rgba(212,135,10,0.15); }
   .domain-card[data-priority="low"]::before     { background: #CBD5E1; }
 
   .domain-card.active {
     background: var(--navy);
     border-color: var(--navy);
-    box-shadow: 0 4px 14px rgba(11,31,58,0.25);
+    box-shadow: 0 8px 20px rgba(11,31,58,0.2);
+    transform: translateY(-2px);
   }
 
   .domain-card.active .d-code,
   .domain-card.active .d-name { color: var(--white); }
-  .domain-card.active .d-code { color: rgba(255,255,255,0.55); }
-  .domain-card.active .d-icon { opacity: 0.7; filter: brightness(10); }
+  .domain-card.active .d-code { color: rgba(255,255,255,0.6); }
+  .domain-card.active .d-icon { opacity: 0.8; filter: brightness(10); }
 
   .d-icon {
-    width: 20px; height: 20px;
+    width: 24px; height: 24px;
     flex-shrink: 0;
-    opacity: 0.45;
+    opacity: 0.5;
     transition: opacity 0.2s, filter 0.2s;
+    margin-bottom: 12px;
   }
 
-  .d-labels { margin-top: 4px; }
+  .d-labels { margin-top: auto; }
 
   .d-code {
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-400);
-    margin-bottom: 1px;
+    margin-bottom: 2px;
     transition: color 0.2s;
   }
 
   .d-name {
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-200);
-    line-height: 1.25;
+    line-height: 1.3;
     transition: color 0.2s;
   }
 
@@ -488,41 +503,42 @@
   ═══════════════════════════════════════════════════════════════ */
   .prompt-wrap {
     background: var(--card-bg);
-    border-radius: var(--r-md);
+    border-radius: var(--r-lg); /* Softer corners */
     box-shadow: var(--card-shadow);
     overflow: hidden;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     border: 1.5px solid transparent;
-    transition: border-color 0.2s;
+    transition: all 0.25s;
+    min-height: 60px;
   }
 
   .prompt-wrap:focus-within {
     border-color: var(--blue);
-    box-shadow: var(--card-shadow), 0 0 0 3px rgba(26,107,196,0.12);
+    box-shadow: var(--card-shadow), 0 0 0 4px rgba(26,107,196,0.1);
   }
 
   .prompt-icon {
-    padding: 0 14px;
+    padding: 0 16px 0 20px;
     color: var(--text-400);
-    font-size: 16px;
+    font-size: 18px;
     flex-shrink: 0;
   }
 
   .prompt-input {
     flex: 1;
-    padding: 14px 16px 14px 0;
+    padding: 16px 20px 16px 0;
     border: none;
     outline: none;
     font-family: 'Poppins', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--text-100);
     background: transparent;
-    min-height: 50px;
+    height: 100%;
   }
 
-  .prompt-input::placeholder { color: var(--text-400); }
+  .prompt-input::placeholder { color: var(--text-400); font-weight: 300; }
 
   /* ═══════════════════════════════════════════════════════════════
      STATUS CARD — shown during generation
@@ -530,23 +546,24 @@
   .status-card {
     display: none;
     background: var(--navy);
-    border-radius: var(--r-md);
-    padding: 16px 18px;
-    margin-bottom: 16px;
+    border-radius: var(--r-lg);
+    padding: 20px;
+    margin-bottom: 20px;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
+    box-shadow: 0 8px 24px rgba(11,31,58,0.15);
   }
 
   .status-card.visible { display: flex; }
   .status-card.error   { background: var(--coral-light); }
 
   .status-icon {
-    width: 32px; height: 32px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     background: rgba(255,255,255,0.1);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .status-card.error .status-icon {
@@ -557,19 +574,19 @@
   .status-text-wrap { flex: 1; }
 
   .status-label {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.6);
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 
   .status-card.error .status-label { color: var(--coral); }
 
   .status-msg {
-    font-size: 13px;
-    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+    color: rgba(255,255,255,0.95);
     line-height: 1.4;
   }
 
@@ -578,11 +595,11 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .spinner {
-    width: 14px; height: 14px;
-    border: 2px solid rgba(255,255,255,0.25);
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.25);
     border-top-color: rgba(255,255,255,0.9);
     border-radius: 50%;
-    animation: spin 0.75s linear infinite;
+    animation: spin 0.8s linear infinite;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -590,18 +607,18 @@
   ═══════════════════════════════════════════════════════════════ */
   .output-section {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.45s ease, transform 0.45s ease;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
   .output-section.visible { opacity: 1; transform: translateY(0); }
 
   .narrative-card {
     background: var(--navy);
-    border-radius: var(--r-lg);
-    padding: 22px 20px;
-    margin-bottom: 8px;
-    box-shadow: 0 6px 24px rgba(11,31,58,0.22);
+    border-radius: var(--r-xl);
+    padding: 28px 24px;
+    margin-bottom: 12px;
+    box-shadow: var(--card-shadow-lg);
     position: relative;
     overflow: hidden;
   }
@@ -610,39 +627,39 @@
   .narrative-card::before {
     content: '';
     position: absolute;
-    top: -40px; right: -40px;
-    width: 180px; height: 180px;
-    background: radial-gradient(circle, rgba(232,93,61,0.18) 0%, transparent 70%);
+    top: -50px; right: -50px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(232,93,61,0.15) 0%, transparent 70%);
     pointer-events: none;
   }
 
   .narrative-chip {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
+    gap: 8px;
+    padding: 6px 12px;
     background: rgba(255,255,255,0.1);
     border-radius: var(--r-pill);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
-    margin-bottom: 14px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 20px;
   }
 
   .narrative-time {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
     margin-left: auto;
   }
 
   .narrative-body p {
-    font-size: 14px;
-    line-height: 1.72;
-    color: rgba(255,255,255,0.88);
-    margin-bottom: 14px;
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 16px;
     font-weight: 300;
   }
 
@@ -650,9 +667,10 @@
 
   /* First paragraph gets a slightly heavier treatment */
   .narrative-body p:first-child {
-    font-size: 14.5px;
+    font-size: 16px;
     font-weight: 400;
     color: var(--white);
+    letter-spacing: -0.01em;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -660,13 +678,13 @@
   ═══════════════════════════════════════════════════════════════ */
   .story-card {
     background: var(--card-bg);
-    border-radius: var(--r-lg);
-    padding: 18px 18px 16px;
-    margin-bottom: 10px;
+    border-radius: var(--r-xl);
+    padding: 24px;
+    margin-bottom: 16px;
     box-shadow: var(--card-shadow);
     opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
   }
 
   .story-card.in { opacity: 1; transform: translateY(0); }
@@ -674,17 +692,17 @@
   .story-tags {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
   }
 
   .tag {
     display: inline-flex;
     align-items: center;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: var(--r-pill);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
     letter-spacing: 0.02em;
@@ -698,91 +716,85 @@
   .tag-sn     { background: #EDE9FE;            color: #6D28D9;      font-weight: 500; }
 
   .story-title {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--text-100);
-    line-height: 1.35;
-    margin-bottom: 8px;
+    line-height: 1.4;
+    margin-bottom: 12px;
     letter-spacing: -0.01em;
   }
 
   .story-body {
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--text-200);
-    line-height: 1.65;
-    margin-bottom: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
     font-weight: 400;
   }
 
   .relevance-block {
     background: var(--surface);
-    border-radius: var(--r-sm);
-    padding: 12px 14px;
-    border-left: 3px solid var(--coral);
+    border-radius: var(--r-md);
+    padding: 16px;
+    border-left: 4px solid var(--coral);
   }
 
   .relevance-eyebrow {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--coral);
-    margin-bottom: 5px;
+    margin-bottom: 8px;
   }
 
   .relevance-text {
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-200);
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
-  /* Watch next — forward-looking line, visually distinct from body/relevance:
-     italic, smaller, with a forward-arrow marker, per v2 spec. */
   .watch-next {
     display: flex;
     align-items: flex-start;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed var(--border, #E5E7EB);
-    font-size: 12px;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    font-size: 13px;
     font-style: italic;
     color: var(--text-300);
-    line-height: 1.55;
+    line-height: 1.6;
   }
 
   .watch-next-arrow {
     flex-shrink: 0;
     font-style: normal;
     color: var(--blue);
-    font-size: 12px;
-    line-height: 1.55;
+    font-size: 14px;
   }
 
-  /* Domain coverage footer — quiet/muted note beneath story cards listing
-     any active domain that returned no material signals today. NOT a
-     story card; deliberately understated. */
   .coverage-footer {
-    margin-top: 14px;
-    padding: 12px 14px;
+    margin-top: 20px;
+    padding: 16px 20px;
     background: var(--surface);
-    border-radius: var(--r-sm);
-    border: 1px dashed var(--border, #E5E7EB);
+    border-radius: var(--r-md);
+    border: 1px dashed var(--border);
   }
 
   .coverage-footer-title {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-300);
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
   .coverage-footer-line {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-300);
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -790,29 +802,29 @@
   ═══════════════════════════════════════════════════════════════ */
   .action-row {
     display: flex;
-    gap: 8px;
-    margin-top: 16px;
-    margin-bottom: 4px;
+    gap: 12px;
+    margin-top: 24px;
+    margin-bottom: 8px;
   }
 
   .btn-secondary {
     flex: 1;
-    padding: 12px 16px;
-    border-radius: var(--r-md);
+    padding: 14px 16px;
+    border-radius: var(--r-lg);
     background: var(--card-bg);
     border: none;
     color: var(--text-200);
     font-family: 'Poppins', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     box-shadow: var(--card-shadow);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    min-height: 46px;
-    transition: all 0.18s ease;
+    gap: 8px;
+    min-height: 52px;
+    transition: all 0.2s ease;
     -webkit-user-select: none; user-select: none;
   }
 
@@ -836,11 +848,11 @@
   .vault-entry {
     display: flex;
     align-items: center;
-    padding: 14px 16px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
     cursor: pointer;
     transition: background 0.15s;
-    gap: 12px;
+    gap: 16px;
   }
 
   .vault-entry:last-child { border-bottom: none; }
@@ -848,27 +860,26 @@
   .vault-entry:active { background: var(--surface); }
 
   .vault-icon {
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     border-radius: var(--r-sm);
     background: var(--blue-light);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--blue);
   }
 
   .vault-info { flex: 1; min-width: 0; }
 
-  /* Small type pill above the date label — distinguishes commercial from TL */
   .vault-type-tag {
     display: inline-block;
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 1px 6px;
+    padding: 2px 8px;
     border-radius: 4px;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
 
   .vault-type-commercial {
@@ -882,7 +893,7 @@
   }
 
   .vault-filename {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: var(--text-100);
     white-space: nowrap;
@@ -891,22 +902,22 @@
   }
 
   .vault-chevron {
-    font-size: 14px;
+    font-size: 16px;
     color: var(--text-400);
     flex-shrink: 0;
   }
 
   .vault-empty {
-    padding: 32px 20px;
+    padding: 40px 24px;
     text-align: center;
     color: var(--text-300);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.6;
   }
 
   .vault-empty-icon {
-    font-size: 28px;
-    margin-bottom: 8px;
+    font-size: 32px;
+    margin-bottom: 12px;
     opacity: 0.4;
   }
 
@@ -919,39 +930,39 @@
     transform: translateX(-50%);
     width: 100%;
     max-width: 540px;
-    padding: 12px 16px;
-    padding-bottom: calc(12px + var(--sab));
-    background: linear-gradient(to top, var(--surface) 70%, transparent);
+    padding: 16px 20px;
+    padding-bottom: calc(16px + var(--sab));
+    background: linear-gradient(to top, var(--surface) 80%, transparent);
     z-index: 50;
     pointer-events: none;
   }
 
   .btn-generate {
     width: 100%;
-    padding: 16px 24px;
+    padding: 18px 24px;
     border-radius: var(--r-xl);
     background: var(--coral);
     border: none;
     color: var(--white);
     font-family: 'Poppins', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    min-height: 56px;
-    box-shadow: 0 8px 24px rgba(232,93,61,0.40);
-    transition: all 0.22s ease;
+    gap: 12px;
+    min-height: 64px;
+    box-shadow: 0 10px 30px rgba(232,93,61,0.35);
+    transition: all 0.25s ease;
     pointer-events: all;
     -webkit-user-select: none; user-select: none;
   }
 
   .btn-generate:active:not(:disabled) {
-    transform: scale(0.975);
-    box-shadow: 0 4px 14px rgba(232,93,61,0.35);
+    transform: scale(0.97);
+    box-shadow: 0 4px 16px rgba(232,93,61,0.3);
   }
 
   .btn-generate:disabled {
@@ -962,67 +973,65 @@
 
   .btn-generate.loading {
     background: var(--navy);
-    box-shadow: 0 8px 24px rgba(11,31,58,0.30);
+    box-shadow: 0 10px 30px rgba(11,31,58,0.25);
   }
 
   .btn-spinner {
-    width: 18px; height: 18px;
+    width: 20px; height: 20px;
     border: 2.5px solid rgba(255,255,255,0.3);
     border-top-color: var(--white);
     border-radius: 50%;
-    animation: spin 0.75s linear infinite;
+    animation: spin 0.8s linear infinite;
     flex-shrink: 0;
   }
 
   /* ═══════════════════════════════════════════════════════════════
-     BRIEF DETAIL PAGE — slides in as a full-page view, eliminating
-     scroll fatigue. Each brief is its own "page" with a back button
-     and pushState URL, following premium mobile app conventions.
+     BRIEF DETAIL PAGE
   ═══════════════════════════════════════════════════════════════ */
   .brief-page {
     position: fixed;
     inset: 0;
-    background: #FFFFFF;  /* explicit white — never transparent */
+    background: #FFFFFF;
     z-index: 200;
     display: flex;
     flex-direction: column;
     transform: translateX(100%);
-    transition: transform 0.32s cubic-bezier(0.32, 0, 0.67, 0);
+    transition: transform 0.35s cubic-bezier(0.32, 0, 0.67, 0);
     will-change: transform;
   }
   .brief-page.open {
     transform: translateX(0);
-    transition: transform 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+    transition: transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
   }
   .brief-page-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 16px 20px;
-    padding-top: calc(16px + env(safe-area-inset-top));
+    gap: 12px;
+    padding: 20px 24px;
+    padding-top: calc(20px + env(safe-area-inset-top));
     background: #FFFFFF;
-    border-bottom: 1px solid var(--border, #E5E7EB);
+    border-bottom: 1px solid var(--border);
     flex-shrink: 0;
     position: sticky;
     top: 0;
     z-index: 10;
   }
   .brief-page-back {
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     background: var(--surface);
     border: none;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
+    font-size: 24px;
     color: var(--text-100);
     flex-shrink: 0;
-    transition: background 0.15s ease;
+    transition: background 0.2s ease;
   }
-  .brief-page-back:active { background: var(--border, #E5E7EB); }
+  .brief-page-back:active { background: var(--border); }
   .brief-page-title-group { flex: 1; min-width: 0; }
   .brief-page-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--text-100);
     white-space: nowrap;
@@ -1030,25 +1039,25 @@
     text-overflow: ellipsis;
   }
   .brief-page-meta {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-300);
-    margin-top: 1px;
+    margin-top: 2px;
   }
   .brief-page-body {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 20px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    padding: 24px;
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
     background: #FFFFFF;
   }
   .brief-page-actions {
     display: flex;
-    gap: 10px;
-    padding: 12px 20px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    gap: 12px;
+    padding: 16px 24px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
     background: #FFFFFF;
-    border-top: 1px solid var(--border, #E5E7EB);
+    border-top: 1px solid var(--border);
     flex-shrink: 0;
     position: sticky;
     bottom: 0;
@@ -1056,8 +1065,7 @@
   .brief-page-actions .btn-secondary { flex: 1; }
 
   /* ═══════════════════════════════════════════════════════════════
-     SIDE DRAWER — slides in from left; houses Vault + TL track.
-     Removes the need to scroll to bottom of main screen for these.
+     SIDE DRAWER
   ═══════════════════════════════════════════════════════════════ */
   .drawer-overlay {
     position: fixed; inset: 0;
@@ -1074,7 +1082,7 @@
   .drawer {
     position: fixed;
     top: 0; left: 0; bottom: 0;
-    width: min(82vw, 340px);
+    width: min(85vw, 360px);
     background: #FFFFFF;
     z-index: 310;
     display: flex;
@@ -1090,7 +1098,7 @@
 
   .drawer-header {
     background: var(--navy);
-    padding: calc(var(--sat) + 20px) 20px 20px;
+    padding: calc(var(--sat) + 24px) 24px 24px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -1100,7 +1108,7 @@
 
   .drawer-brand {
     font-family: 'Playfair Display', serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     color: rgba(255,255,255,0.9);
     line-height: 1.2;
@@ -1109,12 +1117,12 @@
   .drawer-brand em { font-style: italic; color: rgba(255,255,255,0.65); }
 
   .drawer-close {
-    width: 30px; height: 30px;
+    width: 36px; height: 36px;
     border: none;
     background: rgba(255,255,255,0.12);
-    border-radius: 8px;
+    border-radius: 10px;
     color: rgba(255,255,255,0.8);
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
   }
@@ -1123,76 +1131,65 @@
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 0 0 calc(20px + var(--sab));
+    padding: 0 0 calc(24px + var(--sab));
   }
 
   .drawer-section-title {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-400);
-    padding: 20px 20px 8px;
+    padding: 24px 24px 12px;
   }
 
-  /* TL section inside the drawer */
   .drawer-tl {
-    padding: 0 16px 16px;
+    padding: 0 20px 20px;
   }
 
-  .drawer-tl .tl-section {
+  .tl-section {
     margin-top: 0;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: var(--r-xl);
     border: 1px solid var(--border);
   }
 
-
-     (navy, not coral) so this is never mistaken for the daily
-     commercial brief's generate action. Own section, own toggle,
-     own button.
-  ═══════════════════════════════════════════════════════════════ */
-  .tl-section {
-    margin-top: 28px;
-    padding: 18px;
-    background: var(--surface);
-    border-radius: var(--r-lg);
-    border: 1px solid var(--border, #E5E7EB);
-  }
-
   .tl-section-title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--navy);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
   .tl-section-sub {
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--text-300);
-    line-height: 1.5;
-    margin-bottom: 14px;
+    line-height: 1.6;
+    margin-bottom: 16px;
   }
 
   .tl-scope-row {
     display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
+    gap: 12px;
+    margin-bottom: 16px;
   }
 
   .tl-scope-pill {
     flex: 1;
-    padding: 10px 14px;
+    padding: 12px 16px;
     border-radius: var(--r-pill);
-    border: 1.5px solid var(--border, #E5E7EB);
+    border: 1.5px solid var(--border);
     background: var(--card-bg);
     color: var(--text-200);
     font-family: 'Poppins', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     text-align: center;
-    transition: all 0.18s ease;
+    transition: all 0.2s ease;
   }
 
   .tl-scope-pill.active {
@@ -1203,27 +1200,27 @@
 
   .btn-tl-generate {
     width: 100%;
-    padding: 14px 22px;
+    padding: 16px 24px;
     border-radius: var(--r-xl);
     background: var(--navy);
     border: none;
     color: var(--white);
     font-family: 'Poppins', sans-serif;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.01em;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    min-height: 50px;
-    box-shadow: 0 6px 18px rgba(11,31,58,0.30);
-    transition: all 0.22s ease;
+    gap: 12px;
+    min-height: 56px;
+    box-shadow: 0 8px 24px rgba(11,31,58,0.25);
+    transition: all 0.25s ease;
   }
 
   .btn-tl-generate:active:not(:disabled) {
-    transform: scale(0.975);
+    transform: scale(0.97);
   }
 
   .btn-tl-generate:disabled {
@@ -1236,21 +1233,21 @@
   ═══════════════════════════════════════════════════════════════ */
   .toast {
     position: fixed;
-    bottom: calc(80px + var(--sab) + 12px);
+    bottom: calc(90px + var(--sab) + 16px);
     left: 50%;
     transform: translateX(-50%) translateY(20px);
     background: var(--text-100);
     color: var(--white);
-    padding: 11px 20px;
+    padding: 12px 24px;
     border-radius: var(--r-pill);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     white-space: nowrap;
     z-index: 200;
     opacity: 0;
     transition: all 0.25s ease;
     pointer-events: none;
-    box-shadow: 0 4px 16px rgba(11,31,58,0.25);
+    box-shadow: 0 6px 20px rgba(11,31,58,0.25);
   }
 
   .toast.show {
@@ -1266,19 +1263,19 @@
   .divider {
     height: 1px;
     background: var(--border);
-    margin: 24px 0 20px;
+    margin: 32px 0 24px;
   }
 
   /* ═══════════════════════════════════════════════════════════════
      VAULT ANIMATION
   ═══════════════════════════════════════════════════════════════ */
   @keyframes slide-up {
-    from { opacity: 0; transform: translateY(6px); }
+    from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   .vault-entry {
-    animation: slide-up 0.3s ease both;
+    animation: slide-up 0.35s ease both;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -1294,10 +1291,7 @@
 </head>
 <body>
 
-  <!-- Loading screen -->
   <div class="loading-screen" id="loading-screen">
-    <!-- Icon with heartbeat pulse. Falls back to text initial if icon.png
-         hasn't been deployed yet. onerror swaps to the text fallback. -->
     <div class="loading-icon" id="loading-icon-wrap">
       <img src="./icon.png" alt="Tola Edge Brief"
            onerror="this.parentElement.outerHTML='<div class=&quot;loading-icon-fallback&quot;>TE</div>'" />
@@ -1305,10 +1299,8 @@
     <div class="loading-status" id="loading-status">Loading…</div>
   </div>
 
-  <!-- App shell -->
   <div class="app">
 
-    <!-- Header -->
     <header class="app-header">
       <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -1320,10 +1312,8 @@
       </div>
     </header>
 
-    <!-- Scrollable content -->
     <div class="content">
 
-      <!-- Market filter -->
       <div class="section-header" style="margin-top:0">
         <span class="section-title">Market Scope</span>
       </div>
@@ -1333,14 +1323,12 @@
         <button class="market-pill"        data-market="Senegal" onclick="setMarket('Senegal')"><span class="market-flag">🇸🇳</span> Senegal</button>
       </div>
 
-      <!-- Domain toggles -->
       <div class="section-header">
         <span class="section-title">Intelligence Domains</span>
         <span class="section-meta" id="domain-count">6 active</span>
       </div>
       <div class="domain-grid" id="domain-grid"></div>
 
-      <!-- Custom prompt -->
       <div class="section-header">
         <span class="section-title">Targeted Brief</span>
         <span class="section-meta">Optional</span>
@@ -1356,7 +1344,6 @@
         />
       </div>
 
-      <!-- Status card -->
       <div class="status-card" id="status-card">
         <div class="status-icon" id="status-icon">
           <div class="spinner"></div>
@@ -1367,10 +1354,8 @@
         </div>
       </div>
 
-      <!-- Brief output -->
       <div class="output-section" id="output-section">
 
-        <!-- Executive Narrative -->
         <div class="section-header">
           <span class="section-title">Executive Narrative</span>
           <span class="section-meta" id="narrative-time"></span>
@@ -1386,17 +1371,14 @@
           <div class="narrative-body" id="narrative-body"></div>
         </div>
 
-        <!-- Stories -->
         <div class="section-header" style="margin-top:20px;">
           <span class="section-title">Impact-Rated Stories</span>
           <span class="section-meta" id="stories-count"></span>
         </div>
         <div id="stories-container"></div>
 
-        <!-- Domain coverage footer — quiet note for domains checked but empty -->
         <div id="coverage-footer-container"></div>
 
-        <!-- Action row -->
         <div class="action-row">
           <button class="btn-secondary" onclick="if(currentBrief) openBriefPage(currentBrief)">
             <span>⤢</span> Full View
@@ -1411,20 +1393,14 @@
 
       </div>
 
-    </div><!-- /content -->
-
-    <!-- Sticky generate button -->
-    <div class="sticky-footer">
+    </div><div class="sticky-footer">
       <button class="btn-generate" id="btn-generate" onclick="generateBrief()">
         <span id="btn-label">Generate Intelligence Brief</span>
         <span id="btn-icon">→</span>
       </button>
     </div>
 
-  </div><!-- /app -->
-
-  <!-- ═══ SIDE DRAWER — Vault + Thought Leadership ═══════════════════════ -->
-  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+  </div><div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
     <div class="drawer-header">
       <div class="drawer-brand">The Tola <em>Edge Brief</em></div>
@@ -1432,12 +1408,11 @@
     </div>
     <div class="drawer-body">
 
-      <!-- Knowledge Vault -->
       <div class="drawer-section-title">Knowledge Vault</div>
-      <div style="padding: 0 16px 4px; display:flex; align-items:center; justify-content:space-between;">
-        <span style="font-size:11px; color:var(--text-300);" id="vault-count"></span>
+      <div style="padding: 0 20px 8px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:12px; color:var(--text-300);" id="vault-count"></span>
       </div>
-      <div style="padding: 0 16px 20px;">
+      <div style="padding: 0 20px 24px;">
         <div class="vault-card" id="vault-card">
           <div class="vault-empty">
             <div class="vault-empty-icon">🗄</div>
@@ -1446,11 +1421,10 @@
         </div>
       </div>
 
-      <!-- Thought Leadership Track -->
       <div class="drawer-section-title">Thought Leadership</div>
       <div class="drawer-tl">
         <div class="tl-section">
-          <div class="tl-section-sub" style="margin-bottom:14px;">
+          <div class="tl-section-sub" style="margin-bottom:16px;">
             Weekly research brief on housing finance for the working and emerging
             middle class — gig workers, freelancers, irregular-income households.
           </div>
@@ -1465,8 +1439,7 @@
             <span id="btn-tl-icon">→</span>
           </button>
 
-          <!-- TL output renders here -->
-          <div class="tl-output" id="tl-output-section" style="display:none; margin-top:18px;">
+          <div class="tl-output" id="tl-output-section" style="display:none; margin-top:24px;">
             <div class="section-header" style="margin-top:0;">
               <span class="section-title">Weekly Synthesis</span>
               <span class="section-meta" id="tl-week-label"></span>
@@ -1474,7 +1447,7 @@
             <div class="narrative-card">
               <div class="narrative-body" id="tl-synthesis-body"></div>
             </div>
-            <div class="section-header" style="margin-top:20px;">
+            <div class="section-header" style="margin-top:24px;">
               <span class="section-title">Findings</span>
               <span class="section-meta" id="tl-findings-count"></span>
             </div>
@@ -1486,10 +1459,6 @@
     </div>
   </div>
 
-  <!-- Brief Detail Page — shared node reused for every brief open.
-       Content is written in by openBriefPage(); the page slides in
-       from the right and back dismisses it. One DOM element, zero
-       extra requests, premium feel. -->
   <div class="brief-page" id="brief-page" role="dialog" aria-modal="true" aria-label="Brief detail">
     <div class="brief-page-header">
       <button class="brief-page-back" onclick="closeBriefPage()" aria-label="Back">‹</button>
@@ -1505,7 +1474,6 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script>
