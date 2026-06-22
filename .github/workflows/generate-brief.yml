@@ -116,8 +116,12 @@ jobs:
           git config user.email "actions@github.com"
           git add data/brief_output.json data/vault_index.json data/vault/
           git diff --staged --quiet || git commit -m "brief: $(date -u +%Y-%m-%d) [req ${{ inputs.request_id }}]"
+          # Stash any unstaged files (e.g. node_modules, package-lock.json from npm install)
+          # before rebasing, then restore after push
+          git stash --include-untracked || true
           git pull --rebase origin main
           git push
+          git stash pop || true
 
       - name: Log pipeline summary
         if: always()
