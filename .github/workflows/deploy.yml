@@ -38,6 +38,14 @@ jobs:
           TOKEN_CHECK=$(grep "token:" _site/index.html | head -1 | tr -d " '," | cut -c7-18)
           echo "Token prefix injected: ${TOKEN_CHECK}..."
 
+          # App icon (for PWA / add-to-home-screen)
+          if [ -f icon.png ]; then
+            cp icon.png _site/icon.png
+            echo "Icon deployed"
+          else
+            echo "Warning: icon.png not found in repo root — PWA icon will be missing"
+          fi
+
           # Mixta context
           cp data/mixta-context.json _site/data/mixta-context.json
 
