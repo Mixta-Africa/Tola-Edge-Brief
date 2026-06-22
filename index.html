@@ -149,9 +149,6 @@
     opacity: 0; transform: scale(0.98); pointer-events: none;
   }
 
-  /* Icon with heartbeat — single pulse: expand slightly, return.
-     Timing mimics a resting heartbeat (~60bpm = 1s cycle) but stretched
-     to 1.6s so it reads as calm and premium, not anxious. */
   .loading-icon {
     width: 96px;
     height: 96px;
@@ -167,7 +164,6 @@
     object-fit: cover;
   }
 
-  /* Fallback shown if icon.png hasn't loaded yet (e.g. very first deploy) */
   .loading-icon-fallback {
     width: 96px; height: 96px;
     border-radius: 26px;
@@ -207,18 +203,16 @@
      HEADER — Edge-to-Edge Apple Navigation Bar Style
   ═══════════════════════════════════════════════════════════════ */
   .app-header {
-    background: var(--navy);
+    /* Smooth, even linear gradient */
+    background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy) 100%);
     padding: 0 24px 20px; 
     padding-top: calc(var(--sat) + 20px);
     position: relative;
-    background-image: 
-      radial-gradient(ellipse at 50% -20%, rgba(28,63,110,0.6) 0%, transparent 80%);
     flex-shrink: 0;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Clean flat edge with a soft border replaces the heavy aggressive corner radius */
     border-bottom: 1px solid rgba(255,255,255,0.06);
     box-shadow: 0 4px 24px rgba(11,31,58,0.15);
   }
@@ -317,6 +311,29 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
+     GREETING SECTION
+  ═══════════════════════════════════════════════════════════════ */
+  .greeting-section {
+    margin-bottom: 28px;
+    margin-top: 4px;
+  }
+
+  .greeting-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-100);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .greeting-sub {
+    font-size: 14px;
+    color: var(--text-300);
+    font-weight: 400;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
      SECTION HEADERS
   ═══════════════════════════════════════════════════════════════ */
   .section-header {
@@ -348,14 +365,15 @@
   ═══════════════════════════════════════════════════════════════ */
   .market-row {
     display: flex;
-    gap: 12px;
+    gap: 8px; /* Reduced gap ensures elements don't spill over */
     margin-bottom: 20px;
   }
 
   .market-pill {
-    padding: 12px 18px;
+    flex: 1 1 0; /* Forces absolute equal widths for perfect alignment */
+    padding: 12px 4px; /* Narrower padding allowing flex scaling */
     border-radius: var(--r-pill);
-    font-size: 14px;
+    font-size: 13px; /* Slightly smaller to fit gracefully */
     font-weight: 500;
     cursor: pointer;
     border: 1.5px solid var(--border);
@@ -363,14 +381,14 @@
     color: var(--text-300);
     transition: all 0.25s ease;
     white-space: nowrap;
+    min-width: 0; /* Prevents text from pushing width past container */
     min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     -webkit-user-select: none; user-select: none;
     box-shadow: var(--card-shadow);
-    flex: 1; /* Stretch to fill space elegantly */
   }
 
   .market-pill.active {
@@ -409,7 +427,7 @@
   }
 
   .market-flag {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1;
   }
 
@@ -427,14 +445,14 @@
   .domain-card {
     background: var(--card-bg);
     border-radius: var(--r-md);
-    padding: 16px 16px 14px;
+    padding: 14px 14px 12px; /* Smoother padding */
     cursor: pointer;
     box-shadow: var(--card-shadow);
     transition: all 0.25s ease;
     -webkit-user-select: none; user-select: none;
     position: relative;
     overflow: hidden;
-    min-height: 104px;
+    min-height: 90px; /* Reduced min-height so they are less blocky */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -465,14 +483,14 @@
   .domain-card.active .d-code,
   .domain-card.active .d-name { color: var(--white); }
   .domain-card.active .d-code { color: rgba(255,255,255,0.6); }
-  .domain-card.active .d-icon { opacity: 0.8; filter: brightness(10); }
+  .domain-card.active .d-icon { opacity: 0.7; filter: brightness(10); }
 
   .d-icon {
-    width: 24px; height: 24px;
+    width: 20px; height: 20px; /* Scaled down slightly */
     flex-shrink: 0;
-    opacity: 0.5;
+    opacity: 0.4; /* Softer unselected state */
     transition: opacity 0.2s, filter 0.2s;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .d-labels { margin-top: auto; }
@@ -488,8 +506,8 @@
   }
 
   .d-name {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px; /* Smaller for a cleaner, Apple-like look */
+    font-weight: 500; /* Softer than before */
     color: var(--text-200);
     line-height: 1.3;
     transition: color 0.2s;
@@ -1311,6 +1329,12 @@
     <!-- Scrollable content -->
     <div class="content">
 
+      <!-- Greeting -->
+      <div class="greeting-section">
+        <h2 class="greeting-title" id="greeting-title">Good morning Tola,</h2>
+        <p class="greeting-sub">what would you like to research today?</p>
+      </div>
+
       <!-- Market filter -->
       <div class="section-header" style="margin-top:0">
         <span class="section-title">Market Scope</span>
@@ -1564,6 +1588,7 @@
     setTimeout(() => document.getElementById('loading-screen')?.remove(), 600);
 
     renderDate();
+    renderGreeting();
     renderDomains();
     loadVault();
   }
@@ -1576,6 +1601,16 @@
   function renderDate() {
     document.getElementById('header-date').textContent =
       new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function renderGreeting() {
+    const hour = new Date().getHours();
+    let greeting = 'Good evening';
+    if (hour < 12) greeting = 'Good morning';
+    else if (hour < 17) greeting = 'Good afternoon';
+    
+    const el = document.getElementById('greeting-title');
+    if (el) el.textContent = `${greeting} Tola,`;
   }
 
   // Line-art SVG icons for each domain — 20×20 viewport, 1.5px stroke, no fill
