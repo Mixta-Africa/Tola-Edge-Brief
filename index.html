@@ -7,9 +7,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0B1F3A" />
   <title>Tola Edge Brief</title>
+  <meta name="apple-mobile-web-app-title" content="Tola's Edge Brief" />
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="apple-icon" />
+  <link rel="manifest" id="pwa-manifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
   /* ═══════════════════════════════════════════════════════════════
@@ -78,7 +81,7 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
     background: var(--surface);
     color: var(--text-100);
     font-size: 15px;
@@ -429,7 +432,7 @@
     padding: 14px 16px 14px 0;
     border: none;
     outline: none;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 14px;
     color: var(--text-100);
     background: transparent;
@@ -716,7 +719,7 @@
     background: var(--card-bg);
     border: none;
     color: var(--text-200);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -832,7 +835,7 @@
     background: var(--coral);
     border: none;
     color: var(--white);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.01em;
@@ -872,6 +875,86 @@
     animation: spin 0.75s linear infinite;
     flex-shrink: 0;
   }
+
+  /* ═══════════════════════════════════════════════════════════════
+     BRIEF DETAIL PAGE — slides in as a full-page view, eliminating
+     scroll fatigue. Each brief is its own "page" with a back button
+     and pushState URL, following premium mobile app conventions.
+  ═══════════════════════════════════════════════════════════════ */
+  .brief-page {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.32, 0, 0.67, 0);
+    will-change: transform;
+  }
+  .brief-page.open {
+    transform: translateX(0);
+    transition: transform 0.32s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  .brief-page-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    padding-top: calc(16px + env(safe-area-inset-top));
+    background: var(--bg);
+    border-bottom: 1px solid var(--border, #E5E7EB);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .brief-page-back {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    color: var(--text-100);
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+  }
+  .brief-page-back:active { background: var(--border, #E5E7EB); }
+  .brief-page-title-group { flex: 1; min-width: 0; }
+  .brief-page-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-100);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .brief-page-meta {
+    font-size: 11px;
+    color: var(--text-300);
+    margin-top: 1px;
+  }
+  .brief-page-body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+  .brief-page-actions {
+    display: flex;
+    gap: 10px;
+    padding: 12px 20px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    background: var(--bg);
+    border-top: 1px solid var(--border, #E5E7EB);
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+  }
+  .brief-page-actions .btn-secondary { flex: 1; }
 
   /* ═══════════════════════════════════════════════════════════════
      THOUGHT LEADERSHIP TRACK — deliberately separate visual identity
@@ -916,7 +999,7 @@
     border: 1.5px solid var(--border, #E5E7EB);
     background: var(--card-bg);
     color: var(--text-200);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -937,7 +1020,7 @@
     background: var(--navy);
     border: none;
     color: var(--white);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.01em;
@@ -1127,11 +1210,14 @@
 
         <!-- Action row -->
         <div class="action-row">
+          <button class="btn-secondary" onclick="if(currentBrief) openBriefPage(currentBrief)">
+            <span>⤢</span> Full View
+          </button>
           <button class="btn-secondary" onclick="copyBrief()">
             <span>⎘</span> Copy
           </button>
           <button class="btn-secondary" id="btn-save" onclick="saveBrief()">
-            <span>↓</span> Save to Vault
+            <span>↓</span> Save
           </button>
         </div>
 
@@ -1208,6 +1294,25 @@
     </div>
 
   </div><!-- /app -->
+
+  <!-- Brief Detail Page — shared node reused for every brief open.
+       Content is written in by openBriefPage(); the page slides in
+       from the right and back dismisses it. One DOM element, zero
+       extra requests, premium feel. -->
+  <div class="brief-page" id="brief-page" role="dialog" aria-modal="true" aria-label="Brief detail">
+    <div class="brief-page-header">
+      <button class="brief-page-back" onclick="closeBriefPage()" aria-label="Back">‹</button>
+      <div class="brief-page-title-group">
+        <div class="brief-page-title" id="brief-page-title">Intelligence Brief</div>
+        <div class="brief-page-meta" id="brief-page-meta"></div>
+      </div>
+    </div>
+    <div class="brief-page-body" id="brief-page-body"></div>
+    <div class="brief-page-actions">
+      <button class="btn-secondary" onclick="copyPageBrief()"><span>⎘</span> Copy</button>
+      <button class="btn-secondary" onclick="closeBriefPage()">← Back</button>
+    </div>
+  </div>
 
   <!-- Toast -->
   <div class="toast" id="toast"></div>
@@ -1787,14 +1892,13 @@
   async function loadVaultEntry(filename) {
     try {
       const res = await fetch(
-        `https://${CFG.owner}.github.io/${CFG.repo}/vault/${filename}?t=${Date.now()}`,
+        `https://${CFG.owner}.github.io/${CFG.repo}/data/vault/${filename}?t=${Date.now()}`,
         { cache: 'no-store' }
       );
       if (!res.ok) throw new Error('not found');
-      currentBrief = await res.json();
-      renderBrief(currentBrief);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      showToast(`Loaded ${filename.replace('TEB_','').replace('.json','')}`, 'success');
+      const data = await res.json();
+      // Open as a slide-in page — no scroll-to-top, no disrupting the vault list
+      openBriefPage(data, filename.replace('TEB_','').replace('.json',''));
     } catch (_) { showToast('Could not load brief'); }
   }
 
@@ -1847,6 +1951,132 @@
   }
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ─── BRIEF DETAIL PAGE NAVIGATION ────────────────────────────────────────
+  // Each vault entry and live brief opens as a slide-in page, eliminating
+  // tired scroll-back-to-top UX. pushState gives each brief its own URL
+  // (#brief/FILENAME) for sharing, back-button support, and home-screen adds.
+
+  let _pageCurrentBrief = null;
+
+  function openBriefPage(data, label) {
+    _pageCurrentBrief = data;
+    const brief = data.brief;
+    if (!brief) return;
+
+    // Title and meta
+    const date = data.generated_at
+      ? new Date(data.generated_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+      : label || 'Intelligence Brief';
+    document.getElementById('brief-page-title').textContent = 'Intelligence Brief';
+    document.getElementById('brief-page-meta').textContent = date;
+
+    // Build body HTML — same field order as the main view
+    const body = document.getElementById('brief-page-body');
+    body.innerHTML = '';
+
+    // Narrative
+    const narDiv = document.createElement('div');
+    narDiv.className = 'narrative-card';
+    narDiv.innerHTML = `<div class="narrative-eyebrow">Executive Narrative</div><div class="narrative-body">${
+      (brief.narrative || '').split('\n\n').filter(p => p.trim()).map(p => `<p>${esc(p.trim())}</p>`).join('')
+    }</div>`;
+    body.appendChild(narDiv);
+
+    // Stories
+    if (Array.isArray(brief.stories) && brief.stories.length) {
+      const hdr = document.createElement('div');
+      hdr.className = 'section-header';
+      hdr.style.marginTop = '20px';
+      hdr.innerHTML = `<span class="section-title">Impact-Rated Stories</span><span class="section-meta">${brief.stories.length} stories</span>`;
+      body.appendChild(hdr);
+
+      brief.stories.forEach(story => {
+        const card = document.createElement('div');
+        card.className = 'story-card in';
+        const impactTag = { High: 'tag-high', Medium: 'tag-medium', Low: 'tag-low' }[story.impact] || 'tag-low';
+        const mktTag = story.market === 'Senegal' ? 'tag-sn' : 'tag-ng';
+        const watchHtml = story.watch_next
+          ? `<div class="watch-next"><span class="watch-next-arrow">→</span><span>${esc(story.watch_next)}</span></div>` : '';
+        card.innerHTML = `
+          <div class="story-tags">
+            <span class="tag ${impactTag}">${esc(story.impact)}</span>
+            <span class="tag tag-domain">${esc(story.domain)}</span>
+            <span class="tag ${mktTag}">${esc(story.market)}</span>
+          </div>
+          <div class="story-title">${esc(story.title)}</div>
+          <div class="story-body">${esc(story.body)}</div>
+          <div class="relevance-block">
+            <div class="relevance-eyebrow">Mixta Relevance</div>
+            <div class="relevance-text">${esc(story.relevance)}</div>
+          </div>
+          ${watchHtml}`;
+        body.appendChild(card);
+      });
+    }
+
+    // Domain coverage notes
+    const notes = Array.isArray(brief.domain_coverage_notes) ? brief.domain_coverage_notes : [];
+    if (notes.length) {
+      const footer = document.createElement('div');
+      footer.className = 'coverage-footer';
+      footer.innerHTML = `<div class="coverage-footer-title">Domain Coverage</div>${notes.map(n => `<div class="coverage-footer-line">${esc(n)}</div>`).join('')}`;
+      body.appendChild(footer);
+    }
+
+    // Slide the page in
+    const page = document.getElementById('brief-page');
+    page.classList.add('open');
+    body.scrollTop = 0;
+    history.pushState({ briefPage: true }, '', `#brief`);
+  }
+
+  function closeBriefPage() {
+    document.getElementById('brief-page').classList.remove('open');
+    _pageCurrentBrief = null;
+    if (location.hash === '#brief') history.back();
+  }
+
+  function copyPageBrief() {
+    if (!_pageCurrentBrief) return;
+    // Re-use the main copyBrief logic by temporarily setting currentBrief
+    const prev = currentBrief;
+    currentBrief = _pageCurrentBrief;
+    copyBrief();
+    currentBrief = prev;
+  }
+
+  // Handle browser back button and Android back gesture
+  window.addEventListener('popstate', () => {
+    const page = document.getElementById('brief-page');
+    if (page.classList.contains('open')) {
+      page.classList.remove('open');
+      _pageCurrentBrief = null;
+    }
+  });
+
+  // ─── PWA MANIFEST (injected at runtime) ─────────────────────────────────
+  (function injectPWAManifest() {
+    const manifest = {
+      name: "Tola's Edge Brief",
+      short_name: "Tola's Edge",
+      description: "Private intelligence brief for Tola Akinsulire — Mixta Africa GCCO",
+      start_url: "./",
+      display: "standalone",
+      background_color: "#0B1F3A",
+      theme_color: "#0B1F3A",
+      orientation: "portrait-primary",
+      icons: [
+        { src: "./icon.png", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: "./icon.png", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+    // Also wire the apple-touch-icon to the same file
+    const appleIcon = document.getElementById('apple-icon');
+    if (appleIcon) appleIcon.href = './icon.png';
+  })();
 
   // ─── START ───────────────────────────────────────────────────────────────
   boot();
